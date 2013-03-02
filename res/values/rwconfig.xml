@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ===================================================================== -->
+    <!-- App overwritable Roundware Specifications                             -->
+    <!-- ===================================================================== -->
+
+    <string name="rw_spec_server_url">http://roundware.dyndns.org:80/roundware/roundware.py</string>
+    <string name="rw_spec_project_id">1</string>
+    <string name="rw_spec_heartbeat_interval_in_sec">30</string>
+
+    <string name="rw_spec_queue_check_interval_in_sec">10</string>
+    <string name="rw_spec_queued_file_basename">note</string>
+    <string name="rw_spec_queued_file_extension">.wav</string>
+
+    <string name="rw_spec_max_recording_time_in_sec">45</string>
+
+    <string name="rw_spec_listen_enabled_yn">Y</string>
+    <string name="rw_spec_geo_listen_enabled_yn">N</string>
+    
+    <string name="rw_spec_speak_enabled_yn">Y</string>
+    <string name="rw_spec_geo_speak_enabled_yn">N</string>
+
+    <string name="rw_spec_min_location_update_time_msec">60000</string>
+    <string name="rw_spec_min_location_update_distance_meters">5</string>
+    	
+	<string name="rw_spec_stream_metadata_enabled_yn">N</string>
+	<string name="rw_spec_stream_metadata_timer_interval_in_msec">1000</string>
+	
+	<string name="rw_spec_reset_tag_defaults_on_startup_yn">Y</string>    
+		
+    <string name="rw_spec_static_soundtrack_session_id">-1</string>
+    <string name="rw_spec_static_soundtrack_name">outofrange.mp3</string>
+
+    <!-- ===================================================================== -->
+    <!-- Definitions for debugging purposes only (!)                           -->
+    <!-- ===================================================================== -->
+
+    <!--
+         Set to 'N' for normal operation, use 'Y' to skip adding a location to
+         the request stream server call.
+     -->
+    <string name="rw_debug_open_audio_stream_without_location_yn">N</string>
+
+    <!-- ===================================================================== -->
+    <!-- Roundware client and server KV key definitions                        -->
+    <!-- ===================================================================== -->
+
+    <!-- client only (must start with '_')-->
+    <string name="rw_key_server_url">_server_url</string>
+    <string name="rw_key_label">_label</string>
+    <string name="rw_key_location_provider_name">_location_provider</string>
+
+    <!-- send to server -->
+    <string name="rw_key_device_id">device_id</string>
+    <string name="rw_key_project_id">project_id</string>
+    <string name="rw_key_session_id">session_id</string>
+    <string name="rw_key_envelope_id">envelope_id</string>
+    <string name="rw_key_asset_id">asset_id</string>
+    <string name="rw_key_client_type">client_type</string>
+    <string name="rw_key_client_system">client_system</string>
+    <string name="rw_key_client_time">client_time</string>
+    <string name="rw_key_event_type">event_type</string>
+    <string name="rw_key_latitude">latitude</string>
+    <string name="rw_key_longitude">longitude</string>
+    <string name="rw_key_accuracy">haccuracy</string>
+    <string name="rw_key_operation">operation</string>
+    <string name="rw_key_language">language</string>
+    <string name="rw_key_tags">tags</string>
+    <string name="rw_key_data">data</string>
+    <string name="rw_key_vote_type">vote_type</string>
+    <string name="rw_key_vote_value">value</string>
+    <string name="rw_key_submitted">submitted</string>
+        
+    <string name="rw_key_file">file</string>
+    <string name="rw_key_filename">filename</string>
+    <string name="rw_key_stream_url">stream_url</string>
+    <string name="rw_key_create_time">createtime</string>
+
+    <!-- 
+    <string name="rw_key_message">message</string>
+     -->
+        
+    <!-- received from server -->
+    <string name="rw_key_server_result">result</string>
+    <string name="rw_key_server_error_number">error_number</string>
+    <string name="rw_key_server_error_message">error_message</string>
+    <string name="rw_key_server_error_traceback">traceback</string>
+    <string name="rw_key_server_user_message">user_error_message</string>
+    <string name="rw_key_server_sharing_message">sharing_message</string>
+    
+    <string name="rw_key_server_asset_id">asset_id</string>
+    <string name="rw_key_server_current_server_time">current_server_time</string>
+    <string name="rw_key_server_start_time">start_time</string>
+    <string name="rw_key_server_duration_in_ms">duraton_in_ms</string>
+    <string name="rw_key_server_duration_in_stream">duration_in_stream</string>
+    <string name="rw_fmt_server_time">yyyy-MM-dd\'T\'HH:mm:ss</string>
+        
+    <!-- ===================================================================== -->
+    <!-- Definition of names of supported Roundware operations                 -->
+    <!-- ===================================================================== -->
+
+	<string name="rw_op_get_config">get_config</string>
+	<string name="rw_op_get_tags">get_tags</string>
+    <string name="rw_op_heartbeat">heartbeat</string>
+    <string name="rw_op_log_event">log_event</string>
+    <string name="rw_op_get_stream">request_stream</string>
+    <string name="rw_op_modify_stream">modify_stream</string>
+    <string name="rw_op_create_envelope">create_envelope</string>
+    <string name="rw_op_add_asset_to_envelope">add_asset_to_envelope</string>
+    <string name="rw_op_get_current_streaming_asset">get_current_streaming_asset</string>
+    <string name="rw_op_get_asset_info">get_asset_info</string>
+    <string name="rw_op_vote_asset">vote_asset</string>
+    <string name="rw_op_skip_ahead">skip_ahead</string>
+    <string name="rw_op_play_asset_in_stream">play_asset_in_stream</string>
+        	    	
+    <!-- ===================================================================== -->
+    <!-- Definition of Roundware log event types                               -->
+    <!-- ===================================================================== -->
+
+    <string name="rw_et_start_listen">start_listen</string>
+    <string name="rw_et_stop_listen">stop_listen</string>
+    <string name="rw_et_start_record">start_record</string>
+    <string name="rw_et_stop_record">stop_record</string>
+    <string name="rw_et_stop_upload">stop_upload</string>
+    <string name="rw_et_client_error">client_error</string>
+    <string name="rw_et_stop_session">stop_session</string>
+        
+</resources>

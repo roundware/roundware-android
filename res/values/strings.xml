@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RWFramework</string>
+
+    <!-- Error messages, mostly put in exceptions -->
+
+    <string name="roundware_error_mediaplayer_problem">Unfortunately the sound
+        player encountered a problem. Please restart the app and try again.
+    </string>
+    <string name="roundware_error_could_not_create_temp_queue_file">
+        Unfortunately a problem occurred while processing your recording and it
+        can not be uploaded.
+    </string>
+    <string name="roundware_error_announcing_recording">Unfortunately a problem
+        occurred with announcing your recording and it can not be uploaded.
+    </string>
+
+    <!-- Action messages displayed in notifications -->
+    <!--
+          Note that a text starting with '.' is considered to be a detailed
+          message (probably only of interest when debugging) and will only
+          be displayed when they are specifically enabled by setting a property
+          in the main RWService class.
+      -->
+    <string name="roundware_notification_default_text">.talking to server</string>
+    <string name="roundware_notification_request_failed">.Request Failed! Check Log.</string>
+    <string name="roundware_notification_updating_location">.updating location</string>
+    <string name="roundware_notification_retrieve_configuration">.retrieve configuration</string>
+    <string name="roundware_notification_heartbeat">.lub-dub</string>
+    <string name="roundware_notification_event">.logging event</string>
+    <string name="roundware_notification_number_of_recordings">.#recordings</string>
+    <string name="roundware_notification_retrieving_tags">.retrieving tags</string>
+    <string name="roundware_notification_retrieving_questions">.retrieving questions</string>
+    <string name="roundware_notification_requesting_stream">.requesting stream</string>
+    <string name="roundware_notification_modifying_stream">.modifying stream</string>
+    <string name="roundware_notification_uploading">.submitting asset</string>
+    <string name="roundware_notification_announcing_recording">.announcing upload</string>
+    <string name="roundware_notification_uploading_recording">.uploading asset</string>
+    <string name="roundware_notification_requesting_current_streaming_asset">.requesting stream info</string>
+    <string name="roundware_notification_requesting_asset_info">.requesting asset info</string>
+    <string name="roundware_notification_voting_on_asset">.voting on asset</string>
+    <string name="roundware_notification_requesting_skip_ahead">.skipping ahead</string>
+    <string name="roundware_notification_requesting_asset_replay">.replaying asset</string>
+        
+    <!-- LocationTracker messages, mostly put in pop-ups (toasts) -->
+
+    <string name="roundware_no_location_service">No Location Service on Device</string>
+    <string name="roundware_no_location_signal">No Signal (make sure GPS is on)</string>
+    <string name="roundware_no_location_info">No location information available!</string>
+    <string name="roundware_lost_location_signal">Lost Signal</string>
+
+</resources>
