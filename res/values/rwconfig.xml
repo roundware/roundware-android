@@ -4,7 +4,7 @@
     <!-- App overwritable Roundware Specifications                             -->
     <!-- ===================================================================== -->
 
-    <string name="rw_spec_server_url">http://roundware.dyndns.org:80/roundware/roundware.py</string>
+    <string name="rw_spec_server_url">http://rwdev.dyndns.org/roundware/</string>
     <string name="rw_spec_project_id">1</string>
     <string name="rw_spec_heartbeat_interval_in_sec">30</string>
 
