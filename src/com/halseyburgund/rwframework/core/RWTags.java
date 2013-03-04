@@ -46,7 +46,7 @@ public class RWTags {
 
 	// debugging
 	private final static String TAG = "RWTags";
-	// private final static boolean D = false;
+	private final static boolean D = true;
 
 	// data source
 	public final static int DEFAULTS = 0;
@@ -212,10 +212,14 @@ public class RWTags {
 	 * @param jsonResponse to process
 	 * @param fromCache true if using cached data
 	 */
-	public void assignFromJsonServerResponse(String jsonResponse, boolean fromCache) {
+	public void fromJson(String jsonResponse, boolean fromCache) {
 		mAllTags.clear();
 		mDataSource = fromCache ? FROM_CACHE : FROM_SERVER;
 
+		if (D) {
+			Log.d(TAG, "Creating tags from json: " + jsonResponse);
+		}
+		
 		try {
 			JSONObject root = new JSONObject(jsonResponse);
 			if (root != null) {
@@ -225,6 +229,77 @@ public class RWTags {
 		} catch (JSONException e) {
 			Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE, e);
 		}
+	}
+	
+	
+	/**
+	 * Creates a String with JSON data for all the tags.
+	 *   
+	 * @return JSON string
+	 */
+	public String toJson() {
+		JSONArray listenEntries = new JSONArray();
+		JSONArray speakEntries = new JSONArray();
+		
+		// create json data for each tag
+		for (RWTag tag : mAllTags) {
+			JSONObject jsonEntry = new JSONObject();
+			try {
+				// store the basic properties
+				jsonEntry.put(JSON_KEY_TAG_CODE, tag.code);
+				jsonEntry.put(JSON_KEY_TAG_NAME, tag.name);
+				jsonEntry.put(JSON_KEY_TAG_ORDER, tag.order);
+				jsonEntry.put(JSON_KEY_TAG_SELECTION_TYPE, tag.select);
+				
+				// parse default options
+				JSONArray defaults = new JSONArray();
+				for (Integer value : tag.defaultOptionsTagIds) {
+					defaults.put(value);
+				}
+				jsonEntry.put(JSON_KEY_TAG_DEFAULT_OPTIONS, defaults);
+				
+				// add data for all RWOptions
+				JSONArray options = new JSONArray();
+				for (RWOption option : tag.options) {
+					JSONObject jsonOption = new JSONObject();
+					jsonOption.put(JSON_KEY_TAG_OPTION_ID, option.tagId);
+					jsonOption.put(JSON_KEY_TAG_OPTION_ORDER, option.order);
+					jsonOption.put(JSON_KEY_TAG_OPTION_VALUE, option.value);
+					options.put(jsonOption);
+				}
+				jsonEntry.put(JSON_KEY_TAG_OPTIONS, options);
+				
+			} catch (JSONException e) {
+				Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE, e);
+			}
+			
+			// store json entry in type specific collections
+			if (JSON_KEY_MODE_LISTEN.equalsIgnoreCase(tag.type)) {
+				listenEntries.put(jsonEntry);
+			}
+			if (JSON_KEY_MODE_SPEAK.equalsIgnoreCase(tag.type)){
+				speakEntries.put(jsonEntry);
+			}
+		}
+		
+		// gather all the entries with a json root object
+		JSONObject root = new JSONObject();
+		try {
+			if (listenEntries.length() > 0) {
+				root.put(JSON_KEY_MODE_LISTEN, listenEntries);
+			}
+			if (speakEntries.length() > 0) {
+				root.put(JSON_KEY_MODE_SPEAK, speakEntries);
+			}
+		} catch (JSONException e) {
+			Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE, e);
+		}
+
+		String result = root.toString();
+		if (D) {
+			Log.d(TAG, "Created json from tags: " + result);
+		}
+		return result;
 	}
 	
 

@@ -249,7 +249,7 @@ public class RWService extends Service implements Observer {
 				Log.w(TAG, "Could not retrieve tags data from server and no cached data available!");
 				broadcast(RW.NO_TAGS);
 			} else {
-				tags.assignFromJsonServerResponse(result, usingCache);
+				tags.fromJson(result, usingCache);
 				broadcast(RW.TAGS_LOADED);
 			}
 		}
