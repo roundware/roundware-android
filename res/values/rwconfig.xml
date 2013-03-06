@@ -7,6 +7,10 @@
     <string name="rw_spec_server_url">http://rwdev.dyndns.org/roundware/</string>
     <string name="rw_spec_project_id">1</string>
     <string name="rw_spec_heartbeat_interval_in_sec">30</string>
+    
+    <string name="rw_spec_files_url"></string>
+    <string name="rw_spec_files_version">0</string>
+    <string name="rw_spec_files_always_download">N</string>
 
     <string name="rw_spec_queue_check_interval_in_sec">10</string>
     <string name="rw_spec_queued_file_basename">note</string>

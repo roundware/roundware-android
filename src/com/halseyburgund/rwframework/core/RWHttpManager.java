@@ -168,8 +168,8 @@ public class RWHttpManager {
             return sbResponse.toString();
         }
     }
-
-
+    
+    
     public static String uploadFile(String page, Properties properties, String fileParam, String file, int timeOutSec) throws Exception {
     	if (D) { Log.d(TAG, "Starting upload of file: " + file, null); }
 

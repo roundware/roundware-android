@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -44,9 +44,54 @@ public class RWSharedPrefsHelper {
 	// debugging
 	private final static String TAG = "RWSharedPrefsHelper";
 	
-	// prefix used in keys in the shared preferences
-	private static final String PREFIX = "json_";
+	// prefix used in keys in the shared preferences for JSON data caching
+	private static final String JSON_DATA_PREFIX = "json_";
 
+	private static final String CONTENT_FILES_URL_KEY = "files_url";
+	private static final String CONTENT_FILES_VERSION_KEY = "files_version";
+	private static final String CONTENT_FILES_STORAGE_DIR_NAME_KEY = "files_storage_dir_name";
+
+	
+	public static class ContentFilesInfo {
+		public String filesUrl;
+		public int filesVersion;
+		public String filesStorageDirName;
+		
+		public ContentFilesInfo() {
+			this(null, -1, null);
+		}
+		
+		public ContentFilesInfo(String url, int version, String dirName) {
+			filesUrl = url;
+			filesVersion = version;
+			filesStorageDirName = dirName;
+		}
+	}
+	
+	
+	public static void saveContentFilesInfo(Context context, String preferencesName, ContentFilesInfo info) {
+		if ((context != null) && (info != null)) {
+			SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString(RWSharedPrefsHelper.CONTENT_FILES_URL_KEY, info.filesUrl);
+			editor.putInt(RWSharedPrefsHelper.CONTENT_FILES_VERSION_KEY, info.filesVersion);
+			editor.putString(RWSharedPrefsHelper.CONTENT_FILES_STORAGE_DIR_NAME_KEY, info.filesStorageDirName);
+			editor.commit();
+		}
+	}
+	
+	
+	public static ContentFilesInfo loadContentFilesInfo(Context context, String preferencesName) {
+		ContentFilesInfo filesInfo = new ContentFilesInfo();
+		if (context != null) {
+			SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+			filesInfo.filesUrl = settings.getString(RWSharedPrefsHelper.CONTENT_FILES_URL_KEY, null);
+			filesInfo.filesVersion = settings.getInt(RWSharedPrefsHelper.CONTENT_FILES_VERSION_KEY, -1);
+			filesInfo.filesStorageDirName = settings.getString(RWSharedPrefsHelper.CONTENT_FILES_STORAGE_DIR_NAME_KEY, null);
+		}
+		return filesInfo;
+	}
+	
 
 	/**
 	 * Parses the specified JSON data into a JSON Object and stores its
@@ -63,7 +108,7 @@ public class RWSharedPrefsHelper {
 			JSONObject object = new JSONObject(jsonData);
 			SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putString(RWSharedPrefsHelper.PREFIX + key, object.toString());
+			editor.putString(RWSharedPrefsHelper.JSON_DATA_PREFIX + key, object.toString());
 			editor.commit();
 		} catch (JSONException e) {
 			Log.e(TAG, RWConfiguration.JSON_SYNTAX_ERROR_MESSAGE, e);
@@ -86,7 +131,7 @@ public class RWSharedPrefsHelper {
 			JSONArray array = new JSONArray(jsonData);
 			SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putString(RWSharedPrefsHelper.PREFIX + key, array.toString());
+			editor.putString(RWSharedPrefsHelper.JSON_DATA_PREFIX + key, array.toString());
 			editor.commit();
 		} catch (JSONException e) {
 			Log.e(TAG, RWConfiguration.JSON_SYNTAX_ERROR_MESSAGE, e);
@@ -107,7 +152,7 @@ public class RWSharedPrefsHelper {
 	public static String loadJSONObject(Context context, String preferencesName, String key) {
 		try {
 			SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-			JSONObject object = new JSONObject(settings.getString(RWSharedPrefsHelper.PREFIX + key, "{}"));
+			JSONObject object = new JSONObject(settings.getString(RWSharedPrefsHelper.JSON_DATA_PREFIX + key, "{}"));
 			return object.toString();
 		} catch (JSONException e) {
 			Log.e(TAG, RWConfiguration.JSON_SYNTAX_ERROR_MESSAGE, e);
@@ -129,7 +174,7 @@ public class RWSharedPrefsHelper {
 	public static String loadJSONArray(Context context, String preferencesName, String key) {
 		try {
 		SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-		JSONArray array = new JSONArray(settings.getString(RWSharedPrefsHelper.PREFIX + key, "[]"));
+		JSONArray array = new JSONArray(settings.getString(RWSharedPrefsHelper.JSON_DATA_PREFIX + key, "[]"));
 		return array.toString();
 		} catch (JSONException e) {
 			Log.e(TAG, RWConfiguration.JSON_SYNTAX_ERROR_MESSAGE, e);
@@ -148,9 +193,9 @@ public class RWSharedPrefsHelper {
 	 */
 	public static void remove(Context context, String preferencesName, String key) {
 		SharedPreferences settings = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-		if (settings.contains(RWSharedPrefsHelper.PREFIX + key)) {
+		if (settings.contains(RWSharedPrefsHelper.JSON_DATA_PREFIX + key)) {
 			SharedPreferences.Editor editor = settings.edit();
-			editor.remove(RWSharedPrefsHelper.PREFIX + key);
+			editor.remove(RWSharedPrefsHelper.JSON_DATA_PREFIX + key);
 			editor.commit();
 		}
 	}

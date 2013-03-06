@@ -51,6 +51,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -77,7 +78,7 @@ public class RWService extends Service implements Observer {
 	
 	// debugging
 	private final static String TAG = "RWService";
-	private final static boolean D = false;
+	private final static boolean D = true;
 
 	// playback notification
 	private final static int NOTIFICATION_ID = 10001;
@@ -92,8 +93,14 @@ public class RWService extends Service implements Observer {
 		UNINITIALIZED,
 		
 		/**
+		 * RWService session is initializing.
+		 */
+		INITIALIZING,
+		
+		/**
 		 * Session is on-line; project configuration has been retrieved
-		 * and a session ID is available.
+		 * and a session ID is available. When required by the project
+		 * all web content files have been loaded too.
 		 */
 		ON_LINE,
 		
@@ -363,26 +370,37 @@ public class RWService extends Service implements Observer {
 	private BroadcastReceiver rwReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// configuration loaded - switch from uninitialized to on-line or off-line
-			// depending on using server or cached configuration data
+			if (D) { Log.d(TAG, "Received broadcast intent with action: " + intent.getAction()); }
+			
 			if (RW.CONFIGURATION_LOADED.equalsIgnoreCase(intent.getAction())) {
-				if (mSessionState == SessionState.UNINITIALIZED) {
+				if (mSessionState != SessionState.ON_LINE) {
 					if (configuration.getDataSource() != RWConfiguration.FROM_SERVER) {
+						// TODO Check if chached content and tags are available
+						// if so go to off_line state
+						// else go to unitialized state
 						manageSessionState(SessionState.OFF_LINE);
 					} else {
-						manageSessionState(SessionState.ON_LINE);
-					}
-				} else {
-					// refresh tags (now that the session id is known)
-					if (tags.getDataSource() != RWTags.FROM_SERVER) {
-						new RetrieveTagsTask(context, configuration.getProjectId()).execute();
+						if (isContentDownloadRequired(context)) {
+							startContentDownload(context);
+						} else {
+							// otherwise can go to on_line now
+							broadcast(RW.CONTENT_LOADED);
+						}
 					}
 				}
 			} else if (RW.NO_CONFIGURATION.equalsIgnoreCase(intent.getAction())) {
 				// loading configuration failed - switch to uninitialized if needed
-				if (mSessionState != SessionState.UNINITIALIZED) {
-					manageSessionState(SessionState.UNINITIALIZED);
-				}
+				manageSessionState(SessionState.UNINITIALIZED);
+			} else if (RW.CONTENT_LOADED.equalsIgnoreCase(intent.getAction())) {
+				if (mSessionState != SessionState.ON_LINE) {
+					new RetrieveTagsTask(context, configuration.getProjectId()).execute();
+				}				
+			} else if (RW.NO_CONTENT.equalsIgnoreCase(intent.getAction())) {
+				manageSessionState(SessionState.UNINITIALIZED);
+			} else if (RW.TAGS_LOADED.equalsIgnoreCase(intent.getAction())) {
+				manageSessionState(SessionState.ON_LINE);
+			} else if (RW.NO_TAGS.equalsIgnoreCase(intent.getAction())) {
+				manageSessionState(SessionState.UNINITIALIZED);
 			}
 			
 			// operation failed, if due to timeout (UknownHostException) switch to
@@ -417,6 +435,86 @@ public class RWService extends Service implements Observer {
 			}
 		}
 	};
+	
+
+	/**
+	 * Checks if there is any reason to download the content files for the
+	 * app anew.
+	 * 
+	 * @param context
+	 * @return true when downloading content files makes sense
+	 */
+	private boolean isContentDownloadRequired(Context context) {
+		if (D) { Log.d(TAG, "Checking if new content files need to be downloaded"); }
+		if ((configuration == null) || (configuration.getFilesUrl() == null) || (configuration.getFilesVersion() < 0)) {
+			return false;
+		}
+		
+		if (configuration.isFilesAlwaysDownload()) {
+			// override to always download for testing and debugging
+			return true;
+		} else {
+			// check last downloaded version numbers and file url
+			String filesUrl = configuration.getFilesUrl();
+			int filesVersion = configuration.getFilesVersion();
+			
+			RWSharedPrefsHelper.ContentFilesInfo currentFileInfo = RWSharedPrefsHelper.loadContentFilesInfo(context, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO);
+			if (currentFileInfo == null) {
+				return true;
+			} else if (currentFileInfo.filesVersion != filesVersion) {
+				return true;
+			} else if ((currentFileInfo.filesUrl == null) || (!currentFileInfo.filesUrl.equals(filesUrl))) {
+				return true;
+			}
+			
+			// check if last downloaded content files are still available
+			// (at least the folder still exists and is not empty)
+			String filesDirName = currentFileInfo.filesStorageDirName;
+			File filesDir = new File(filesDirName);
+			if ((!filesDir.exists()) || (!filesDir.isDirectory()) || (filesDir.list().length == 0)) {
+				return true;
+			}
+			
+			return false;
+		}
+	}
+	
+	
+	private void startContentDownload(Context context) {
+		if (D) { Log.d(TAG, "Starting download of new content files"); }
+		
+		// figure out where to store the files
+		final Context ctx = context;
+		// final File filesDir = ctx.getFilesDir(); // cannot create subfolders in private app dir??
+		final File filesDir = ctx.getExternalFilesDir(null);
+		final String targetDirName = filesDir.getAbsolutePath();
+
+		// get current content file info from project configuration
+		final String fileUrl = configuration.getFilesUrl();
+		final int filesVersion = configuration.getFilesVersion();
+
+		// start async task to download and unpack content file
+		new RWZipDownloadingTask(fileUrl, targetDirName, new RWZipDownloadingTask.StateListener() {
+			@Override
+			public void downloadingStarted(long timeStampMsec) {
+				// void - use for progress indicator if needed
+			}
+			
+			@Override
+			public void downloadingFinished(long timeStampMsec) {
+				// NOTE: remember this is called from an async background task
+				RWSharedPrefsHelper.saveContentFilesInfo(ctx, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO, 
+						new RWSharedPrefsHelper.ContentFilesInfo(fileUrl, filesVersion, targetDirName)
+				);
+				broadcast(RW.CONTENT_LOADED);
+			}
+			
+			@Override
+			public void downloading(long timeStampMsec, long bytesProcessed, long totalBytes) {
+				// void - use for progress indicator if needed
+			}
+		}).execute();
+	}
 	
 	
 	/**
@@ -484,6 +582,10 @@ public class RWService extends Service implements Observer {
 		IntentFilter filter = createOperationsIntentFilter();
 		filter.addAction(RW.CONFIGURATION_LOADED);
 		filter.addAction(RW.NO_CONFIGURATION);
+		filter.addAction(RW.CONTENT_LOADED);
+		filter.addAction(RW.NO_CONTENT);
+		filter.addAction(RW.TAGS_LOADED);
+		filter.addAction(RW.NO_TAGS);
 		registerReceiver(rwReceiver, filter);
 		
 		// setup for GPS callback
@@ -577,8 +679,8 @@ public class RWService extends Service implements Observer {
 
 		startForeground(NOTIFICATION_ID, mRwNotification);
 
-		// try to go on-line, this will attempt to get the configuration and tags
-		manageSessionState(SessionState.ON_LINE);
+		// start initializing the Roundware session, this will attempt to get the configuration, tags and content
+		manageSessionState(SessionState.INITIALIZING);
 		
 		return Service.START_STICKY;
 	}
@@ -1535,8 +1637,12 @@ public class RWService extends Service implements Observer {
 				mAssetTracker.stop();
 				playbackStop();
 				break;
+			case INITIALIZING:
+				new RetrieveConfigurationTask(this, configuration.getDeviceId(), configuration.getProjectId()).execute();
+				break;
 			case ON_LINE:
 				// refresh configuration after threshold time so session ID can be refreshed
+				// TODO Better to have a task that only updates the session ID?
 				long millis = System.currentTimeMillis();
 				if ((millis - mLastStateChangeMsec) > (configuration.getHeartbeatTimerSec() * 5)) {
 					// project ID assumed to be already in configuration and not changing!

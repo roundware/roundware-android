@@ -244,6 +244,16 @@ public class RW {
 	 * Project tags could not be retrieved or read from cache.
 	 */
 	public final static String NO_TAGS = BROADCAST_PREFIX + "no_tags";
+
+	/**
+	 * Content for displaying in web views successfully retrieved and unpacked.
+	 */
+	public final static String CONTENT_LOADED = BROADCAST_PREFIX + "content_loaded";
+	
+	/**
+	 * Content for displaying in web views could not be retrieved.
+	 */
+	public final static String NO_CONTENT = BROADCAST_PREFIX + "no_content";
 	
 	/**
 	 * Ready for playback, connected to audio stream from server.
@@ -301,6 +311,11 @@ public class RW {
 	 * Name of SharedPreferences cache for tags of projects.
 	 */
 	public final static String PROJECT_TAGS_CACHE = PREFERENCES_PREFIX + "cached_project_tags";
+	
+	/**
+	 * Name of SharedPreferences for content files info.
+	 */
+	public final static String LAST_DOWNLOADED_CONTENT_FILES_INFO = PREFERENCES_PREFIX + "last_downloaded_content_files_info";
 
 	// --------------------------------------------------------------------------------------------
 	

@@ -118,8 +118,8 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
 		mRwServiceBinder = rwServiceBinder;
 		mListener = listener;
 
-		if ((tempDirName == null) || (!tempDirName.endsWith("/"))) {
-			mTempDirName = tempDirName + "/";
+		if ((tempDirName == null) || (!tempDirName.endsWith(File.separator))) {
+			mTempDirName = tempDirName + File.separator;
 		} else {
 			mTempDirName = tempDirName;
 		}

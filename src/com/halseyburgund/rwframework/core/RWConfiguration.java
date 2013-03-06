@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -74,6 +74,8 @@ public class RWConfiguration {
 	private final static String JSON_KEY_CONFIG_GEO_SPEAK_ENABLED = "geo_speak_enabled";
 	private final static String JSON_KEY_CONFIG_LISTEN_ENABLED = "listen_enabled";
 	private final static String JSON_KEY_CONFIG_SPEAK_ENABLED = "speak_enabled";
+	private final static String JSON_KEY_CONFIG_FILES_URL = "files_url";
+	private final static String JSON_KEY_CONFIG_FILES_VERSION = "files_version";
 	
 	private final static String JSON_KEY_CONFIG_SECTION_SERVER = "server";
 	private final static String JSON_KEY_CONFIG_CURRENT_VERSION = "version";
@@ -95,6 +97,10 @@ public class RWConfiguration {
 	
 	private String mSessionId = null;
 	private String mProjectName = null;
+
+	private String mFilesUrl = null;
+	private int mFilesVersion = -1;
+	private boolean mFilesAlwaysDownload = false;
 	
 	private int mHeartbeatTimerSec = 15;
 	private int mQueueCheckIntervalSec = 60;
@@ -150,20 +156,30 @@ public class RWConfiguration {
 		// overwrite defaults from resources
 		if (context != null) {
 			String val;
-			val = context.getString(com.halseyburgund.rwframework.R.string.rw_spec_heartbeat_interval_in_sec);
+			val = context.getString(R.string.rw_spec_heartbeat_interval_in_sec);
 			mHeartbeatTimerSec = Integer.valueOf(val);
 			
-			val = context.getString(com.halseyburgund.rwframework.R.string.rw_spec_queue_check_interval_in_sec);
+			val = context.getString(R.string.rw_spec_queue_check_interval_in_sec);
 			mQueueCheckIntervalSec = Integer.valueOf(val);
 			
-			val = context.getString(com.halseyburgund.rwframework.R.string.rw_spec_stream_metadata_timer_interval_in_msec);
+			val = context.getString(R.string.rw_spec_stream_metadata_timer_interval_in_msec);
 			mStreamMetadataTimerIntervalMSec = Integer.valueOf(val);
 			
-			String str = context.getString(R.string.rw_spec_min_location_update_time_msec);
-			mMinLocationUpdateTimeMSec = Long.valueOf(str);
+			val = context.getString(R.string.rw_spec_min_location_update_time_msec);
+			mMinLocationUpdateTimeMSec = Long.valueOf(val);
 
-			str = context.getString(R.string.rw_spec_min_location_update_distance_meters);
-			mMinLocationUpdateDistanceMeter = Double.valueOf(str);
+			val = context.getString(R.string.rw_spec_min_location_update_distance_meters);
+			mMinLocationUpdateDistanceMeter = Double.valueOf(val);
+			
+			val = context.getString(R.string.rw_spec_files_url);
+			mFilesUrl = val;
+			
+			val = context.getString(R.string.rw_spec_files_version);
+			if (val != null) {
+				mFilesVersion = Integer.valueOf(val);
+			}
+			
+			mFilesAlwaysDownload = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_files_always_download));
 
 			mListenEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_listen_enabled_yn));
 			mGeoListenEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_geo_listen_enabled_yn));
@@ -204,6 +220,8 @@ public class RWConfiguration {
 	        		specs = jsonObj.getJSONObject(JSON_KEY_CONFIG_SECTION_PROJECT);
 		        	setProjectId(specs.optString(JSON_KEY_CONFIG_PROJECT_ID, getProjectId()));
 		        	setProjectName(specs.optString(JSON_KEY_CONFIG_PROJECT_NAME, getProjectName()));
+		        	setFilesUrl(specs.optString(JSON_KEY_CONFIG_FILES_URL, getFilesUrl()));
+		        	setFilesVersion(specs.optInt(JSON_KEY_CONFIG_FILES_VERSION, getFilesVersion()));
 		        	setHeartbeatTimerSec(specs.optInt(JSON_KEY_CONFIG_HEARTBEAT_TIMER_SEC, getHeartbeatTimerSec()));
 		        	setMaxRecordingTimeSec(specs.optInt(JSON_KEY_CONFIG_MAX_RECORDING_LENGTH_SEC, getMaxRecordingTimeSec()));
 		        	setSharingMessage(specs.optString(JSON_KEY_CONFIG_SHARING_MESSAGE, getSharingMessage()));
@@ -502,6 +520,36 @@ public class RWConfiguration {
 
 	public void setStreamMetadataEnabled(boolean streamMetadataEnabled) {
 		mStreamMetadataEnabled = streamMetadataEnabled;
+	}
+
+
+	public String getFilesUrl() {
+		return mFilesUrl;
+	}
+
+
+	public void setFilesUrl(String filesUrl) {
+		mFilesUrl = filesUrl;
+	}
+
+
+	public int getFilesVersion() {
+		return mFilesVersion;
+	}
+
+
+	public void setFilesVersion(int filesVersion) {
+		mFilesVersion = filesVersion;
+	}
+
+
+	public boolean isFilesAlwaysDownload() {
+		return mFilesAlwaysDownload;
+	}
+
+
+	public void setFilesAlwaysDownload(boolean filesAlwaysDownload) {
+		mFilesAlwaysDownload = filesAlwaysDownload;
 	}
 	
 }
