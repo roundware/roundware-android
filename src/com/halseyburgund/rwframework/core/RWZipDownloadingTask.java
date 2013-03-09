@@ -62,7 +62,8 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
     public interface StateListener {
     	public void downloadingStarted(long timeStampMsec);
     	public void downloading(long timeStampMsec, long bytesProcessed, long totalBytes);
-    	public void downloadingFinished(long timeStampMsec);
+    	public void downloadingFinished(long timeStampMsec, String filesStorageDir);
+    	public void downloadingFailed(long timeStampMsec, String errorMessage);
     }
 
     
@@ -107,7 +108,7 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
     	} catch (IOException e) {
     		e.printStackTrace();
         	Log.e(TAG, "Download failed: " + e.getMessage(), null);
-        	return "Content download failed!";
+        	return "Could not download app content files from: " + mFileUrl;
 		}
 
     	if (mListener != null) {
@@ -164,18 +165,11 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 	    		zipInputStream.closeEntry();
     		}
 	    	zipInputStream.close();
-	    	
-	    	if (mListener != null) {
-				long currentMillis = System.currentTimeMillis();
-	    		mListener.downloadingFinished(currentMillis);
-	    	}
-	    	
 	    	if (D) { Log.d(TAG, "Download complete", null); }
-	    	
     	} catch (IOException e) {
     		e.printStackTrace();
     		Log.e(TAG, "Error while downloading and unpacking: " + e.getMessage());
-        	return "Content download failed!";
+        	return "Download of app content files failed! Please try again later.";
     	}
 		
 		return null;
@@ -188,6 +182,13 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
+		if (mListener != null) {
+			if ((result == null) || (result.length() == 0)) {
+				mListener.downloadingFinished(System.currentTimeMillis(), mTargetDirName);
+			} else {
+				mListener.downloadingFailed(System.currentTimeMillis(), result);
+			}
+		}
 	}
 
 }

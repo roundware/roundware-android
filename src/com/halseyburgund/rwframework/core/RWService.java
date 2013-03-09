@@ -51,7 +51,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -148,6 +147,7 @@ public class RWService extends Service implements Observer {
 	
 	private RWConfiguration configuration;
 	private RWTags tags;
+	private String contentFilesLocalDir = null;
 
 	
 	/**
@@ -497,21 +497,30 @@ public class RWService extends Service implements Observer {
 		new RWZipDownloadingTask(fileUrl, targetDirName, new RWZipDownloadingTask.StateListener() {
 			@Override
 			public void downloadingStarted(long timeStampMsec) {
+				// NOTE: remember this is called from an async background task
+				// void - use for progress indicator if needed
+			}
+
+			@Override
+			public void downloading(long timeStampMsec, long bytesProcessed, long totalBytes) {
+				// NOTE: remember this is called from an async background task
 				// void - use for progress indicator if needed
 			}
 			
 			@Override
-			public void downloadingFinished(long timeStampMsec) {
-				// NOTE: remember this is called from an async background task
+			public void downloadingFinished(long timeStampMsec, String targetDir) {
 				RWSharedPrefsHelper.saveContentFilesInfo(ctx, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO, 
-						new RWSharedPrefsHelper.ContentFilesInfo(fileUrl, filesVersion, targetDirName)
+						new RWSharedPrefsHelper.ContentFilesInfo(fileUrl, filesVersion, targetDir)
 				);
+				contentFilesLocalDir = targetDir;
 				broadcast(RW.CONTENT_LOADED);
 			}
 			
 			@Override
-			public void downloading(long timeStampMsec, long bytesProcessed, long totalBytes) {
-				// void - use for progress indicator if needed
+			public void downloadingFailed(long timeStampMsec, String errorMessage) {
+				// TODO: pass error message in intent?
+				contentFilesLocalDir = null;
+				broadcast(RW.NO_CONTENT);
 			}
 		}).execute();
 	}
@@ -899,6 +908,22 @@ public class RWService extends Service implements Observer {
 	 */
 	public String getStreamUrl() {
 		return mStreamUrl;
+	}
+	
+	
+	/**
+	 * Returns the local directory name where web content files have been
+	 * stored. These files are downloaded from the server for the project
+	 * and contain HTML/CSS/JS code to be displayed in web views for the
+	 * projects' Listen and Speak filters. NULL will be returned if no
+	 * content files are used or when download has failed. The broadcast
+	 * intent NO_CONTENT signals that download of the content files was
+	 * not possible.
+	 * 
+	 * @return path name where content files have been stored
+	 */
+	public String getContentFilesDir() {
+		return contentFilesLocalDir;
 	}
 
 	
