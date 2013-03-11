@@ -54,23 +54,24 @@ public class RWTags {
 	public final static int FROM_SERVER = 2;
 	
 	// json names
-	private final static String JSON_KEY_MODE_SPEAK = "speak";
-	private final static String JSON_KEY_MODE_LISTEN = "listen";
-	private final static String JSON_KEY_TAG_CODE = "code";
-	private final static String JSON_KEY_TAG_NAME = "name";
-	private final static String JSON_KEY_TAG_ORDER = "order";
-	private final static String JSON_KEY_TAG_SELECTION_TYPE = "select";
-	private final static String JSON_VALUE_SELECT_SINGLE = "single";
+	public final static String JSON_KEY_MODE_SPEAK = "speak";
+	public final static String JSON_KEY_MODE_LISTEN = "listen";
+	public final static String JSON_KEY_TAG_CODE = "code";
+	public final static String JSON_KEY_TAG_NAME = "name";
+	public final static String JSON_KEY_TAG_ORDER = "order";
+	public final static String JSON_KEY_TAG_SELECTION_TYPE = "select";
+	public final static String JSON_VALUE_SELECT_SINGLE = "single";
 	// private final static String JSON_VALUE_SELECT_MULTIPLE = "multi";
-	private final static String JSON_VALUE_SELECT_AT_LEAST_ONE = "multi_at_least_one";
-	private final static String JSON_KEY_TAG_DEFAULT_OPTIONS = "defaults";
-	private final static String JSON_KEY_TAG_OPTIONS = "options";
-	private final static String JSON_KEY_TAG_OPTION_ORDER = "order";
-	private final static String JSON_KEY_TAG_OPTION_ID = "tag_id";
-	private final static String JSON_KEY_TAG_OPTION_VALUE = "value";
+	public final static String JSON_VALUE_SELECT_AT_LEAST_ONE = "multi_at_least_one";
+	public final static String JSON_KEY_TAG_DEFAULT_OPTIONS = "defaults";
+	public final static String JSON_KEY_TAG_OPTIONS = "options";
+	public final static String JSON_KEY_TAG_OPTION_ORDER = "order";
+	public final static String JSON_KEY_TAG_OPTION_DATA = "data";
+	public final static String JSON_KEY_TAG_OPTION_ID = "tag_id";
+	public final static String JSON_KEY_TAG_OPTION_VALUE = "value";
 
 	// json parsing error message
-	private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid server response received!";
+	private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
 	
 	private int mDataSource = DEFAULTS;
 	
@@ -180,6 +181,7 @@ public class RWTags {
 	
 	// single option for a tag
 	public class RWOption {
+		public String data;
 		public int order;
 		public int tagId;
 		public String value;
@@ -210,15 +212,13 @@ public class RWTags {
 	 * unchanged.
 	 * 
 	 * @param jsonResponse to process
-	 * @param fromCache true if using cached data
+	 * @param dataSource of json data (DEFAULTS, FROM_CACHE, FROM_SERVER)
 	 */
-	public void fromJson(String jsonResponse, boolean fromCache) {
+	public void fromJson(String jsonResponse, int dataSource) {
 		mAllTags.clear();
-		mDataSource = fromCache ? FROM_CACHE : FROM_SERVER;
-
-		if (D) {
-			Log.d(TAG, "Creating tags from json: " + jsonResponse);
-		}
+		mDataSource = dataSource;
+		
+		if (D) { Log.d(TAG, "Creating tags from json: " + jsonResponse); }
 		
 		try {
 			JSONObject root = new JSONObject(jsonResponse);
@@ -233,11 +233,11 @@ public class RWTags {
 	
 	
 	/**
-	 * Creates a String with JSON data for all the tags.
+	 * Creates a JSON object for the tags data.
 	 *   
-	 * @return JSON string
+	 * @return JSONObject for tags
 	 */
-	public String toJson() {
+	public JSONObject toJson() {
 		JSONArray listenEntries = new JSONArray();
 		JSONArray speakEntries = new JSONArray();
 		
@@ -264,6 +264,7 @@ public class RWTags {
 					JSONObject jsonOption = new JSONObject();
 					jsonOption.put(JSON_KEY_TAG_OPTION_ID, option.tagId);
 					jsonOption.put(JSON_KEY_TAG_OPTION_ORDER, option.order);
+					jsonOption.put(JSON_KEY_TAG_OPTION_DATA, option.data);
 					jsonOption.put(JSON_KEY_TAG_OPTION_VALUE, option.value);
 					options.put(jsonOption);
 				}
@@ -295,7 +296,17 @@ public class RWTags {
 			Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE, e);
 		}
 
-		String result = root.toString();
+		return root;
+	}
+	
+	
+	/**
+	 * Creates a String with JSON data for all the tags.
+	 *   
+	 * @return JSON string
+	 */
+	public String toJsonString() {
+		String result = toJson().toString();
 		if (D) {
 			Log.d(TAG, "Created json from tags: " + result);
 		}
@@ -335,6 +346,7 @@ public class RWTags {
 	        		JSONObject option = options.getJSONObject(j);
 	        		RWOption o = new RWOption();
 	        		o.order = option.getInt(JSON_KEY_TAG_OPTION_ORDER);
+	        		o.data = option.getString(JSON_KEY_TAG_OPTION_DATA);
 	        		o.tagId = option.getInt(JSON_KEY_TAG_OPTION_ID);
 	        		o.value = option.getString(JSON_KEY_TAG_OPTION_VALUE);
 	        		
