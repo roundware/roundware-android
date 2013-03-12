@@ -117,6 +117,17 @@ public class RWList extends ArrayList<RWListItem> {
     }
     
     
+    /**
+     * Creates text to be inserted into a Roundware html page for display
+     * in a webview. Typically a marker (e.g. %roundware_tags%) in the html
+     * will indicate the place for inserting this string. The text created
+     * is an assignment of the json data for the tags used by this list to
+     * a Roundware.tags variable. The defaults for each tag will be set to
+     * the current selected options in the list. 
+     * 
+     * @param type (e.g. "listen", "speak") to create json data for
+     * @return string with JavaScript Roundware.tags assignment
+     */
 	public String toJsonForWebView(String type) {
 		if (mTags != null) {
 			// create json from tags (with original defaults)
@@ -154,15 +165,23 @@ public class RWList extends ArrayList<RWListItem> {
 	}
 	
 	
+	/**
+	 * Deciphers the Roundware information in the specified URI and uses it
+	 * to update the selection state of the tags options. The URI is expected
+	 * to have a format like:
+	 * 
+	 * roundware://project?demographic=35,36&question=38,40
+	 * 
+	 * @param webViewMessageUri to process and set selection from
+	 */
 	public void setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
-		// format: roundware://project?demographic=35,36&question=38,40
 		String query = webViewMessageUri.getQuery(); // everything after ? to #
 		if ((query != null) && (query.length() > 0)) {
 			String[] parameters = query.split("&");
 			for (String parameter : parameters) {
 				String parameterName = parameter.substring(0, parameter.lastIndexOf("="));
 				String parameterValues = parameter.substring(parameter.lastIndexOf("=") + 1);
-				Log.d(TAG, "Parameter name: " + parameterName + " values: " + parameterValues);
+				if (D) { Log.d(TAG, "Parameter name: " + parameterName + " values: " + parameterValues); }
 				String selectedIds[] = parameterValues.split(",");
 				
 				for (RWListItem item : this) {

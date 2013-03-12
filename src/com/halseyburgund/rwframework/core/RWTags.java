@@ -323,8 +323,8 @@ public class RWTags {
 	 * @throws JSONException on parse problems
 	 */
 	private void parseTagsFromJson(String type, JSONObject root) throws JSONException {
-		JSONArray entries = root.getJSONArray(type);
-		if (entries != null) {
+		if (root.has(type)) {
+			JSONArray entries = root.getJSONArray(type);
 	        for (int i = 0; i < entries.length(); i++) {
 	        	JSONObject jsonObj = entries.getJSONObject(i);
 	        	RWTag tag = new RWTag();

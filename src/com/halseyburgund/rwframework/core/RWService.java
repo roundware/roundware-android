@@ -485,8 +485,8 @@ public class RWService extends Service implements Observer {
 		
 		// figure out where to store the files
 		final Context ctx = context;
-		// final File filesDir = ctx.getFilesDir(); // cannot create subfolders in private app dir??
-		final File filesDir = ctx.getExternalFilesDir(null);
+		final File filesDir = ctx.getFilesDir(); // cannot create subfolders in private app dir??
+		// final File filesDir = ctx.getExternalFilesDir(null);
 		final String targetDirName = filesDir.getAbsolutePath();
 
 		// get current content file info from project configuration

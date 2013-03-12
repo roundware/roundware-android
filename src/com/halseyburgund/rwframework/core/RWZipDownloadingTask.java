@@ -124,8 +124,10 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 	    	
 	    	for (ZipEntry zipEntry = zipInputStream.getNextEntry(); zipEntry != null; zipEntry = zipInputStream.getNextEntry()) {
 	    		if (D) { Log.d(TAG, "Extracting entry: " + zipEntry.getName() + " ..."); }
+
 	    		String innerFileName = mTargetDirName + zipEntry.getName();
 	    		File innerFile = new File(innerFileName);
+	    		
 	    		if (innerFileName.endsWith(File.separator)) {
 		    		if (D) { Log.d(TAG, "Creating folder(s): " + innerFileName + " ..."); }
 	    			if (!innerFile.mkdirs()) {
