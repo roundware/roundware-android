@@ -173,24 +173,46 @@ public class RWList extends ArrayList<RWListItem> {
 	 * roundware://project?demographic=35,36&question=38,40
 	 * 
 	 * @param webViewMessageUri to process and set selection from
+	 * @return true when the uri contains done=true, false otherwise
 	 */
-	public void setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
+	public boolean setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
+		boolean done = false;
 		String query = webViewMessageUri.getQuery(); // everything after ? to #
 		if ((query != null) && (query.length() > 0)) {
 			String[] parameters = query.split("&");
 			for (String parameter : parameters) {
+				if (parameter.lastIndexOf("=") < 0) {
+					break;
+				}
+				
 				String parameterName = parameter.substring(0, parameter.lastIndexOf("="));
 				String parameterValues = parameter.substring(parameter.lastIndexOf("=") + 1);
 				if (D) { Log.d(TAG, "Parameter name: " + parameterName + " values: " + parameterValues); }
-				String selectedIds[] = parameterValues.split(",");
+
+				if ((parameterName == null) || (parameterName.length() == 0)) {
+					break;
+				}
+
+				String values[];
+				if ((parameterValues != null) && (parameterValues.length() >= 0)) {
+					values = parameterValues.split(",");
+				} else {
+					values = new String[]{};
+				}
+				
+				// check done parameter
+				if ("done".equalsIgnoreCase(parameterName) && (values.length > 0) && ("true".equalsIgnoreCase(values[0]))) {
+					done = true;
+					break;
+				}
 				
 				for (RWListItem item : this) {
 					item.setOff();
 					RWTag tag = item.getTag();
 					String tagId = String.valueOf(item.getTagId());
 					if (tag.code.equals(parameterName)) {
-						for (String id : selectedIds) {
-							if (tagId.equals(id)) {
+						for (String value : values) {
+							if (tagId.equals(value)) {
 								item.setOn();
 								break;
 							}
@@ -199,6 +221,7 @@ public class RWList extends ArrayList<RWListItem> {
 				}
 			}
 		}
+		return done;
 	}
 
     
