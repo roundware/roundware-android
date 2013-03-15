@@ -46,7 +46,7 @@ public class RWTags {
 
 	// debugging
 	private final static String TAG = "RWTags";
-	private final static boolean D = true;
+	private final static boolean D = false;
 
 	// data source
 	public final static int DEFAULTS = 0;

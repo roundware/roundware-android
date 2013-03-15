@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -90,6 +90,23 @@ public class RW {
 	 * notification bar by the RWService.
 	 */
 	public final static String EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME = INTENT_EXTRA_PREFIX + "notification_activity_class_name";
+
+	/**
+	 * Apps that use web content in the user interface can use this setting
+	 * to force downloading of files. The default is false, and in this case
+	 * the files version info from the project configuration is used to
+	 * determine if already downloaded web content needs to be refreshed or
+	 * not.
+	 */
+	public final static String EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD = INTENT_EXTRA_PREFIX + "web_content_always_download";
+
+	/**
+	 * Downloaded web content for apps is by default stored as internal and
+	 * private files. Set this parameter to true to use external storage for
+	 * the files instead. Note that this does make the files readable and
+	 * editable by other apps and by the user. 
+	 */
+	public final static String EXTRA_WEB_CONTENT_EXTERNAL_STORAGE = INTENT_EXTRA_PREFIX + "web_content_external_storage";
 	
 	// --- Intent extras for broadcasts -----------------------------------------------------------
 	

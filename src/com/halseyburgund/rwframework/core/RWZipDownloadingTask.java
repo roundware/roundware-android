@@ -127,19 +127,25 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 
 	    		String innerFileName = mTargetDirName + zipEntry.getName();
 	    		File innerFile = new File(innerFileName);
+	    		if (innerFile.isHidden()) {
+		    		if (D) { Log.d(TAG, "Skipping hidden file: " + innerFile.getName()); }
+		    		continue;
+	    		}
 	    		
 	    		if (innerFileName.endsWith(File.separator)) {
-		    		if (D) { Log.d(TAG, "Creating folder(s): " + innerFileName + " ..."); }
-	    			if (!innerFile.mkdirs()) {
-	    				Log.e(TAG, "Could not create directory: " + innerFileName);
+	    			if (!innerFile.exists()) {
+			    		if (D) { Log.d(TAG, "Creating folder(s): " + innerFileName + " ..."); }
+		    			if (!innerFile.mkdirs()) {
+		    				Log.e(TAG, "Could not create directory: " + innerFileName);
+		    			}
 	    			}
 	    		} else {
 		    		if (D) { Log.d(TAG, "Unpacking file: " + innerFileName + " ..."); }
-		    		File parentFile = innerFile.getParentFile();
-		    		if ((parentFile != null) && (!parentFile.exists())) {
-			    		if (D) { Log.d(TAG, "Creating missing folder(s) for: " + innerFileName + " ..."); }
-		    			parentFile.mkdirs();
-		    		}
+//		    		File parentFile = innerFile.getParentFile();
+//		    		if ((parentFile != null) && (!parentFile.exists())) {
+//			    		if (D) { Log.d(TAG, "Creating missing folder(s) for: " + innerFileName + " ..."); }
+//		    			parentFile.mkdirs();
+//		    		}
 	    			FileOutputStream outputStream = new FileOutputStream(innerFile);
 	    			final int BUFFER_SIZE = 2048;
 	    			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);

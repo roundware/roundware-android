@@ -36,6 +36,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -77,7 +78,7 @@ public class RWService extends Service implements Observer {
 	
 	// debugging
 	private final static String TAG = "RWService";
-	private final static boolean D = true;
+	private final static boolean D = false;
 
 	// playback notification
 	private final static int NOTIFICATION_ID = 10001;
@@ -133,6 +134,10 @@ public class RWService extends Service implements Observer {
 	private int mNotificationIconId;
 	private Class<?> mNotificationActivity;
 
+	private String mContentFilesLocalDir = null;
+	private boolean mAlwaysDownloadWebContent = false;
+	private boolean mUseExternalStorageForWebContent = false;
+	
 	private String mServerUrl;
 	private String mStreamUrl;
 	private boolean mShowDetailedMessages = false;
@@ -147,8 +152,6 @@ public class RWService extends Service implements Observer {
 	
 	private RWConfiguration configuration;
 	private RWTags tags;
-	private String contentFilesLocalDir = null;
-
 	
 	/**
 	 * Service binder used to communicate with the Roundware service.
@@ -446,37 +449,38 @@ public class RWService extends Service implements Observer {
 	 */
 	private boolean isContentDownloadRequired(Context context) {
 		if (D) { Log.d(TAG, "Checking if new content files need to be downloaded"); }
+		
 		if ((configuration == null) || (configuration.getFilesUrl() == null) || (configuration.getFilesVersion() < 0)) {
 			return false;
 		}
 		
-		if (configuration.isFilesAlwaysDownload()) {
-			// override to always download for testing and debugging
+		// overrides to always download for testing and debugging
+		if (mAlwaysDownloadWebContent || configuration.isFilesAlwaysDownload()) {
 			return true;
-		} else {
-			// check last downloaded version numbers and file url
-			String filesUrl = configuration.getFilesUrl();
-			int filesVersion = configuration.getFilesVersion();
-			
-			RWSharedPrefsHelper.ContentFilesInfo currentFileInfo = RWSharedPrefsHelper.loadContentFilesInfo(context, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO);
-			if (currentFileInfo == null) {
-				return true;
-			} else if (currentFileInfo.filesVersion != filesVersion) {
-				return true;
-			} else if ((currentFileInfo.filesUrl == null) || (!currentFileInfo.filesUrl.equals(filesUrl))) {
-				return true;
-			}
-			
-			// check if last downloaded content files are still available
-			// (at least the folder still exists and is not empty)
-			String filesDirName = currentFileInfo.filesStorageDirName;
-			File filesDir = new File(filesDirName);
-			if ((!filesDir.exists()) || (!filesDir.isDirectory()) || (filesDir.list().length == 0)) {
-				return true;
-			}
-			
-			return false;
 		}
+		
+		// check last downloaded version numbers and file url
+		String filesUrl = configuration.getFilesUrl();
+		int filesVersion = configuration.getFilesVersion();
+		
+		RWSharedPrefsHelper.ContentFilesInfo currentFileInfo = RWSharedPrefsHelper.loadContentFilesInfo(context, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO);
+		if (currentFileInfo == null) {
+			return true;
+		} else if (currentFileInfo.filesVersion != filesVersion) {
+			return true;
+		} else if ((currentFileInfo.filesUrl == null) || (!currentFileInfo.filesUrl.equals(filesUrl))) {
+			return true;
+		}
+		
+		// check if last downloaded content files are still available
+		// (at least the folder still exists and is not empty)
+		String filesDirName = currentFileInfo.filesStorageDirName;
+		File filesDir = new File(filesDirName);
+		if ((!filesDir.exists()) || (!filesDir.isDirectory()) || (filesDir.list().length == 0)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	
@@ -485,8 +489,13 @@ public class RWService extends Service implements Observer {
 		
 		// figure out where to store the files
 		final Context ctx = context;
-		final File filesDir = ctx.getFilesDir(); // cannot create subfolders in private app dir??
-		// final File filesDir = ctx.getExternalFilesDir(null);
+		File filesDir;
+		
+		if (mUseExternalStorageForWebContent) {
+			filesDir = ctx.getExternalFilesDir(null);
+		} else {
+			filesDir = ctx.getFilesDir();
+		}
 		final String targetDirName = filesDir.getAbsolutePath();
 
 		// get current content file info from project configuration
@@ -512,14 +521,14 @@ public class RWService extends Service implements Observer {
 				RWSharedPrefsHelper.saveContentFilesInfo(ctx, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO, 
 						new RWSharedPrefsHelper.ContentFilesInfo(fileUrl, filesVersion, targetDir)
 				);
-				contentFilesLocalDir = targetDir;
+				mContentFilesLocalDir = targetDir;
 				broadcast(RW.CONTENT_LOADED);
 			}
 			
 			@Override
 			public void downloadingFailed(long timeStampMsec, String errorMessage) {
 				// TODO: pass error message in intent?
-				contentFilesLocalDir = null;
+				mContentFilesLocalDir = null;
 				broadcast(RW.NO_CONTENT);
 			}
 		}).execute();
@@ -740,6 +749,10 @@ public class RWService extends Service implements Observer {
 				mServerUrl = serverUrlOverride;
 			}
 
+			// app web content downloading
+			mAlwaysDownloadWebContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD, false);
+			mUseExternalStorageForWebContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_EXTERNAL_STORAGE, false);
+			
 			// notification icon and handling class
 			mNotificationTitle = intent.getExtras().getString(RW.EXTRA_NOTIFICATION_TITLE);
 			if (mNotificationTitle == null) {
@@ -923,7 +936,32 @@ public class RWService extends Service implements Observer {
 	 * @return path name where content files have been stored
 	 */
 	public String getContentFilesDir() {
-		return contentFilesLocalDir;
+		return mContentFilesLocalDir;
+	}
+	
+	
+	/**
+	 * Returns true when the framework is set to always download the web
+	 * content if it is used by an app. When not the download of content
+	 * depends on the files version specified in the configuration of
+	 * the project.
+	 * 
+	 * @return true when download of web content is forced
+	 */
+	public boolean isWebContentAlwaysDownloaded() {
+		return mAlwaysDownloadWebContent;
+	}
+	
+	
+	/**
+	 * Returns true when the framework is set to store web content that is
+	 * downloaded for the app on external storage. Otherwise the more private
+	 * internal storage is used.
+	 * 
+	 * @return true when web content is saved on external storage
+	 */
+	public boolean isWebContentStoredExternally() {
+		return mUseExternalStorageForWebContent;
 	}
 
 	
@@ -1707,6 +1745,7 @@ public class RWService extends Service implements Observer {
 	}
 	
 	
+	@SuppressLint("DefaultLocale")
 	private void broadcastActionSuccess(RWAction action, String result) {
 		Intent intent = new Intent();
 		String actionName = RW.BROADCAST_PREFIX + action.getOperation().toLowerCase() + RW.BROADCAST_SUCCESS_POSTFIX;
@@ -1718,6 +1757,7 @@ public class RWService extends Service implements Observer {
 	}
 	
 
+	@SuppressLint("DefaultLocale")
 	private void broadcastActionFailure(RWAction action, String reason, Throwable e) {
 		Intent intent = new Intent();
 		String actionName = RW.BROADCAST_PREFIX + action.getOperation().toLowerCase() + RW.BROADCAST_FAILURE_POSTFIX;
@@ -1732,6 +1772,7 @@ public class RWService extends Service implements Observer {
 	}
 	
 
+	@SuppressLint("DefaultLocale")
 	private void broadcastActionQueued(RWAction action, String reason, Throwable e) {
 		Intent intent = new Intent();
 		String actionName = RW.BROADCAST_PREFIX + action.getOperation().toLowerCase() + RW.BROADCAST_QUEUED_POSTFIX;
