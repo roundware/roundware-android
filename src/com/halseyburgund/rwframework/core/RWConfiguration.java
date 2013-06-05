@@ -46,7 +46,7 @@ public class RWConfiguration {
 	
 	// debugging
 	private final static String TAG = "RWConfiguration";
-	private final static boolean D = false;
+	private final static boolean D = true;
 	
 	// data source
 	public final static int DEFAULTS = 0;

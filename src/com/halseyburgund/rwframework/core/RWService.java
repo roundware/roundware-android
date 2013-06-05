@@ -33,10 +33,13 @@ import java.util.TimerTask;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -52,8 +55,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.halseyburgund.rwframework.R;
@@ -78,7 +83,7 @@ public class RWService extends Service implements Observer {
 	
 	// debugging
 	private final static String TAG = "RWService";
-	private final static boolean D = false;
+	private final static boolean D = true;
 
 	// playback notification
 	private final static int NOTIFICATION_ID = 10001;
@@ -449,13 +454,14 @@ public class RWService extends Service implements Observer {
 	 */
 	private boolean isContentDownloadRequired(Context context) {
 		if (D) { Log.d(TAG, "Checking if new content files need to be downloaded"); }
-		
+
+        // configuration does not exist or does not use content files
 		if ((configuration == null) || (configuration.getFilesUrl() == null) || (configuration.getFilesVersion() < 0)) {
 			return false;
 		}
 		
 		// overrides to always download for testing and debugging
-		if (mAlwaysDownloadWebContent || configuration.isFilesAlwaysDownload()) {
+		if (mAlwaysDownloadWebContent || configuration.isFilesAlwaysDownload() || mContentFilesLocalDir == null) {
 			return true;
 		}
 		
@@ -576,9 +582,13 @@ public class RWService extends Service implements Observer {
 	}
 	
 	
-	@Override
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @Override
 	public void onCreate() {
 		super.onCreate();
+
+        // set strict mode usage
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectCustomSlowCalls().penaltyLog().build());
 
 		// create default configuration and tags
 		configuration = new RWConfiguration(this);
@@ -1581,10 +1591,23 @@ public class RWService extends Service implements Observer {
         
         if (key != null) {
         	try {
-	        	JSONObject jsonObj = new JSONObject(response);
-	        	if (jsonObj.has(key)) {
-	        		return jsonObj.getString(key);
-	        	}
+                Object json = new JSONTokener(response).nextValue();
+                if (json instanceof JSONArray) {
+                    JSONArray entries = (JSONArray) json;
+                    for (int i = 0; i < entries.length(); i++) {
+                        JSONObject jsonObj = entries.getJSONObject(i);
+                        if (D) { Log.d(TAG, jsonObj.toString()); }
+                        if (jsonObj.has(key)) {
+                            return jsonObj.getString(key);
+                        }
+                    }
+                } else if (json instanceof JSONObject) {
+                    JSONObject jsonObj = (JSONObject) json;
+                    if (D) { Log.d(TAG, jsonObj.toString()); }
+                    if (jsonObj.has(key)) {
+                        return jsonObj.getString(key);
+                    }
+                }
         	} catch (JSONException e) {
     			Log.w(TAG, "Could not get server message from response, probably a JSON array instead of a JSON object.");
         	}
