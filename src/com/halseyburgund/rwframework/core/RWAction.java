@@ -398,7 +398,7 @@ public class RWAction {
      * This might be useful when the action has been created in off-line
      * mode when no envelope ID was known, and it can be added later.
      * 
-     * @param sessionId to set for the action
+     * @param envelopeId to set for the action
      */
     public void setEnvelopeId(String envelopeId) {
     	add(R.string.rw_key_envelope_id, envelopeId);

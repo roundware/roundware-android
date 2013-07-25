@@ -170,14 +170,21 @@ public class RWList extends ArrayList<RWListItem> {
 	 * to update the selection state of the tags options. The URI is expected
 	 * to have a format like:
 	 * 
-	 * roundware://project?demographic=35,36&question=38,40
+	 * roundware://project?demographic=35,36&question=38,40[&done=true]
 	 * 
 	 * @param webViewMessageUri to process and set selection from
 	 * @return true when the uri contains done=true, false otherwise
 	 */
 	public boolean setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
 		boolean done = false;
-		String query = webViewMessageUri.getQuery(); // everything after ? to #
+
+        // set all tags to off
+        for (RWListItem item : this) {
+            item.setOff();
+        }
+
+        // process the url
+        String query = webViewMessageUri.getQuery(); // everything after ? to #
 		if ((query != null) && (query.length() > 0)) {
 			String[] parameters = query.split("&");
 			for (String parameter : parameters) {
@@ -205,9 +212,9 @@ public class RWList extends ArrayList<RWListItem> {
 					done = true;
 					break;
 				}
-				
+
+                // check tags
 				for (RWListItem item : this) {
-					item.setOff();
 					RWTag tag = item.getTag();
 					String tagId = String.valueOf(item.getTagId());
 					if (tag.code.equals(parameterName)) {

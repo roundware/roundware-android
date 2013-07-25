@@ -58,7 +58,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.StrictMode;
+// import android.os.StrictMode;
 import android.util.Log;
 
 import com.halseyburgund.rwframework.R;
@@ -588,7 +588,7 @@ public class RWService extends Service implements Observer {
 		super.onCreate();
 
         // set strict mode usage
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectCustomSlowCalls().penaltyLog().build());
+        // StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectCustomSlowCalls().penaltyLog().build());
 
 		// create default configuration and tags
 		configuration = new RWConfiguration(this);

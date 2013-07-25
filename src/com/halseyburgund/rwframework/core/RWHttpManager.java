@@ -21,6 +21,7 @@
 */ 		
 package com.halseyburgund.rwframework.core;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
