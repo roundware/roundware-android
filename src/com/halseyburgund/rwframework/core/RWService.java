@@ -21,7 +21,10 @@
  */
 package com.halseyburgund.rwframework.core;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -948,7 +951,35 @@ public class RWService extends Service implements Observer {
 	public String getContentFilesDir() {
 		return mContentFilesLocalDir;
 	}
-	
+
+
+    /**
+     * Reads the specified web content file and returns its content as a
+     * single String.
+     *
+     * @param contentFileName to read
+     * @return String with content of the file
+     * @throws IOException on error
+     */
+    public String readContentFile(String contentFileName) throws IOException {
+        String data = "";
+        BufferedReader br = new BufferedReader(new FileReader(contentFileName));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            data = sb.toString();
+        } finally {
+            br.close();
+        }
+        return data;
+    }
+
 	
 	/**
 	 * Returns true when the framework is set to always download the web

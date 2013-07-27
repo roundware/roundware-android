@@ -53,22 +53,27 @@ public class RWTags {
 	public final static int FROM_CACHE = 1;
 	public final static int FROM_SERVER = 2;
 	
-	// json names
+	// json keys - tags
 	public final static String JSON_KEY_MODE_SPEAK = "speak";
 	public final static String JSON_KEY_MODE_LISTEN = "listen";
 	public final static String JSON_KEY_TAG_CODE = "code";
+    public final static String JSON_KEY_TAG_HEADER_TEXT = "header_text";
 	public final static String JSON_KEY_TAG_NAME = "name";
 	public final static String JSON_KEY_TAG_ORDER = "order";
-	public final static String JSON_KEY_TAG_SELECTION_TYPE = "select";
+    public final static String JSON_KEY_TAG_DEFAULT_OPTIONS = "defaults";
+
+    // json keys - tag selection types
+    public final static String JSON_KEY_TAG_SELECTION_TYPE = "select";
 	public final static String JSON_VALUE_SELECT_SINGLE = "single";
-	// private final static String JSON_VALUE_SELECT_MULTIPLE = "multi";
 	public final static String JSON_VALUE_SELECT_AT_LEAST_ONE = "multi_at_least_one";
-	public final static String JSON_KEY_TAG_DEFAULT_OPTIONS = "defaults";
+
+    // json keys - tag options
 	public final static String JSON_KEY_TAG_OPTIONS = "options";
 	public final static String JSON_KEY_TAG_OPTION_ORDER = "order";
 	public final static String JSON_KEY_TAG_OPTION_DATA = "data";
 	public final static String JSON_KEY_TAG_OPTION_ID = "tag_id";
 	public final static String JSON_KEY_TAG_OPTION_VALUE = "value";
+    public final static String JSON_KEY_TAG_OPTION_RELATIONSHIPS = "relationships";
 
 	// json parsing error message
 	private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
@@ -82,6 +87,7 @@ public class RWTags {
 	public class RWTag {
 		public String code; // e.g. demo, age, ques
 		public String name;
+        public String headerText;
 		public int order;
 		public String select; // e.g. single, multi, multi_at_least_one
 		public String type; // e.g. listen, speak
@@ -185,6 +191,7 @@ public class RWTags {
 		public int order;
 		public int tagId;
 		public String value;
+        public ArrayList<Integer> relatedTagIds = new ArrayList<Integer>();
 		public boolean selectByDefault;
 
 		/* (non-Javadoc)
@@ -248,6 +255,7 @@ public class RWTags {
 				// store the basic properties
 				jsonEntry.put(JSON_KEY_TAG_CODE, tag.code);
 				jsonEntry.put(JSON_KEY_TAG_NAME, tag.name);
+                jsonEntry.put(JSON_KEY_TAG_HEADER_TEXT, tag.headerText);
 				jsonEntry.put(JSON_KEY_TAG_ORDER, tag.order);
 				jsonEntry.put(JSON_KEY_TAG_SELECTION_TYPE, tag.select);
 				
@@ -266,6 +274,14 @@ public class RWTags {
 					jsonOption.put(JSON_KEY_TAG_OPTION_ORDER, option.order);
 					jsonOption.put(JSON_KEY_TAG_OPTION_DATA, option.data);
 					jsonOption.put(JSON_KEY_TAG_OPTION_VALUE, option.value);
+
+                    // add related tag ids
+                    JSONArray jsonRelatedTagIds = new JSONArray();
+                    for (Integer relatedTagId : option.relatedTagIds) {
+                        jsonRelatedTagIds.put(relatedTagId);
+                    }
+                    jsonOption.put(JSON_KEY_TAG_OPTION_RELATIONSHIPS, jsonRelatedTagIds);
+
 					options.put(jsonOption);
 				}
 				jsonEntry.put(JSON_KEY_TAG_OPTIONS, options);
@@ -331,6 +347,7 @@ public class RWTags {
 	        	tag.type = type;
 	        	tag.code = jsonObj.optString(JSON_KEY_TAG_CODE);
 	        	tag.name = jsonObj.optString(JSON_KEY_TAG_NAME);
+                tag.headerText = jsonObj.optString(JSON_KEY_TAG_HEADER_TEXT);
 	        	tag.order = jsonObj.optInt(JSON_KEY_TAG_ORDER);
 	        	tag.select = jsonObj.getString(JSON_KEY_TAG_SELECTION_TYPE);
 
@@ -349,7 +366,14 @@ public class RWTags {
 	        		o.data = option.getString(JSON_KEY_TAG_OPTION_DATA);
 	        		o.tagId = option.getInt(JSON_KEY_TAG_OPTION_ID);
 	        		o.value = option.getString(JSON_KEY_TAG_OPTION_VALUE);
-	        		
+
+                    // relationships to other tag options (ids)
+                    o.relatedTagIds.clear();
+                    JSONArray relatedTagIds = option.getJSONArray(JSON_KEY_TAG_OPTION_RELATIONSHIPS);
+                    for (int k = 0; k < relatedTagIds.length(); k++) {
+                        o.relatedTagIds.add(relatedTagIds.getInt(k));
+                    }
+
 	        		// check if option needs to be selected by default
 	        		o.selectByDefault = tag.defaultOptionsTagIds.contains(o.tagId);
 
