@@ -14,5 +14,5 @@ collectively in continuous audio streams.
 
 History
 =======
-1.2.0 In development: Support for displaying Roundware screens in web views
+1.2.0 Support for displaying Roundware tag selection screens in web views
 1.1.4 Current stable master release

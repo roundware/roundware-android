@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.UnknownHostException;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -82,11 +83,11 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
  * 
  * @author Rob Knapen
  */
-public class RWService extends Service implements Observer {
+@SuppressLint("DefaultLocale") public class RWService extends Service implements Observer {
 	
 	// debugging
 	private final static String TAG = "RWService";
-	private final static boolean D = true;
+	private final static boolean D = false;
 
 	// playback notification
 	private final static int NOTIFICATION_ID = 10001;
@@ -143,8 +144,8 @@ public class RWService extends Service implements Observer {
 	private Class<?> mNotificationActivity;
 
 	private String mContentFilesLocalDir = null;
-	private boolean mAlwaysDownloadWebContent = false;
-	private boolean mUseExternalStorageForWebContent = false;
+	private boolean mAlwaysDownloadContent = false;
+	private boolean mUseExternalStorageForContent = false;
 	
 	private String mServerUrl;
 	private String mStreamUrl;
@@ -459,18 +460,18 @@ public class RWService extends Service implements Observer {
 		if (D) { Log.d(TAG, "Checking if new content files need to be downloaded"); }
 
         // configuration does not exist or does not use content files
-		if ((configuration == null) || (configuration.getFilesUrl() == null) || (configuration.getFilesVersion() < 0)) {
+		if ((configuration == null) || (configuration.getContentFilesUrl() == null) || (configuration.getContentFilesVersion() < 0)) {
 			return false;
 		}
 		
 		// overrides to always download for testing and debugging
-		if (mAlwaysDownloadWebContent || configuration.isFilesAlwaysDownload() || mContentFilesLocalDir == null) {
+		if (mAlwaysDownloadContent || configuration.isContentFilesAlwaysDownload() || mContentFilesLocalDir == null) {
 			return true;
 		}
 		
 		// check last downloaded version numbers and file url
-		String filesUrl = configuration.getFilesUrl();
-		int filesVersion = configuration.getFilesVersion();
+		String filesUrl = configuration.getContentFilesUrl();
+		int filesVersion = configuration.getContentFilesVersion();
 		
 		RWSharedPrefsHelper.ContentFilesInfo currentFileInfo = RWSharedPrefsHelper.loadContentFilesInfo(context, RW.LAST_DOWNLOADED_CONTENT_FILES_INFO);
 		if (currentFileInfo == null) {
@@ -500,7 +501,7 @@ public class RWService extends Service implements Observer {
 		final Context ctx = context;
 		File filesDir;
 		
-		if (mUseExternalStorageForWebContent) {
+		if (mUseExternalStorageForContent) {
 			filesDir = ctx.getExternalFilesDir(null);
 		} else {
 			filesDir = ctx.getFilesDir();
@@ -508,8 +509,8 @@ public class RWService extends Service implements Observer {
 		final String targetDirName = filesDir.getAbsolutePath();
 
 		// get current content file info from project configuration
-		final String fileUrl = configuration.getFilesUrl();
-		final int filesVersion = configuration.getFilesVersion();
+		final String fileUrl = configuration.getContentFilesUrl();
+		final int filesVersion = configuration.getContentFilesVersion();
 
 		// start async task to download and unpack content file
 		new RWZipDownloadingTask(fileUrl, targetDirName, new RWZipDownloadingTask.StateListener() {
@@ -763,8 +764,8 @@ public class RWService extends Service implements Observer {
 			}
 
 			// app web content downloading
-			mAlwaysDownloadWebContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD, false);
-			mUseExternalStorageForWebContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_EXTERNAL_STORAGE, false);
+			mAlwaysDownloadContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD, false);
+			mUseExternalStorageForContent = intent.getExtras().getBoolean(RW.EXTRA_WEB_CONTENT_EXTERNAL_STORAGE, false);
 			
 			// notification icon and handling class
 			mNotificationTitle = intent.getExtras().getString(RW.EXTRA_NOTIFICATION_TITLE);
@@ -940,7 +941,7 @@ public class RWService extends Service implements Observer {
 	/**
 	 * Returns the local directory name where web content files have been
 	 * stored. These files are downloaded from the server for the project
-	 * and contain HTML/CSS/JS code to be displayed in web views for the
+	 * and contain HTML/CSS/JS content to be displayed in web views for the
 	 * projects' Listen and Speak filters. NULL will be returned if no
 	 * content files are used or when download has failed. The broadcast
 	 * intent NO_CONTENT signals that download of the content files was
@@ -954,8 +955,9 @@ public class RWService extends Service implements Observer {
 
 
     /**
-     * Reads the specified web content file and returns its content as a
-     * single String.
+     * Reads the specified content file and returns its content as a single
+     * String. Some content files might need further processing, e.g. to
+     * replace markers with specific information. 
      *
      * @param contentFileName to read
      * @return String with content of the file
@@ -982,27 +984,27 @@ public class RWService extends Service implements Observer {
 
 	
 	/**
-	 * Returns true when the framework is set to always download the web
-	 * content if it is used by an app. When not the download of content
-	 * depends on the files version specified in the configuration of
-	 * the project.
+	 * Returns true when the framework is set to always download the content
+	 * files when it is required by an app. When not the download of content
+	 * depends on the content files version specified in the configuration of
+	 * the project (i.e. only newer version content will be downloaded).
 	 * 
 	 * @return true when download of web content is forced
 	 */
-	public boolean isWebContentAlwaysDownloaded() {
-		return mAlwaysDownloadWebContent;
+	public boolean isContentAlwaysDownloaded() {
+		return mAlwaysDownloadContent;
 	}
 	
 	
 	/**
-	 * Returns true when the framework is set to store web content that is
+	 * Returns true when the framework is set to store content files that are
 	 * downloaded for the app on external storage. Otherwise the more private
 	 * internal storage is used.
 	 * 
-	 * @return true when web content is saved on external storage
+	 * @return true when content files are saved on external storage
 	 */
-	public boolean isWebContentStoredExternally() {
-		return mUseExternalStorageForWebContent;
+	public boolean isContentStoredExternally() {
+		return mUseExternalStorageForContent;
 	}
 
 	
@@ -2043,7 +2045,7 @@ public class RWService extends Service implements Observer {
 	 * @param newVolumeLevel for the music player
 	 * @param fade change level by fading or not
 	 */
-	public void setVolumeLevel(int newVolumeLevel, boolean fade) {
+	@SuppressLint("DefaultLocale") public void setVolumeLevel(int newVolumeLevel, boolean fade) {
 		int oldVolumeLevel = mVolumeLevel;
 		mVolumeLevel = newVolumeLevel;
 		if (mVolumeLevel < mMinVolumeLevel) {
@@ -2063,7 +2065,7 @@ public class RWService extends Service implements Observer {
 		// gradually modify the volume when playing and set to fade
 		if (mPlayer != null) {
 			if (D) {
-				String msg = String.format("Changing volume from level %d (%1.5f) to level %d (%1.5f)", oldVolumeLevel, oldVolume, mVolumeLevel, newVolume);
+				String msg = String.format(Locale.US, "Changing volume from level %d (%1.5f) to level %d (%1.5f)", oldVolumeLevel, oldVolume, mVolumeLevel, newVolume);
 				Log.d(TAG, msg);
 			}
 			if (fade) {
@@ -2083,7 +2085,7 @@ public class RWService extends Service implements Observer {
 			}
 		} else {
 			if (D) {
-				String msg = String.format("Volume set to level %d (%1.5f) but MediaPlayer not initialized!", mVolumeLevel, newVolume);
+				String msg = String.format(Locale.US, "Volume set to level %d (%1.5f) but MediaPlayer not initialized!", mVolumeLevel, newVolume);
 				Log.d(TAG, msg);
 			}
 		}

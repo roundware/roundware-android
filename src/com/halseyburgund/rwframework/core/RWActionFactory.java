@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -21,11 +21,11 @@
 */ 		
 package com.halseyburgund.rwframework.core;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import com.halseyburgund.rwframework.R;
 import com.halseyburgund.rwframework.util.RWList;
 import com.halseyburgund.rwframework.util.RWListItem;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -305,7 +305,7 @@ public class RWActionFactory {
      * @param tags to include in the call
      * @return RWAction instance for the server call
      */
-    public RWAction createRequestStreamAction(RWList tags) {
+    @SuppressLint("DefaultLocale") public RWAction createRequestStreamAction(RWList tags) {
         RWAction action = createDefaultAction(true);
         action.add(R.string.rw_key_label,
                 R.string.roundware_notification_requesting_stream)
@@ -314,7 +314,7 @@ public class RWActionFactory {
 
         // can skip adding coordinates for debugging purposes
         String str = mService.getString(R.string.rw_debug_open_audio_stream_without_location_yn);
-        if ((str != null) && ("N".equals(str.toUpperCase()))) {
+        if ((str != null) && ("N".equals(str.toUpperCase(Locale.US)))) {
         	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
         		addCoordinates(action);
         	}
@@ -486,7 +486,7 @@ public class RWActionFactory {
      */
     private RWAction addClientTime(RWAction action) {
     	if (action != null) {
-	        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z");
+	        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z", Locale.US);
 	        action.add(R.string.rw_key_client_time, sf.format(new Date()));
     	}
     	return action;

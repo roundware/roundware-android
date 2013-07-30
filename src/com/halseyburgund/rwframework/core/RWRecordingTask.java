@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -194,7 +194,7 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
     	}
     	mIsRecording = true;
     	
-    	int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+    	int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
     	int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
     	if ("google_sdk".equalsIgnoreCase(Build.MODEL) || "sdk".equalsIgnoreCase(Build.MODEL)) {

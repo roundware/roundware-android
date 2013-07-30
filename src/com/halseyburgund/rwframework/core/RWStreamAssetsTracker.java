@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -24,14 +24,13 @@ package com.halseyburgund.rwframework.core;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
-
 import com.halseyburgund.rwframework.R;
 
 /**
@@ -47,7 +46,7 @@ import com.halseyburgund.rwframework.R;
  * 
  * @author Rob Knapen
  */
-public class RWStreamAssetsTracker {
+@SuppressLint("DefaultLocale") public class RWStreamAssetsTracker {
 
 	// debugging
 	private final static String TAG = "RWStreamAssetsTracker";
@@ -113,7 +112,7 @@ public class RWStreamAssetsTracker {
 		mDurationInStreamMsJsonKey = mRwService.getString(R.string.rw_key_server_duration_in_stream);
 		
 		// create date formatters
-		mServerTimeDateFormat = new SimpleDateFormat(mRwService.getString(R.string.rw_fmt_server_time));
+		mServerTimeDateFormat = new SimpleDateFormat(mRwService.getString(R.string.rw_fmt_server_time), Locale.US);
 		
 		// init
 		mCurrentlyPlayingAssetId = -1;
@@ -203,7 +202,7 @@ public class RWStreamAssetsTracker {
 	 * buffer). By lack of better control over the buffering on the device an
 	 * estimation of the buffer length is used for this.
 	 */
-	private void streamMetadataUpdate() {
+	@SuppressLint("DefaultLocale") private void streamMetadataUpdate() {
 		long currentMillis = System.currentTimeMillis();
 		RWConfiguration config = mRwService.getConfiguration();
 
@@ -276,7 +275,7 @@ public class RWStreamAssetsTracker {
 			} else {
 				assetId = info.assetId;
 				// make up a title for the new asset (we could pass this as asset info?)
-				meta = String.format("Asset: %d (%.2fs)", info.assetId, (float)info.assetDurationInStreamMs / 1000.0);
+				meta = String.format(Locale.US, "Asset: %d (%.2fs)", info.assetId, (float)info.assetDurationInStreamMs / 1000.0);
 				break;
 			}
 		}

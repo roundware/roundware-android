@@ -46,7 +46,7 @@ public class RWConfiguration {
 	
 	// debugging
 	private final static String TAG = "RWConfiguration";
-	private final static boolean D = true;
+	private final static boolean D = false;
 	
 	// data source
 	public final static int DEFAULTS = 0;
@@ -98,15 +98,18 @@ public class RWConfiguration {
 	private String mSessionId = null;
 	private String mProjectName = null;
 
-	private String mFilesUrl = null;
-	private int mFilesVersion = -1;
-	private boolean mFilesAlwaysDownload = false;
+	// (web) content file management
+	private String mContentFilesUrl = null;
+	private int mContentFilesVersion = -1;
+	private boolean mContentFilesAlwaysDownload = false;
 	
+	// timing variables
 	private int mHeartbeatTimerSec = 15;
 	private int mQueueCheckIntervalSec = 60;
 	private int mStreamMetadataTimerIntervalMSec = 2000;
 	private int mMaxRecordingTimeSec = 30;
 	
+	// social sharing
 	private String mSharingUrl = null;
 	private String mSharingMessage = null;
 	private String mLegalAgreement = null;
@@ -172,14 +175,14 @@ public class RWConfiguration {
 			mMinLocationUpdateDistanceMeter = Double.valueOf(val);
 			
 			val = context.getString(R.string.rw_spec_files_url);
-			mFilesUrl = val;
+			mContentFilesUrl = val;
 			
 			val = context.getString(R.string.rw_spec_files_version);
 			if (val != null) {
-				mFilesVersion = Integer.valueOf(val);
+				mContentFilesVersion = Integer.valueOf(val);
 			}
 			
-			mFilesAlwaysDownload = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_files_always_download));
+			mContentFilesAlwaysDownload = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_files_always_download));
 
 			mListenEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_listen_enabled_yn));
 			mGeoListenEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_geo_listen_enabled_yn));
@@ -220,8 +223,8 @@ public class RWConfiguration {
 	        		specs = jsonObj.getJSONObject(JSON_KEY_CONFIG_SECTION_PROJECT);
 		        	setProjectId(specs.optString(JSON_KEY_CONFIG_PROJECT_ID, getProjectId()));
 		        	setProjectName(specs.optString(JSON_KEY_CONFIG_PROJECT_NAME, getProjectName()));
-		        	setFilesUrl(specs.optString(JSON_KEY_CONFIG_FILES_URL, getFilesUrl()));
-		        	setFilesVersion(specs.optInt(JSON_KEY_CONFIG_FILES_VERSION, getFilesVersion()));
+		        	setContentFilesUrl(specs.optString(JSON_KEY_CONFIG_FILES_URL, getContentFilesUrl()));
+		        	setContentFilesVersion(specs.optInt(JSON_KEY_CONFIG_FILES_VERSION, getContentFilesVersion()));
 		        	setHeartbeatTimerSec(specs.optInt(JSON_KEY_CONFIG_HEARTBEAT_TIMER_SEC, getHeartbeatTimerSec()));
 		        	setMaxRecordingTimeSec(specs.optInt(JSON_KEY_CONFIG_MAX_RECORDING_LENGTH_SEC, getMaxRecordingTimeSec()));
 		        	setSharingMessage(specs.optString(JSON_KEY_CONFIG_SHARING_MESSAGE, getSharingMessage()));
@@ -523,33 +526,33 @@ public class RWConfiguration {
 	}
 
 
-	public String getFilesUrl() {
-		return mFilesUrl;
+	public String getContentFilesUrl() {
+		return mContentFilesUrl;
 	}
 
 
-	public void setFilesUrl(String filesUrl) {
-		mFilesUrl = filesUrl;
+	public void setContentFilesUrl(String filesUrl) {
+		mContentFilesUrl = filesUrl;
 	}
 
 
-	public int getFilesVersion() {
-		return mFilesVersion;
+	public int getContentFilesVersion() {
+		return mContentFilesVersion;
 	}
 
 
-	public void setFilesVersion(int filesVersion) {
-		mFilesVersion = filesVersion;
+	public void setContentFilesVersion(int filesVersion) {
+		mContentFilesVersion = filesVersion;
 	}
 
 
-	public boolean isFilesAlwaysDownload() {
-		return mFilesAlwaysDownload;
+	public boolean isContentFilesAlwaysDownload() {
+		return mContentFilesAlwaysDownload;
 	}
 
 
-	public void setFilesAlwaysDownload(boolean filesAlwaysDownload) {
-		mFilesAlwaysDownload = filesAlwaysDownload;
+	public void setContentFilesAlwaysDownload(boolean contentFilesAlwaysDownload) {
+		mContentFilesAlwaysDownload = contentFilesAlwaysDownload;
 	}
 	
 }

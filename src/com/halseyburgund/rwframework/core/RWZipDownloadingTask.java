@@ -44,7 +44,7 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 
 	// debugging
 	private final static String TAG = "RWZipDownloadingTask";
-	private final static boolean D = true;
+	private final static boolean D = false;
 
 	private static final int DOWNLOADING_EVENT_INTERVAL_MSEC = 2000; // 2.0 sec between updates
 	
@@ -141,11 +141,6 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 	    			}
 	    		} else {
 		    		if (D) { Log.d(TAG, "Unpacking file: " + innerFileName + " ..."); }
-//		    		File parentFile = innerFile.getParentFile();
-//		    		if ((parentFile != null) && (!parentFile.exists())) {
-//			    		if (D) { Log.d(TAG, "Creating missing folder(s) for: " + innerFileName + " ..."); }
-//		    			parentFile.mkdirs();
-//		    		}
 	    			FileOutputStream outputStream = new FileOutputStream(innerFile);
 	    			final int BUFFER_SIZE = 2048;
 	    			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);

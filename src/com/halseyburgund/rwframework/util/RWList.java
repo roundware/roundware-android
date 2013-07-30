@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -53,7 +53,7 @@ public class RWList extends ArrayList<RWListItem> {
 
     // debugging
     private final static String TAG = "RWList";
-    private final static boolean D = true;
+    private final static boolean D = false;
 
 	// json parsing error message
 	private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";

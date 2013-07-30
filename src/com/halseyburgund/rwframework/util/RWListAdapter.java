@@ -2,7 +2,7 @@
     ROUNDWARE
 	a participatory, location-aware media platform
 	Android client library
-   	Copyright (C) 2008-2012 Halsey Solutions, LLC
+   	Copyright (C) 2008-2013 Halsey Solutions, LLC
 	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
 	http://roundware.org | contact@roundware.org
 
@@ -21,7 +21,6 @@
 */ 		
 package com.halseyburgund.rwframework.util;
 
-import android.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,8 +69,8 @@ public class RWListAdapter extends BaseAdapter {
             v = vi.inflate(mListItemLayoutId, null);
         }
 
-        ImageView image = (ImageView) v.findViewById(R.id.icon);
-        TextView text = (TextView) v.findViewById(R.id.text1);
+        ImageView image = (ImageView) v.findViewById(android.R.id.icon);
+        TextView text = (TextView) v.findViewById(android.R.id.text1);
 
         RWListItem q = getItem(position);
         if (q != null) {
