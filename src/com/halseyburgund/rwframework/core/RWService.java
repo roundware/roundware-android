@@ -57,6 +57,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -130,6 +132,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	// fields
 	private RWActionFactory mActionFactory;
 	private MediaPlayer mPlayer;
+	private WifiLock mWifiLock;
 	private Timer mQueueTimer;
 	private long mLastRequestMsec;
 	private long mLastStateChangeMsec;
@@ -323,10 +326,21 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 						mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 						mPlayer.setDataSource(mStreamUrl);
 						mPlayer.prepareAsync();
+						
+						// get wifi lock, will be released when playback is stopped
+						mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+							    .createWifiLock(WifiManager.WIFI_MODE_FULL, "roundware_playback_wifilock");
+
+						mWifiLock.setReferenceCounted(false);
+						mWifiLock.acquire();						
 
 						// send log message about stream started
 						rwSendLogEvent(R.string.rw_et_start_listen, null, null, true);
 					} catch (Exception ex) {
+						if (mWifiLock != null) {
+							mWifiLock.release();
+						}
+						
 						Log.e(TAG, ex.toString());
 						broadcast(RW.UNABLE_TO_PLAY);
 
@@ -1968,6 +1982,11 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 			playbackFadeOut();
 			mPlayer.release();
 			mPlayer = null;
+		}
+		
+		// release wifi radio if a lock on it was aquired for playback
+		if (mWifiLock != null) {
+			mWifiLock.release();
 		}
 	}
 
