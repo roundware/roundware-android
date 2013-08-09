@@ -44,7 +44,7 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 
 	// debugging
 	private final static String TAG = "RWZipDownloadingTask";
-	private final static boolean D = false;
+	private final static boolean D = true;
 
 	private static final int DOWNLOADING_EVENT_INTERVAL_MSEC = 2000; // 2.0 sec between updates
 	

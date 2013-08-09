@@ -89,7 +89,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	
 	// debugging
 	private final static String TAG = "RWService";
-	private final static boolean D = false;
+	private final static boolean D = true;
 
 	// playback notification
 	private final static int NOTIFICATION_ID = 10001;
