@@ -143,7 +143,7 @@ public class RWConfiguration {
 	private double mMinLocationUpdateDistanceMeter = 5.0;
 	
 	// http call timeout
-	private int mHttpTimeOutSec = 15;
+	private int mHttpTimeOutSec = 45;
 
 	// current Roundware software version on the server
 	private String mServerVersion = null;

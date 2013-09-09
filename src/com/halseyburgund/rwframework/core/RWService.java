@@ -740,6 +740,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	 * @param tags of tags options for the audio
 	 */
 	public void playbackStart(RWList tags) {
+        if (D) { Log.d(TAG, "+++ playbackStart +++"); }
 		if (!isPlaying()) {
 			createPlayer();
 			new StartPlaybackTask(tags).execute();
@@ -1910,6 +1911,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	 * Creates a media player for sound playback, with initial volume of 0.
 	 */
 	private void createPlayer() {
+        if (D) { Log.d(TAG, "+++ createPlayer +++"); }
 		if (mPlayer == null) {
 			mPlayer = new MediaPlayer();
 			mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
