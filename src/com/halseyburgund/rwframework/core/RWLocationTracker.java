@@ -55,6 +55,7 @@ public class RWLocationTracker extends Observable {
     private String mCoarseLocationProvider;
     private String mGpsLocationProvider;
     private boolean mGpsLocationAvailable;
+    private boolean mUseGpsIfPossible;
     private long mMinUpdateTime;
     private float mMinUpdateDistance;
     private Location mLastLocation;
@@ -169,6 +170,7 @@ public class RWLocationTracker extends Observable {
         mFixedLocation = false;
         mMinUpdateTime = -1;
         mMinUpdateDistance = -1;
+        mUseGpsIfPossible = false;
         mUsingGpsLocation = false;
         mUsingCoarseLocation = false;
     }
@@ -394,14 +396,16 @@ public class RWLocationTracker extends Observable {
      * 
      * @param minTime (msec) allowed between location updates
      * @param minDistance (m) for location updates
+     * @param useGps when available on the device
      */
-    public void startLocationUpdates(long minTime, float minDistance) {
+    public void startLocationUpdates(long minTime, float minDistance, boolean useGps) {
         mMinUpdateTime = minTime;
         mMinUpdateDistance = minDistance;
         mUsingGpsLocation = false;
         mUsingCoarseLocation = false;
+        mUseGpsIfPossible = useGps;
         switchToCoarseLocationUpdates();
-        if (mLocationManager != null) {
+        if ((mLocationManager != null) && (mGpsLocationAvailable) && (mUseGpsIfPossible)) {
             mLocationManager.addGpsStatusListener(mGpsStatusListener);
         }
     }
@@ -414,7 +418,7 @@ public class RWLocationTracker extends Observable {
         if (mUsingGpsLocation) {
             return;
         }
-        if (mLocationManager != null) {
+        if ((mLocationManager != null) && (mUseGpsIfPossible)) {
             if (D) {
                 Log.d(TAG, "Using GPS location updates. minTime=" + mMinUpdateTime + ", " + "minDistance=" + mMinUpdateDistance);
             }
@@ -461,7 +465,7 @@ public class RWLocationTracker extends Observable {
                 mUsingCoarseLocation = true;
             }
 
-            if (mGpsLocationProvider != null) {
+            if ((mGpsLocationProvider != null) && (mUseGpsIfPossible)) {
                 mLocationManager.requestLocationUpdates(mGpsLocationProvider, mMinUpdateTime, mMinUpdateDistance, mGpsLocationProviderListener);
             }
 

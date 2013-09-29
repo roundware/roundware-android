@@ -85,6 +85,7 @@ public class RWConfiguration {
 	private final static String JSON_KEY_CONFIG_RESET_TAG_DEFAULTS_ON_STARTUP = "reset_tag_defaults_on_startup";
 	private final static String JSON_KEY_CONFIG_MIN_LOCATION_UPDATE_TIME_MSEC = "min_location_update_time_msec";
 	private final static String JSON_KEY_CONFIG_MIN_LOCATION_UPDATE_DISTANCE_METER = "min_location_update_distance_meter";
+    private final static String JSON_KEY_CONFIG_USE_GPS_IF_POSSIBLE = "use_gps_if_possible";
 	private final static String JSON_KEY_CONFIG_HTTP_TIMEOUT_SEC = "http_timeout_sec";
 	
 	// json parsing error message
@@ -141,6 +142,15 @@ public class RWConfiguration {
 	 */
 	private long mMinLocationUpdateTimeMSec = 60000;
 	private double mMinLocationUpdateDistanceMeter = 5.0;
+
+    /**
+     * Use GPS for location tracking if possible on the device. It needs to be
+     * present and activated for this to work. Using GPS indoors is not a good
+     * idea, since it will have a hard time getting a position fix from the
+     * satellites. If possible stick with lesser accurate WiFi or network
+     * location and do not try to use the GPS.
+     */
+    private boolean mUseGpsIfPossible = false;
 	
 	// http call timeout
 	private int mHttpTimeOutSec = 45;
@@ -190,6 +200,8 @@ public class RWConfiguration {
 			mGeoSpeakEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_geo_speak_enabled_yn));
 			mStreamMetadataEnabled = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_stream_metadata_enabled_yn));
 			mResetTagDefaultsOnStartup = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_reset_tag_defaults_on_startup_yn));
+
+            mUseGpsIfPossible = "Y".equalsIgnoreCase(context.getString(R.string.rw_spec_use_gps_if_possible));
 		}
 	}
 
@@ -241,6 +253,7 @@ public class RWConfiguration {
 		        	setMinLocationUpdateTimeMSec(specs.optLong(JSON_KEY_CONFIG_MIN_LOCATION_UPDATE_TIME_MSEC, getMinLocationUpdateTimeMSec()));
 		        	setMinLocationUpdateDistanceMeter(specs.optDouble(JSON_KEY_CONFIG_MIN_LOCATION_UPDATE_DISTANCE_METER, getMinLocationUpdateDistanceMeter()));
 		        	setHttpTimeOutSec(specs.optInt(JSON_KEY_CONFIG_HTTP_TIMEOUT_SEC, getHttpTimeOutSec()));
+                    setUseGpsIfPossible(specs.optBoolean(JSON_KEY_CONFIG_USE_GPS_IF_POSSIBLE, getUseGpsIfPossible()));
 	        	} else if (jsonObj.has(JSON_KEY_CONFIG_SECTION_SERVER)) {
 	        		specs = jsonObj.getJSONObject(JSON_KEY_CONFIG_SECTION_SERVER);
 	        		setServerVersion(specs.optString(JSON_KEY_CONFIG_CURRENT_VERSION, getServerVersion()));
@@ -549,6 +562,16 @@ public class RWConfiguration {
 	public boolean isContentFilesAlwaysDownload() {
 		return mContentFilesAlwaysDownload;
 	}
+
+
+    public void setUseGpsIfPossible(boolean useGps) {
+        mUseGpsIfPossible = useGps;
+    }
+
+
+    public boolean getUseGpsIfPossible() {
+        return mUseGpsIfPossible;
+    }
 
 
 	public void setContentFilesAlwaysDownload(boolean contentFilesAlwaysDownload) {

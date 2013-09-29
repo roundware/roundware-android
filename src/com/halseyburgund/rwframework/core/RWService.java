@@ -672,7 +672,8 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 		if ((configuration != null) && (configuration.isUsingLocation())) {
 			RWLocationTracker.instance().startLocationUpdates(
 					configuration.getMinLocationUpdateTimeMSec(), 
-					(float)configuration.getMinLocationUpdateDistanceMeter());
+					(float)configuration.getMinLocationUpdateDistanceMeter(),
+                    configuration.getUseGpsIfPossible());
 		}
 	}
 	
