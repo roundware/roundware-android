@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Roundware Service Connection">
+		<Preference
+			android:title="Roundware ID"
+			android:defaultValue="Not Assigned"
+			android:summary="Roundware specific ID for this device."
+			android:key="roundwareDeviceIdPref"
+			/>
+		<EditTextPreference
+			android:title="Server URL"
+			android:name="URL"
+			android:defaultValue="http://rwdev.dyndns.org/"
+			android:summary="URL of Roundware service. Please only modify if you know what you are doing! (restart required)"
+			android:key="serverNamePref"
+			/>
+		<EditTextPreference
+			android:title="Roundware Webpage"
+			android:name="Roundware"
+			android:defaultValue="/roundware/"
+			android:summary="Roundware service webpage. Please only modify if you know what you are doing! (restart required)"
+			android:key="serverPagePref"
+			/>
+		<CheckBoxPreference
+			android:title="Use only WiFi connection"
+			android:defaultValue="false"
+			android:summary="Select to use only WiFi for connecting to the Roundware server."
+			android:key="useOnlyWiFiPref"
+			/>
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="App Debugging">
+		<CheckBoxPreference
+			android:title="Detailed Messages"
+			android:defaultValue="false"
+			android:summary="Enable or disable detailed messages"
+			android:key="showDetailedMessagesPref"
+			/>
+		<EditTextPreference
+			android:title="Mock Latitude"
+			android:defaultValue="N/A"
+			android:summary="Enter latitude of mock location"
+			android:key="mockLocationLatitudePref"
+			/>
+		<EditTextPreference
+			android:title="Mock Longitude"
+			android:defaultValue="N/A"
+			android:summary="Enter longitude of mock location"
+			android:key="mockLocationLongitudePref"
+			/>
+		<EditTextPreference
+			android:title="Average Buffer Length (MSec)"
+			android:defaultValue="4000"
+			android:summary="Enter average audio buffer length in msec"
+			android:key="averageBufferLengthPref"
+			/>
+	</PreferenceCategory>
+</PreferenceScreen>

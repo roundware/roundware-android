@@ -1,0 +1,759 @@
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+index c2bad58..fab88b6 100644
+--- a/.idea/workspace.xml
++++ b/.idea/workspace.xml
+@@ -56,389 +56,9 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="ec330950-ae8c-4e89-a0cd-dc24cf731de9" name="Default" comment="">
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_focus_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_focus_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_normal_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_normal_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_pressed_dark.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-hdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-mdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable-xhdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-hdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-mdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable-xhdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_pressed_light.9.png" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/debug.keystore" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/libs/google-play-services.jar" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/.classpath" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/AndroidManifest.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/source/buildConfig/debug/com/google/android/gms/BuildConfig.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/source/buildConfig/release/com/google/android/gms/BuildConfig.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/gen/com/google/android/gms/BuildConfig.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/ComGoogleAndroidGmsPlayServices3136_aar.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/gen/com/google/android/gms/Manifest.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/source/r/debug/com/google/android/gms/R.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/source/r/release/com/google/android/gms/R.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/gen/com/google/android/gms/R.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/README.txt" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/src/android/UnusedStub.java" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build.gradle" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values/colors.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable/common_signin_btn_icon_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable/common_signin_btn_icon_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable/common_signin_btn_icon_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable/common_signin_btn_icon_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable/common_signin_btn_icon_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable/common_signin_btn_icon_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/color/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/color/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/color/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable/common_signin_btn_text_dark.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/color/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/drawable/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/color/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/drawable/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/color/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/drawable/common_signin_btn_text_light.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/libs/google-play-services.jar.properties" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/google-play-services_lib.iml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/src/main/res/drawable/headphones_button.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values/maps_attrs.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/project.properties" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-af/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-am/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ar/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-be/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-bg/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ca/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-cs/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-da/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-de/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-el/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-en-rGB/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-es/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-es-rUS/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-et/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-fa/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-fi/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-fr/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-hi/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-hr/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-hu/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-in/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-it/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-iw/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ja/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ko/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-lt/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-lv/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ms/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-nb/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-nl/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-pl/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-pt/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-pt-rBR/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-pt-rPT/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ro/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-ru/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-sk/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-sl/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-sr/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-sv/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-sw/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-th/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-tl/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-tr/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-uk/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-vi/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-zh-rCN/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-zh-rTW/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/res/values-zu/strings.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-af/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-am/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ar/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-be/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-bg/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ca/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-cs/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-da/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-de/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-el/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-en-rGB/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-es/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-es-rUS/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-et/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-fa/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-fi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-fr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-hi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-hr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-hu/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-in/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-it/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-iw/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ja/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ko/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-lt/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-lv/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ms/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-nb/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-nl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-pl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-pt/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-pt-rBR/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-pt-rPT/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ro/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-ru/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-sk/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-sl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-sr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-sv/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-sw/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-th/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-tl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-tr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-uk/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-vi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-zh-rCN/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-zh-rTW/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/debug/values-zu/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-af/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-am/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ar/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-be/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-bg/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ca/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-cs/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-da/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-de/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-el/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-en-rGB/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-es/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-es-rUS/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-et/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-fa/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-fi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-fr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-hi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-hr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-hu/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-in/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-it/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-iw/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ja/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ko/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-lt/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-lv/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ms/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-nb/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-nl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-pl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-pt/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-pt-rBR/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-pt-rPT/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ro/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-ru/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-sk/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-sl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-sr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-sv/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-sw/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-th/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-tl/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-tr/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-uk/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-vi/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-zh-rCN/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-zh-rTW/values.xml" />
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build/res/all/release/values-zu/values.xml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/SFMS/src/main/AndroidManifest.xml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/SFMS.iml" afterPath="$PROJECT_DIR$/SFMS/SFMS.iml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSSpeakActivity.java" afterPath="$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSSpeakActivity.java" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/res/layout/activity_listen.xml" afterPath="$PROJECT_DIR$/SFMS/src/main/res/layout/activity_listen.xml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/res/layout/activity_speak.xml" afterPath="$PROJECT_DIR$/SFMS/src/main/res/layout/activity_speak.xml" />
+       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/build.gradle" afterPath="$PROJECT_DIR$/SFMS/build.gradle" />
+       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/libs/roundware-android-framework/build.gradle" afterPath="$PROJECT_DIR$/SFMS/libs/roundware-android-framework/build.gradle" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/libs/libs.iml" afterPath="$PROJECT_DIR$/SFMS/libs/libs.iml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.txt" afterPath="$PROJECT_DIR$/project.txt" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/SFMS/src/main/res/values/strings.xml" />
+-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SFMS/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/SFMS/src/main/res/values/styles.xml" />
++      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
+       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+     </list>
+     <ignored path="SFMS.iws" />
+@@ -511,20 +131,8 @@
+       <file leaf-file-name="SFMSSpeakActivity.java" pinned="false" current="true" current-in-tab="true">
+         <entry file="file://$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSSpeakActivity.java">
+           <provider selected="true" editor-type-id="text-editor">
+-            <state line="499" column="0" selection-start="18599" selection-end="18599" vertical-scroll-proportion="0.4894434" vertical-offset="5985" max-vertical-offset="15345">
+-              <folding>
+-                <element signature="e#7367#7419#0" expanded="true" />
+-                <element signature="e#10062#10109#0" expanded="true" />
+-                <element signature="e#12976#13127#0" expanded="true" />
+-                <element signature="e#13116#13117#0" expanded="true" />
+-                <element signature="e#18155#18429#0" expanded="true" />
+-                <element signature="e#18418#18419#0" expanded="true" />
+-                <element signature="e#18810#18811#0" expanded="true" />
+-                <element signature="e#21619#21647#0" expanded="true" />
+-                <element signature="e#35861#35905#0" expanded="true" />
+-                <element signature="e#36165#36209#0" expanded="true" />
+-                <element signature="e#38248#38289#0" expanded="true" />
+-              </folding>
++            <state line="681" column="89" selection-start="25129" selection-end="25129" vertical-scroll-proportion="0.02851711" vertical-offset="8760" max-vertical-offset="15795">
++              <folding />
+             </state>
+           </provider>
+         </entry>
+@@ -532,7 +140,7 @@
+       <file leaf-file-name="SFMSMainActivity.java" pinned="false" current="false" current-in-tab="false">
+         <entry file="file://$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSMainActivity.java">
+           <provider selected="true" editor-type-id="text-editor">
+-            <state line="382" column="0" selection-start="13917" selection-end="13917" vertical-scroll-proportion="0.0" vertical-offset="4830" max-vertical-offset="7905">
++            <state line="377" column="0" selection-start="13728" selection-end="13728" vertical-scroll-proportion="0.0" vertical-offset="5640" max-vertical-offset="9225">
+               <folding />
+             </state>
+           </provider>
+@@ -541,7 +149,7 @@
+       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
+         <entry file="file://$PROJECT_DIR$/SFMS/src/main/AndroidManifest.xml">
+           <provider selected="true" editor-type-id="text-editor">
+-            <state line="42" column="35" selection-start="1699" selection-end="1699" vertical-scroll-proportion="0.0" vertical-offset="615" max-vertical-offset="1260">
++            <state line="65" column="35" selection-start="2651" selection-end="2651" vertical-scroll-proportion="0.0" vertical-offset="960" max-vertical-offset="1320">
+               <folding />
+             </state>
+           </provider>
+@@ -549,18 +157,14 @@
+       </file>
+       <file leaf-file-name="activity_speak.xml" pinned="false" current="false" current-in-tab="false">
+         <entry file="file://$PROJECT_DIR$/SFMS/src/main/res/layout/activity_speak.xml">
+-          <provider editor-type-id="android-designer">
+-            <state />
+-          </provider>
+           <provider selected="true" editor-type-id="text-editor">
+-            <state line="356" column="42" selection-start="15789" selection-end="15789" vertical-scroll-proportion="-11.62963" vertical-offset="5026" max-vertical-offset="5670">
+-              <folding>
+-                <element signature="e#155#189#0" expanded="true" />
+-                <element signature="e#13532#13569#0" expanded="true" />
+-                <element signature="e#14231#14271#0" expanded="true" />
+-              </folding>
++            <state line="372" column="0" selection-start="16414" selection-end="16414" vertical-scroll-proportion="0.0" vertical-offset="5565" max-vertical-offset="5670">
++              <folding />
+             </state>
+           </provider>
++          <provider editor-type-id="android-designer">
++            <state />
++          </provider>
+         </entry>
+       </file>
+     </leaf>
+@@ -604,34 +208,6 @@
+           <key>
+             <ExternalProjectPojo>
+               <option name="name" value="roundware-android-sfms" />
+-              <option name="path" value="$PROJECT_DIR$/SFMS/libs/roundware-android-framework" />
+-            </ExternalProjectPojo>
+-          </key>
+-          <value>
+-            <list>
+-              <ExternalProjectPojo>
+-                <option name="name" value="SFMS" />
+-                <option name="path" value="$PROJECT_DIR$/SFMS/libs/roundware-android-sfms/SFMS" />
+-              </ExternalProjectPojo>
+-              <ExternalProjectPojo>
+-                <option name="name" value="libs" />
+-                <option name="path" value="$PROJECT_DIR$/SFMS/libs/roundware-android-sfms/SFMS/libs" />
+-              </ExternalProjectPojo>
+-              <ExternalProjectPojo>
+-                <option name="name" value="roundware-android-sfms" />
+-                <option name="path" value="$PROJECT_DIR$/SFMS/libs/roundware-android-sfms" />
+-              </ExternalProjectPojo>
+-              <ExternalProjectPojo>
+-                <option name="name" value="roundware-android-framework" />
+-                <option name="path" value="$PROJECT_DIR$/SFMS/libs/roundware-android-sfms/SFMS/libs/roundware-android-framework" />
+-              </ExternalProjectPojo>
+-            </list>
+-          </value>
+-        </entry>
+-        <entry>
+-          <key>
+-            <ExternalProjectPojo>
+-              <option name="name" value="roundware-android-sfms" />
+               <option name="path" value="$PROJECT_DIR$" />
+             </ExternalProjectPojo>
+           </key>
+@@ -680,8 +256,7 @@
+     </option>
+     <option name="modificationStamps">
+       <map>
+-        <entry key="$PROJECT_DIR$" value="1375901454000" />
+-        <entry key="$PROJECT_DIR$/SFMS/libs/roundware-android-framework" value="1375948957000" />
++        <entry key="$PROJECT_DIR$" value="1375040141000" />
+       </map>
+     </option>
+   </component>
+@@ -708,9 +283,10 @@
+     </option>
+   </component>
+   <component name="ProjectFrameBounds">
++    <option name="x" value="4" />
+     <option name="y" value="22" />
+-    <option name="width" value="1440" />
+-    <option name="height" value="874" />
++    <option name="width" value="1436" />
++    <option name="height" value="878" />
+   </component>
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+     <OptionsSetting value="true" id="Add" />
+@@ -723,7 +299,7 @@
+     <ConfirmationsSetting value="0" id="Remove" />
+   </component>
+   <component name="ProjectReloadState">
+-    <option name="STATE" value="0" />
++    <option name="STATE" value="2" />
+   </component>
+   <component name="ProjectStructureProblems">
+     <ignored-problems>
+@@ -743,6 +319,8 @@
+       <sortByType />
+     </navigator>
+     <panes>
++      <pane id="PackagesPane" />
++      <pane id="Scope" />
+       <pane id="ProjectPane">
+         <subPane>
+           <PATH>
+@@ -829,8 +407,6 @@
+           </PATH>
+         </subPane>
+       </pane>
+-      <pane id="Scope" />
+-      <pane id="PackagesPane" />
+     </panes>
+   </component>
+   <component name="PropertiesComponent">
+@@ -844,10 +420,10 @@
+     <property name="options.lastSelected" value="editor.preferences.tabs" />
+     <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+     <property name="project.structure.side.proportion" value="0.21378505" />
+-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="emulator-5554" />
++    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="" />
+     <property name="MemberChooser.copyJavadoc" value="false" />
+     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus4-768x1280-api17-intel-nogoogle" />
++    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="avd-480x800-api10" />
+     <property name="restartRequiresConfirmation" value="true" />
+     <property name="MemberChooser.showClasses" value="true" />
+     <property name="FullScreen" value="false" />
+@@ -862,7 +438,7 @@
+       <recent name="$PROJECT_DIR$/SFMS/src/main/res/color" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Android Application.SFMS-USB">
++  <component name="RunManager" selected="Android Application.SFMS-Chooser">
+     <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+       <module name="" />
+       <setting name="path" value="" />
+@@ -1117,7 +693,7 @@
+     </todo-panel>
+   </component>
+   <component name="ToolWindowManager">
+-    <frame x="0" y="22" width="1440" height="874" extended-state="6" />
++    <frame x="4" y="22" width="1436" height="878" extended-state="6" />
+     <editor active="false" />
+     <layout>
+       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+@@ -1126,7 +702,7 @@
+       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32686782" sideWeight="0.7281167" order="7" side_tool="false" content_ui="tabs" />
+       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37931034" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
++      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26912928" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
+       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32632744" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+@@ -1137,8 +713,8 @@
+       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24908201" sideWeight="0.7267904" order="1" side_tool="false" content_ui="tabs" />
+       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2517934" sideWeight="0.7281167" order="0" side_tool="false" content_ui="combo" />
+-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27188328" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
++      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2514409" sideWeight="0.7308707" order="0" side_tool="false" content_ui="combo" />
++      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26912928" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+@@ -1255,30 +831,48 @@
+     <breakpoint-manager />
+   </component>
+   <component name="editorHistoryManager">
+-    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/gradlew">
++    <entry file="file://$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSMainActivity.java">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2550" />
++        <state line="382" column="0" selection-start="13916" selection-end="13916" vertical-scroll-proportion="0.0" vertical-offset="5715" max-vertical-offset="9705">
++          <folding />
++        </state>
+       </provider>
+     </entry>
+-    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/gradlew.bat">
++    <entry file="file://$PROJECT_DIR$/SFMS/src/main/AndroidManifest.xml">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440">
++        <state line="42" column="35" selection-start="1854" selection-end="1854" vertical-scroll-proportion="0.0" vertical-offset="615" max-vertical-offset="975">
+           <folding />
+         </state>
+       </provider>
+     </entry>
+-    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/build.gradle">
++    <entry file="file://$PROJECT_DIR$/SFMS/src/main/res/layout/activity_speak.xml">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="16" column="29" selection-start="313" selection-end="313" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="720">
++        <state line="237" column="0" selection-start="9751" selection-end="9751" vertical-scroll-proportion="0.0" vertical-offset="3540" max-vertical-offset="3645">
+           <folding />
+         </state>
+       </provider>
++      <provider editor-type-id="android-designer">
++        <state />
++      </provider>
++    </entry>
++    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/gradlew">
++      <provider selected="true" editor-type-id="text-editor">
++        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2550" />
++      </provider>
++    </entry>
++    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/gradlew.bat">
++      <provider selected="true" editor-type-id="text-editor">
++        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440" />
++      </provider>
++    </entry>
++    <entry file="file://$PROJECT_DIR$/SFMS/libs/roundware-android-framework/build.gradle">
++      <provider selected="true" editor-type-id="text-editor">
++        <state line="16" column="29" selection-start="313" selection-end="313" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="720" />
++      </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/libs/google-play-services_lib/README.txt">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
+-          <folding />
+-        </state>
++        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532" />
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/settings.gradle">
+@@ -1288,91 +882,52 @@
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/libs/google-play-services_lib/build.gradle">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="20" column="0" selection-start="347" selection-end="347" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+-          <folding />
+-        </state>
++        <state line="20" column="0" selection-start="347" selection-end="347" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645" />
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/roundware-android-sfms.iml">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
+-          <folding />
+-        </state>
++        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532" />
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/build.gradle">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="876">
+-          <folding />
+-        </state>
++        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="876" />
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/src/main/AndroidManifest.xml">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="42" column="35" selection-start="1699" selection-end="1699" vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="1260">
++        <state line="65" column="35" selection-start="2651" selection-end="2651" vertical-scroll-proportion="0.0" vertical-offset="960" max-vertical-offset="1320">
+           <folding />
+         </state>
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/build.gradle">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="16" column="0" selection-start="275" selection-end="275" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
+-          <folding />
+-        </state>
+-      </provider>
+-    </entry>
+-    <entry file="file://$PROJECT_DIR$/../device-2013-08-14-212937-thankyou.png">
+-      <provider selected="true" editor-type-id="images">
+-        <state />
+-      </provider>
+-    </entry>
+-    <entry file="file://$PROJECT_DIR$/../device-2013-08-14-213401-thankyou-floorplans.png">
+-      <provider selected="true" editor-type-id="images">
+-        <state />
+-      </provider>
+-    </entry>
+-    <entry file="file://$PROJECT_DIR$/../device-2013-08-14-213638-thankyou-3d.png">
+-      <provider selected="true" editor-type-id="images">
+-        <state />
++        <state line="16" column="0" selection-start="275" selection-end="275" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615" />
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSMainActivity.java">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="382" column="0" selection-start="13917" selection-end="13917" vertical-scroll-proportion="0.0" vertical-offset="4830" max-vertical-offset="7905">
++        <state line="377" column="0" selection-start="13728" selection-end="13728" vertical-scroll-proportion="0.0" vertical-offset="5640" max-vertical-offset="9225">
+           <folding />
+         </state>
+       </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/src/main/res/layout/activity_speak.xml">
+-      <provider editor-type-id="android-designer">
+-        <state />
+-      </provider>
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="356" column="42" selection-start="15789" selection-end="15789" vertical-scroll-proportion="-11.62963" vertical-offset="5026" max-vertical-offset="5670">
+-          <folding>
+-            <element signature="e#155#189#0" expanded="true" />
+-            <element signature="e#13532#13569#0" expanded="true" />
+-            <element signature="e#14231#14271#0" expanded="true" />
+-          </folding>
++        <state line="372" column="0" selection-start="16414" selection-end="16414" vertical-scroll-proportion="0.0" vertical-offset="5565" max-vertical-offset="5670">
++          <folding />
+         </state>
+       </provider>
++      <provider editor-type-id="android-designer">
++        <state />
++      </provider>
+     </entry>
+     <entry file="file://$PROJECT_DIR$/SFMS/src/main/java/edu/si/sfms/SFMSSpeakActivity.java">
+       <provider selected="true" editor-type-id="text-editor">
+-        <state line="499" column="0" selection-start="18599" selection-end="18599" vertical-scroll-proportion="0.4894434" vertical-offset="5985" max-vertical-offset="15345">
+-          <folding>
+-            <element signature="e#7367#7419#0" expanded="true" />
+-            <element signature="e#10062#10109#0" expanded="true" />
+-            <element signature="e#12976#13127#0" expanded="true" />
+-            <element signature="e#13116#13117#0" expanded="true" />
+-            <element signature="e#18155#18429#0" expanded="true" />
+-            <element signature="e#18418#18419#0" expanded="true" />
+-            <element signature="e#18810#18811#0" expanded="true" />
+-            <element signature="e#21619#21647#0" expanded="true" />
+-            <element signature="e#35861#35905#0" expanded="true" />
+-            <element signature="e#36165#36209#0" expanded="true" />
+-            <element signature="e#38248#38289#0" expanded="true" />
+-          </folding>
++        <state line="681" column="89" selection-start="25129" selection-end="25129" vertical-scroll-proportion="0.02851711" vertical-offset="8760" max-vertical-offset="15795">
++          <folding />
+         </state>
+       </provider>
+     </entry>

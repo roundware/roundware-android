@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/flag_inactive_disabled" android:state_enabled="false" />
+	<item android:drawable="@drawable/flag_active_pressed" android:state_checked="true" android:state_pressed="true" />
+	<item android:drawable="@drawable/flag_active_focussed" android:state_checked="true" android:state_focused="true" />
+	<item android:drawable="@drawable/flag_active_normal" android:state_checked="true" />
+	<item android:drawable="@drawable/flag_inactive_pressed" android:state_checked="false" android:state_pressed="true" />
+	<item android:drawable="@drawable/flag_inactive_focussed" android:state_checked="false" android:state_focused="true" />
+	<item android:drawable="@drawable/flag_inactive_normal" android:state_checked="false" />
+</selector>

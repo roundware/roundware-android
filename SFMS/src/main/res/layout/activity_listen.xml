@@ -1,0 +1,157 @@
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/viewFlipper"
+             android:contentDescription="@string/speak_screen_description"
+             android:inAnimation="@anim/in_from_right"
+             android:orientation="vertical"
+             android:outAnimation="@anim/out_to_left"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/bg_90"
+             tools:context=".SFMSListenActivity">
+
+    <!-- listen view -->
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#55ffffff"
+            >
+
+        <!-- header -->
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/header_background"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:id="@+id/relativeLayout">
+
+            <Button
+                    style="@style/AppTheme.Shadow.NavButton"
+                    android:id="@+id/listenBackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home"
+                    android:singleLine="true"
+                    android:background="@drawable/back_button"
+                    android:paddingLeft="5dp"
+                    android:layout_centerVertical="true"/>
+
+            <TextView
+                    style="@style/AppTheme.Shadow.HeaderText"
+                    android:id="@+id/listenHeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="Listen"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_vertical|center_horizontal"/>
+
+            <Button
+                    style="@style/AppTheme.Shadow.ActionButton"
+                    android:id="@+id/listenModifyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modify"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/action_button"
+                    android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <TextView
+                style="@style/AppTheme.Shadow.ListenTitleText"
+                android:id="@+id/listenTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Life in Your Community"
+                android:layout_below="@+id/relativeLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:singleLine="false"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="20dp"/>
+
+        <ToggleButton
+                style="@style/AppTheme.Shadow.ListenLargeButton"
+                android:id="@+id/listenPlayPauseToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/listenTitleTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:background="#00FFFFFF"
+                android:drawableTop="@drawable/listen_play_pause_button"
+                android:drawablePadding="10dp"
+                android:textOff="PLAY AUDIO"
+                android:textOn="PAUSE AUDIO"
+                />
+
+        <ToggleButton
+                style="@style/AppTheme.Shadow.ListenSmallButton"
+                android:id="@+id/listenFlagToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="42dp"
+                android:layout_marginLeft="50dp"
+                android:background="#00FFFFFF"
+                android:drawableTop="@drawable/flag_button"
+                android:drawablePadding="2dp"
+                android:textOff="Flag"
+                android:textOn="Flag"
+                />
+
+        <ToggleButton
+                style="@style/AppTheme.Shadow.ListenSmallButton"
+                android:id="@+id/listenLikeToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/listenFlagToggleButton"
+                android:layout_centerHorizontal="true"
+                android:background="#00FFFFFF"
+                android:drawableTop="@drawable/like_button"
+                android:drawablePadding="2dp"
+                android:textOff="Like"
+                android:textOn="Like"
+                />
+
+        <Button
+            style="@style/AppTheme.Shadow.ListenSmallButton"
+            android:id="@+id/listenMicButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Record"
+            android:singleLine="true"
+            android:layout_alignTop="@+id/listenLikeToggleButton"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:background="#00FFFFFF"
+            android:drawableTop="@drawable/mic_button"
+            android:drawablePadding="2dp"
+            />
+
+    </RelativeLayout>
+
+    <!-- web view (filters) -->
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#55ffffff">
+
+            <WebView
+                    android:id="@+id/listenFilterWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+</ViewFlipper>

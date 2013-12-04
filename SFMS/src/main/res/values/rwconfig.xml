@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="rw_spec_server_url">***REMOVED***</string>
+	<string name="rw_spec_project_id">6</string>
+
+    <string name="rw_spec_listen_enabled_yn">Y</string>
+    <string name="rw_spec_speak_enabled_yn">Y</string>
+
+    <string name="rw_spec_max_recording_time_in_sec">90</string>
+    		
+	<string name="rw_spec_queue_check_interval_in_sec">10</string>
+    <string name="rw_spec_heartbeat_interval_in_sec">30</string>
+    
+    <string name="rw_spec_geo_listen_enabled_yn">N</string>
+    <string name="rw_spec_geo_speak_enabled_yn">Y</string>
+    
+    <string name="rw_spec_min_location_update_time_msec">1200000</string>
+    <string name="rw_spec_min_location_update_distance_meters">100</string>
+    <string name="rw_spec_use_gps_if_possible">N</string>
+	
+	<string name="rw_spec_stream_metadata_enabled_yn">Y</string>
+	<string name="rw_spec_stream_metadata_timer_interval_in_msec">2000</string>
+		
+	<string name="rw_spec_reset_tag_defaults_on_startup_yn">Y</string>
+
+</resources>
