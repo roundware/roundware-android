@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/viewFlipper"
+             android:contentDescription="@string/home_screen_description"
+             android:inAnimation="@anim/in_from_right"
+             android:orientation="vertical"
+             android:outAnimation="@anim/out_to_left"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/main_background"
+             tools:context=".MainActivity">
+            >
+
+    <!-- Main Listen and Speak selection -->
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/mainRelativeLayout"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="10dp"
+            android:focusableInTouchMode="true">
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoButton"
+                android:src="@drawable/info_button"
+                android:background="#00000000"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/listenButton"
+                android:layout_marginBottom="10dp" />
+
+
+        <Button
+                android:id="@+id/listenButton"
+                style="@style/AppTheme.Shadow.BlueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listen"
+                android:paddingLeft="10dp"
+                android:drawableLeft="@drawable/headphones_normal"
+                android:background="@drawable/green_button"
+                android:layout_above="@+id/speakButton"
+                android:layout_alignLeft="@+id/speakButton"
+                android:layout_marginBottom="39dp"  
+                android:layout_alignParentStart="false"/>
+
+        <Button
+                android:id="@+id/speakButton"
+                android:enabled="false"
+                style="@style/AppTheme.Shadow.BlueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:drawableLeft="@drawable/mic_normal"
+                android:text="Speak"
+                android:background="@drawable/brown_button"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+/>
+
+
+    </RelativeLayout>
+
+    <!-- Info overlay -->
+
+    <FrameLayout
+            android:id="@+id/infoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/overlay_background"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_marginTop="120dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="30dp"
+                >
+
+            <WebView
+                    android:id="@+id/infoWebView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="1"
+                    android:background="#FFF"
+                    android:layout_above="@+id/infoFeedbackButton"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    />
+
+            <Button
+                    style="@style/AppTheme.FeedbackButton"
+                    android:id="@+id/infoFeedbackButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/feedback_button"
+                    android:contentDescription="@string/home_feedback_button_description"
+                    android:text="@string/button_feedback"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="0dp"
+                android:layout_marginTop="105dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="20dp"
+                >
+
+            <ImageButton
+                    android:id="@+id/infoCloseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/x_button"
+                    android:contentDescription="@string/home_info_close_button_description"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <!--  Hidden webview for loading home.html -->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+        <WebView
+                android:id="@+id/hiddenWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</ViewFlipper>
