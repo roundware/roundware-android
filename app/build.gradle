@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 21
     buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "org.famsf.roundware"
         minSdkVersion 9
-        targetSdkVersion 17
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -20,7 +20,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile files('libs/google-play-services.jar')
+    compile 'com.google.android.gms:play-services:4.4.52'
     compile project(':roundware-android-framework')
 }
