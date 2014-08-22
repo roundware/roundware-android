@@ -187,7 +187,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp">
-                <com.earprint.rw.utils.LevelMeterView
+                <org.famsf.roundware.utils.LevelMeterView
                         android:id="@+id/recordingLevelMeterView"
                         android:layout_width="fill_parent"
                         android:layout_height="40dp"
@@ -279,12 +279,11 @@
                 android:id="@+id/speakMapViewLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
             <com.google.android.gms.maps.MapView
-                    android:id="@+id/speakMapView"
+                    android:id="@+id/map"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
+                    android:layout_height="match_parent"
+                    />
         </LinearLayout>
 
         <!-- overlay with other views -->

@@ -5,7 +5,7 @@
 	with contributions by Rob Knapen
 	ALL RIGHTS RESERVED
 */
-package org.famsf.roundware;
+package org.famsf.roundware.activity;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -23,7 +23,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -40,6 +40,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import org.famsf.roundware.R;
+import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
 import org.famsf.roundware.utils.VersionDialog;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -48,21 +50,14 @@ import com.halseyburgund.rwframework.core.RWService;
 import com.halseyburgund.rwframework.util.RWList;
 
 public class MainActivity extends Activity {
-
-    // name of shared preferences used by all activities in the app
-    public final static String APP_SHARED_PREFS = "com.earprint.rw.preferences";
-
-    // preferences keys for parameter storage
-    public final static String PREFS_KEY_RW_DEVICE_ID = "SavedRoundwareDeviceId";
+    public static final String LOGTAG = MainActivity.class.getSimpleName();
+    private final static boolean D = true;
 
     // menu items
     private final static int MENU_ITEM_INFO = Menu.FIRST;
     private final static int MENU_ITEM_PREFERENCES = Menu.FIRST + 1;
     private final static int MENU_ITEM_EXIT = Menu.FIRST + 2;
 
-    // debugging
-    private final static String TAG = "SFMSMainActivity";
-    private final static boolean D = true;
 
     // view references
     private Animation mFadeInAnimation;
@@ -82,7 +77,6 @@ public class MainActivity extends Activity {
     private String mDeviceId;
     private String mProjectId;
     private boolean mIsConnected;
-
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -134,7 +128,7 @@ public class MainActivity extends Activity {
             } else if (RW.TAGS_LOADED.equals(intent.getAction())) {
                 if (mRwBinder.getConfiguration().isResetTagsDefaultOnStartup()) {
                     RWList allTags = new RWList(mRwBinder.getTags());
-                    allTags.saveSelectionState(getSharedPreferences(APP_SHARED_PREFS, MODE_PRIVATE));
+                    allTags.saveSelectionState(Settings.getSharedPreferences());
                 }
             } else if (RW.CONTENT_LOADED.equals(intent.getAction())) {
                 String contentFileName = mRwBinder.getContentFilesDir() + "home-a.html";
@@ -143,7 +137,7 @@ public class MainActivity extends Activity {
                     mHiddenWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e(TAG, "Problem loading content file: " + contentFileName);
+                    Log.e(LOGTAG, "Problem loading content file: " + contentFileName);
                     // TODO: dialog?? error??
                 }
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
@@ -422,7 +416,7 @@ public class MainActivity extends Activity {
      * once every time the app is run and the Speak functionality is used.
      */
     private void resetLegalNoticeSetting() {
-        SharedPreferences prefs = getSharedPreferences(APP_SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = Settings.getSharedPreferences();
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putBoolean(SpeakActivity.PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
         prefsEditor.commit();
@@ -433,9 +427,9 @@ public class MainActivity extends Activity {
      * Saves app settings as shared preferences.
      */
     private void saveRoundwareDeviceIdSetting() {
-        SharedPreferences prefs = getSharedPreferences(APP_SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = Settings.getSharedPreferences();
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(PREFS_KEY_RW_DEVICE_ID, mDeviceId);
+        prefsEditor.putString(Settings.PREFS_KEY_RW_DEVICE_ID, mDeviceId);
         prefsEditor.commit();
     }
 
@@ -444,8 +438,8 @@ public class MainActivity extends Activity {
      * Restores app settings from shared preferences.
      */
     private void restoreRoundwareDeviceIdSetting() {
-        SharedPreferences prefs = getSharedPreferences(APP_SHARED_PREFS, MODE_PRIVATE);
-        mDeviceId = prefs.getString(PREFS_KEY_RW_DEVICE_ID, mDeviceId);
+        SharedPreferences prefs = Settings.getSharedPreferences();
+        mDeviceId = prefs.getString(Settings.PREFS_KEY_RW_DEVICE_ID, mDeviceId);
     }
 
 
@@ -460,7 +454,7 @@ public class MainActivity extends Activity {
             mListenButton.setEnabled(mIsConnected);
         }
         if (mSpeakButton != null) {
-            // mSpeakButton.setEnabled(true);
+            mSpeakButton.setEnabled(true);
         }
     }
 
@@ -524,9 +518,8 @@ public class MainActivity extends Activity {
             } else {
                 license.append(R.string.play_services_not_installed);
             }
-            VersionDialog.show(this, "com.earprint.rw", R.layout.version_dialog, license.toString(), forced);
         } catch (Exception e) {
-            Log.e(TAG, "Unable to show version dialog!", e);
+            Log.e(LOGTAG, "Unable to show version dialog!", e);
         }
     }
 

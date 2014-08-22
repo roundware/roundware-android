@@ -5,7 +5,7 @@
 	with contributions by Rob Knapen
 	ALL RIGHTS RESERVED
 */
-package org.famsf.roundware;
+package org.famsf.roundware.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -42,11 +42,12 @@ import com.halseyburgund.rwframework.util.RWListItem;
 
 import java.io.IOException;
 
+import org.famsf.roundware.R;
+import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
 
 public class ListenActivity extends Activity {
-
-    private final static String TAG = "Listen";
+    private final static String LOGTAG = "Listen";
 
     // Roundware tag type used in this activity
     private final static String ROUNDWARE_TAGS_TYPE = "listen";
@@ -84,7 +85,7 @@ public class ListenActivity extends Activity {
         @SuppressLint("SetJavaScriptEnabled")
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            if (D) { Log.d(TAG, "+++ onServiceConnected +++"); }
+            if (D) { Log.d(LOGTAG, "+++ onServiceConnected +++"); }
             mRwBinder = ((RWService.RWServiceBinder) service).getService();
             startPlayback();
             // mRwBinder.playbackFadeIn(mVolumeLevel);
@@ -93,7 +94,7 @@ public class ListenActivity extends Activity {
             // create a tags list for display and selection
             mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
             mTagsList = new RWList(mProjectTags);
-            mTagsList.restoreSelectionState(getSharedPreferences(MainActivity.APP_SHARED_PREFS, MODE_PRIVATE));
+            mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
             
             // get the folder where the web content files are stored
@@ -109,7 +110,7 @@ public class ListenActivity extends Activity {
                     mWebView.loadDataWithBaseURL("file:///android_asset/listen-a.html", data, null, null, null);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e(TAG, "Problem loading content file: listen-a.html");
+                    Log.e(LOGTAG, "Problem loading content file: listen-a.html");
                     // TODO: dialog?? error??
                 }
             }
@@ -126,7 +127,7 @@ public class ListenActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            if (D) { Log.d(TAG, "+++ onServiceDisconnected +++"); }
+            if (D) { Log.d(LOGTAG, "+++ onServiceDisconnected +++"); }
             mRwBinder = null;
         }
     };
@@ -134,7 +135,7 @@ public class ListenActivity extends Activity {
 
     /**
      * Handles events received from the RWService Android Service that we
-     * connect to. Sinds most operations of the service involve making calls
+     * connect to. Since most operations of the service involve making calls
      * to the Roundware server, the response is handle asynchronously with
      * results passed back as broadcast intents. An IntentFilter is set up
      * in the onResume method of this activity and controls which intents
@@ -143,16 +144,16 @@ public class ListenActivity extends Activity {
     private BroadcastReceiver rwReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (D) { Log.d(TAG, "+++ BroadcastReceiver.onReceive +++"); }
+            if (D) { Log.d(LOGTAG, "+++ BroadcastReceiver.onReceive +++"); }
             updateUIState();
             if (RW.READY_TO_PLAY.equals(intent.getAction())) {
-                if (D) { Log.d(TAG, "RW_READY_TO_PLAY"); }
+                if (D) { Log.d(LOGTAG, "RW_READY_TO_PLAY"); }
                 // remove progress dialog when needed
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
                 }
             } else if (RW.STREAM_METADATA_UPDATED.equals(intent.getAction())) {
-                if (D) { Log.d(TAG, "RW_STREAM_METADATA_UPDATED"); }
+                if (D) { Log.d(LOGTAG, "RW_STREAM_METADATA_UPDATED"); }
                 // new recording started playing - update title display
                 int previousAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID, -1);
                 int currentAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_CURRENT_ASSET_ID, -1);
@@ -164,13 +165,13 @@ public class ListenActivity extends Activity {
                     mProgressDialog = null;
                 }
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
-                if (D) { Log.d(TAG, "RW_USER_MESSAGE"); }
+                if (D) { Log.d(LOGTAG, "RW_USER_MESSAGE"); }
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), false, false);
             } else if (RW.ERROR_MESSAGE.equals(intent.getAction())) {
-                if (D) { Log.d(TAG, "RW_ERROR_MESSAGE"); }
+                if (D) { Log.d(LOGTAG, "RW_ERROR_MESSAGE"); }
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), true, false);
             } else if (RW.SESSION_OFF_LINE.equals(intent.getAction())) {
-                if (D) { Log.d(TAG, "RW_SESSION_OFF_LINE"); }
+                if (D) { Log.d(LOGTAG, "RW_SESSION_OFF_LINE"); }
                 showMessage(getString(R.string.connection_to_server_lost_play), true, false);
             }
         }
@@ -179,7 +180,7 @@ public class ListenActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (D) { Log.d(TAG, "+++ onCreate +++"); }
+        if (D) { Log.d(LOGTAG, "+++ onCreate +++"); }
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
@@ -200,7 +201,7 @@ public class ListenActivity extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (D) { Log.d(TAG, "+++ onNewIntent +++"); }
+        if (D) { Log.d(LOGTAG, "+++ onNewIntent +++"); }
         super.onNewIntent(intent);
         // TODO: activity is reused for a new task
         // TODO: check if this can be used?
@@ -216,18 +217,18 @@ public class ListenActivity extends Activity {
 
     @Override
     protected void onPause() {
-        if (D) { Log.d(TAG, "+++ onPause +++"); }
+        if (D) { Log.d(LOGTAG, "+++ onPause +++"); }
         super.onPause();
         unregisterReceiver(rwReceiver);
         if (mTagsList != null) {
-            mTagsList.saveSelectionState(getSharedPreferences(MainActivity.APP_SHARED_PREFS, MODE_PRIVATE));
+            mTagsList.saveSelectionState(Settings.getSharedPreferences());
         }
     }
 
 
     @Override
     protected void onResume() {
-        if (D) { Log.d(TAG, "+++ onResume +++"); }
+        if (D) { Log.d(LOGTAG, "+++ onResume +++"); }
         super.onResume();
 
         IntentFilter filter = new IntentFilter();
@@ -291,10 +292,10 @@ public class ListenActivity extends Activity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d(TAG, "shouldOverrideUrlLoading");
+                Log.d(LOGTAG, "shouldOverrideUrlLoading");
                 Uri uri = Uri.parse(url);
                 if (uri.getScheme().equals("roundware")) {
-                    Log.d(TAG, "Processing roundware uri: " + url);
+                    Log.d(LOGTAG, "Processing roundware uri: " + url);
                     String schemeSpecificPart = uri.getSchemeSpecificPart(); // everything from : to #
                     if ("//listen_done".equalsIgnoreCase(schemeSpecificPart)) {
                         // request update of audio stream directly when needed
@@ -334,7 +335,7 @@ public class ListenActivity extends Activity {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-              Log.d(TAG, "Error: " + description);
+              Log.d(LOGTAG, "Error: " + description);
                 if (mRefineButton != null) {
                     mRefineButton.setEnabled(false);
                 }
@@ -397,7 +398,7 @@ public class ListenActivity extends Activity {
 
 
     private void startPlayback() {
-        if (D) { Log.d(TAG, "+++ startPlayback +++"); }
+        if (D) { Log.d(LOGTAG, "+++ startPlayback +++"); }
         if (mRwBinder != null) {
             if (!mRwBinder.isPlaying()) {
                 if (!mRwBinder.isPlayingMuted()) {

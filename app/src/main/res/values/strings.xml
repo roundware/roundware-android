@@ -163,4 +163,6 @@
 <string name="speak_submitted_speak_again_description">Speak Again</string>
 <string name="speak_submitted_listen_more_description">Listen More</string>
 
+<string name="please_wait">Please wait...</string>
+
 </resources>

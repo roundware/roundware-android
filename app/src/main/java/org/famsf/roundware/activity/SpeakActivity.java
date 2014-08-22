@@ -5,7 +5,7 @@
 	with contributions by Rob Knapen
 	ALL RIGHTS RESERVED
 */
-package org.famsf.roundware;
+package org.famsf.roundware.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -41,8 +41,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -61,10 +59,13 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.famsf.roundware.R;
+import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.LevelMeterView;
 import org.famsf.roundware.utils.Utils;
 
 public class SpeakActivity extends Activity {
+    public static final String LOGTAG = SpeakActivity.class.getSimpleName();
 
     // intent actions to select recording type when starting the activity
     public final static String ACTION_RECORD_FEEDBACK = "com.earprint.rw.record_feedback";
@@ -151,7 +152,7 @@ public class SpeakActivity extends Activity {
             // create a tags list for display and selection
             mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
             mTagsList = new RWList(mProjectTags);
-            mTagsList.restoreSelectionState(getSharedPreferences(MainActivity.APP_SHARED_PREFS, MODE_PRIVATE));
+            mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
             // get the folder where the web content files are stored
             mContentFileDir = mRwBinder.getContentFilesDir();
@@ -210,8 +211,8 @@ public class SpeakActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speak);
 
-        mMapView = (MapView) findViewById(R.id.speakMapView);
-        mMapView.onCreate(savedInstanceState);
+        //mMapView = (MapView) findViewById(R.id.speakMapView);
+        //mMapView.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -257,7 +258,7 @@ public class SpeakActivity extends Activity {
         mMapView.onPause();
         unregisterReceiver(rwReceiver);
         if (mTagsList != null) {
-            mTagsList.saveSelectionState(getSharedPreferences(MainActivity.APP_SHARED_PREFS, MODE_PRIVATE));
+            mTagsList.saveSelectionState(Settings.getSharedPreferences());
         }
         super.onPause();
     }
@@ -266,9 +267,9 @@ public class SpeakActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mMapView.onResume();
 
         initMapIfNeeded();
+        //mMapView.onResume();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(RW.SESSION_ON_LINE);
@@ -314,7 +315,7 @@ public class SpeakActivity extends Activity {
 
     private void initMapIfNeeded() {
         if (mGoogleMap == null) {
-            mGoogleMap = ((MapView) findViewById(R.id.speakMapView)).getMap();
+            mGoogleMap = ((MapView) findViewById(R.id.map)).getMap();
             if (mGoogleMap != null) {
                 setUpMap();
             }
