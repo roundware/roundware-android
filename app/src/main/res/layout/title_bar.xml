@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:background="@drawable/header_background"
+    android:id="@+id/title_bar"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <Button
+        style="@style/TitleBar.Button"
+        android:id="@+id/left_title_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_home"
+        android:singleLine="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@+id/left_title_button"
+        android:layout_toLeftOf="@+id/right_title_button"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textAppearance="@style/TitleBar.Text"
+        android:text="@string/listen_title"/>
+
+    <Button
+        style="@style/TitleBar.Button"
+        android:id="@+id/right_title_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_explore"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

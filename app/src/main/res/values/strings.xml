@@ -144,12 +144,14 @@
 <string name="home_info_close_button_description">Close</string>
 
 <!-- Listen screen content descriptions (for Talk Back) -->
-<string name="listen_screen_description">Listen</string>
+<string name="listen_title">Listen</string>
 <string name="listen_filter_done_button_description">Done</string>
 <string name="listen_main_screen_description">You are listening to</string>
 <string name="listen_main_home_button_description">Home</string>
-<string name="listen_main_speak_button_description">Speak</string>
-<string name="listen_main_play_button_description">Play</string>
+<string name="record_button">Record</string>
+<string name="refine_button">Refine</string>
+<string name="action_home">Home</string>
+<string name="action_explore">Explore</string>
 
 <!-- Speak screen content descriptions (for Talk Back) -->
 <string name="speak_screen_description">Speak</string>
@@ -162,6 +164,9 @@
 <string name="speak_submitted_screen_description">Recording uploaded - thank you!</string>
 <string name="speak_submitted_speak_again_description">Speak Again</string>
 <string name="speak_submitted_listen_more_description">Listen More</string>
+<string name="agreement">Agreement</string>
+<string name="accept">Accept</string>
+<string name="decline">Decline</string>
 
 <string name="please_wait">Please wait...</string>
 

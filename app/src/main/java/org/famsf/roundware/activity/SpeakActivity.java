@@ -418,7 +418,8 @@ public class SpeakActivity extends Activity {
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
         // button to agree to legal agreement
-        mAgreeButton = (Button) findViewById(R.id.speakLegalAcceptButton);
+        mAgreeButton = (Button) findViewById(R.id.left_title_button);
+        mAgreeButton.setText(R.string.accept);
         mAgreeButton.setEnabled(false);
         mAgreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -428,8 +429,12 @@ public class SpeakActivity extends Activity {
             }
         });
 
+        TextView titleView = (TextView) findViewById(R.id.title);
+        titleView.setText(R.string.agreement);
+
         // button to decline legal agreement
-        mDeclineButton = (Button) findViewById(R.id.speakLegalDeclineButton);
+        mDeclineButton = (Button) findViewById(R.id.right_title_button);
+        mDeclineButton.setText(R.string.decline);
         mDeclineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

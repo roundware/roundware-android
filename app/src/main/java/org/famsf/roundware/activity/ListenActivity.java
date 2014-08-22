@@ -61,10 +61,13 @@ public class ListenActivity extends Activity {
     private ProgressDialog mProgressDialog;
     private ViewFlipper mViewFlipper;
     private WebView mWebView;
-    private ToggleButton mPlayButton;
     private Button mHomeButton;
+    private Button mListenModifyButton;
+
     private Button mRefineButton;
+    private ToggleButton mPlayButton;
     private Button mRecordButton;
+
 //    private ToggleButton mLikeButton;
 //    private ToggleButton mFlagButton;
     private int mVolumeLevel = 80;
@@ -319,16 +322,16 @@ public class ListenActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (mRefineButton != null) {
-                    mRefineButton.setEnabled(true);
+                if (mListenModifyButton != null) {
+                    mListenModifyButton.setEnabled(true);
                 }
                 super.onPageFinished(view, url);
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (mRefineButton != null) {
-                    mRefineButton.setEnabled(false);
+                if (mListenModifyButton != null) {
+                    mListenModifyButton.setEnabled(false);
                 }
                 super.onPageStarted(view, url, favicon);
             }
@@ -336,8 +339,8 @@ public class ListenActivity extends Activity {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
               Log.d(LOGTAG, "Error: " + description);
-                if (mRefineButton != null) {
-                    mRefineButton.setEnabled(false);
+                if (mListenModifyButton != null) {
+                    mListenModifyButton.setEnabled(false);
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
@@ -345,7 +348,7 @@ public class ListenActivity extends Activity {
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
-        mHomeButton = (Button) findViewById(R.id.listenBackButton);
+        mHomeButton = (Button) findViewById(R.id.left_title_button);
         mHomeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mRwBinder.playbackStop();
@@ -354,8 +357,8 @@ public class ListenActivity extends Activity {
             }
         });
 
-        mRefineButton = (Button) findViewById(R.id.listenModifyButton);
-        mRefineButton.setOnClickListener(new View.OnClickListener() {
+        mListenModifyButton = (Button) findViewById(R.id.right_title_button);
+        mListenModifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mViewFlipper != null) {
@@ -364,7 +367,15 @@ public class ListenActivity extends Activity {
             }
         });
 
-        mPlayButton = (ToggleButton) findViewById(R.id.listenPlayPauseToggleButton);
+        mRefineButton = (Button) findViewById(R.id.refine);
+        mRefineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        mPlayButton = (ToggleButton) findViewById(R.id.play);
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!mRwBinder.isPlaying()) {
@@ -382,9 +393,9 @@ public class ListenActivity extends Activity {
 
         mLikeButton = (ToggleButton) findViewById(R.id.listenLikeToggleButton);
         mLikeButton.setEnabled(false);
-*/
-        mRecordButton = (Button) findViewById(R.id.listenMicButton);
-        /*
+        */
+
+        mRecordButton = (Button) findViewById(R.id.record);
         mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,7 +404,6 @@ public class ListenActivity extends Activity {
                 ListenActivity.this.startActivity(intent);
             }
         });
-        */
     }
 
 
@@ -472,7 +482,7 @@ public class ListenActivity extends Activity {
 //            mLikeButton.setEnabled(false);
 //            mFlagButton.setChecked(false);
 //            mFlagButton.setEnabled(false);
-            mRefineButton.setEnabled(false);
+            mListenModifyButton.setEnabled(false);
         } else {
             // connected to RWService
             boolean isPlaying = mRwBinder.isPlaying();
