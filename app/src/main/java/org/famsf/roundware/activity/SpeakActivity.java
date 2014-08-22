@@ -211,8 +211,8 @@ public class SpeakActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speak);
 
-        //mMapView = (MapView) findViewById(R.id.speakMapView);
-        //mMapView.onCreate(savedInstanceState);
+        mMapView = (MapView) findViewById(R.id.map);
+        mMapView.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
