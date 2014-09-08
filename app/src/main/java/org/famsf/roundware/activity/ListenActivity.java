@@ -400,8 +400,7 @@ public class ListenActivity extends Activity {
             @Override
             public void onClick(View v) {
                 stopPlayback();
-                Intent intent = new Intent(ListenActivity.this, SpeakActivity.class);
-                ListenActivity.this.startActivity(intent);
+                SpeakActivity.showLegalDialogIfNeeded(ListenActivity.this, mRwBinder);
             }
         });
     }

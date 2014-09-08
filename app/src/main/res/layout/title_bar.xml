@@ -25,6 +25,8 @@
         android:layout_toLeftOf="@+id/right_title_button"
         android:layout_centerVertical="true"
         android:gravity="center"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_gravity="center"
         android:textAppearance="@style/TitleBar.Text"
         android:text="@string/listen_title"/>
 

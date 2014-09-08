@@ -27,7 +27,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Life in Your Community"
                 android:layout_below="@+id/title_bar"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"

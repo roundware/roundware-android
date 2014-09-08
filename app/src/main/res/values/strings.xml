@@ -145,7 +145,7 @@
 
 <!-- Listen screen content descriptions (for Talk Back) -->
 <string name="listen_title">Listen</string>
-<string name="listen_filter_done_button_description">Done</string>
+<string name="done">Done</string>
 <string name="listen_main_screen_description">You are listening to</string>
 <string name="listen_main_home_button_description">Home</string>
 <string name="record_button">Record</string>
@@ -167,7 +167,17 @@
 <string name="agreement">Agreement</string>
 <string name="accept">Accept</string>
 <string name="decline">Decline</string>
+<string name="cancel">Cancel</string>
+<string name="record_sub_title">Life in Your Community</string>
 
 <string name="please_wait">Please wait...</string>
+
+<!-- Refine screen -->
+<string name="refine_title">Refine</string>
+<string name="refine_question">Who do you want to hear?</string>
+<string name="refine_help">Select from the options below</string>
+<string name="community_button">Community</string>
+<string name="museum_button">Museum</string>
+
 
 </resources>

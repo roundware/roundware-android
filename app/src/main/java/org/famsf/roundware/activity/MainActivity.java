@@ -23,7 +23,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -43,7 +42,7 @@ import android.widget.ViewFlipper;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
-import org.famsf.roundware.utils.VersionDialog;
+
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.halseyburgund.rwframework.core.RW;
 import com.halseyburgund.rwframework.core.RWService;
@@ -157,7 +156,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        resetLegalNoticeSetting();
+        // Why would we want this reset every time the app starts???
+        //resetLegalNoticeSetting();
 
         initUIWidgets();
         updateUIState(false);
@@ -371,7 +371,7 @@ public class MainActivity extends Activity {
         mSpeakButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeakActivity.class));
+                SpeakActivity.showLegalDialogIfNeeded(MainActivity.this, mRwBinder);
             }
         });
         mInfoButton = (ImageButton) findViewById(R.id.infoButton);

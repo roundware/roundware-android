@@ -96,6 +96,11 @@ public class SpeakActivity extends Activity {
     private final static String ROUNDWARE_TAGS_TYPE = "speak";
 
 
+    // NOTE: Order must match R.layout.activity_speak
+    private static final int RECORD_LAYOUT = 0;
+    private static final int FILTER_LAYOUT = 1;
+    private static final int THANKS_LAYOUT = 2;
+
     // fields
     private ViewFlipper mViewFlipper;
     private WebView mWebView;
@@ -108,7 +113,6 @@ public class SpeakActivity extends Activity {
     private ToggleButton mRecordButton;
     private Button mRerecordButton;
     private Button mUploadButton;
-    private Button mCancelButton;
     private Button mListenMoreButton;
     private Button mSpeakMoreButton;
     private RWService mRwBinder;
@@ -128,6 +132,11 @@ public class SpeakActivity extends Activity {
     private String mContentFileDir;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
+
+    // Custom ActionBar
+    private TextView mTitleView;
+    private Button mLeftTitleButton;
+    private Button mRightTitleButton;
 
     // click listeners
     private View.OnClickListener mRecordListener;
@@ -248,7 +257,7 @@ public class SpeakActivity extends Activity {
         // TODO: test (back) navigation, define tasks and activity stacks
 
         if (mViewFlipper != null) {
-            mViewFlipper.setDisplayedChild(0);
+            showRecord();
         }
     }
 
@@ -417,30 +426,9 @@ public class SpeakActivity extends Activity {
     private void initUIWidgets() {
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
-        // button to agree to legal agreement
-        mAgreeButton = (Button) findViewById(R.id.left_title_button);
-        mAgreeButton.setText(R.string.accept);
-        mAgreeButton.setEnabled(false);
-        mAgreeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewFlipper.showNext();
-                updateUIState();
-            }
-        });
-
-        TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setText(R.string.agreement);
-
-        // button to decline legal agreement
-        mDeclineButton = (Button) findViewById(R.id.right_title_button);
-        mDeclineButton.setText(R.string.decline);
-        mDeclineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        mTitleView = (TextView) findViewById(R.id.title);
+        mLeftTitleButton = (Button) findViewById(R.id.left_title_button);
+        mRightTitleButton = (Button) findViewById(R.id.right_title_button);
 
         // webview for showing tag filter web content
         mWebView = (WebView) findViewById(R.id.speakFilterWebView);
@@ -521,9 +509,6 @@ public class SpeakActivity extends Activity {
         mRerecordButton = (Button) findViewById(R.id.speakReRecordButton);
         mRerecordButton.setOnClickListener(mRerecordListener);
 
-        mCancelButton = (Button) findViewById(R.id.speakRecordCancelButton);
-        mCancelButton.setOnClickListener(mCancelListener);
-
         mListenMoreButton = (Button) findViewById(R.id.speakHeadphonesButton);
         mListenMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -541,21 +526,6 @@ public class SpeakActivity extends Activity {
                 startActivity(new Intent(getApplicationContext(), SpeakActivity.class));
             }
         });
-
-        // modify screen depending on type of recording being made
-        if (mIsRecordingGeneralFeedback) {
-            // skip agreement and filter views
-            mViewFlipper.setDisplayedChild(2);
-
-            TextView tv = (TextView) findViewById(R.id.speakRecordHeaderTextView);
-            tv.setText(R.string.speak_feedback_header_text);
-
-            tv = (TextView) findViewById(R.id.speakTitleTextView);
-            tv.setText(R.string.speak_feedback_message_text);
-
-            ImageView iv = (ImageView) findViewById(R.id.recordingInstructionsImageView);
-            iv.setBackgroundResource(R.drawable.steps_text_feedback);
-        }
     }
 
 
@@ -577,13 +547,16 @@ public class SpeakActivity extends Activity {
             mRerecordButton.setEnabled(false);
             mUploadButton.setEnabled(false);
         } else {
-            // update legal agreement text
-            TextView tx = (TextView) findViewById(R.id.speakLegalTextView);
-            if (tx != null) {
-                tx.setText(mRwBinder.getConfiguration().getLegalAgreement());
+            // connected to RWService
+
+            // Show LegalDialog if needed
+            mViewFlipper.setVisibility(View.VISIBLE);
+            if (mIsRecordingGeneralFeedback) {
+                showGeneralFeedback();
+            } else {
+                showRecord();
             }
 
-            // connected to RWService
             mRecordButton.setEnabled(true);
             if (mPlayer != null) {
                 changeToRecordingPlaybackUIState();
@@ -603,6 +576,8 @@ public class SpeakActivity extends Activity {
      * Updates the UI for recording playback state.
      */
     private void changeToRecordingPlaybackUIState() {
+        showRecord();
+
         // change record toggle button
         Drawable img = getResources().getDrawable(R.drawable.speak_play_pause_button);
         mRecordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
@@ -618,7 +593,6 @@ public class SpeakActivity extends Activity {
         // set other button states and handlers
         mRerecordButton.setEnabled(false);
         mUploadButton.setEnabled(false);
-        mCancelButton.setOnClickListener(mCancelListener);
     }
 
 
@@ -626,6 +600,8 @@ public class SpeakActivity extends Activity {
      * Updates the UI for recording lead-in playback state.
      */
     private void changeToRecordingLeadInUIState() {
+        showRecord();
+
         // change record toggle button
         Drawable img = getResources().getDrawable(R.drawable.speak_record_pause_button);
         mRecordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
@@ -643,7 +619,6 @@ public class SpeakActivity extends Activity {
         mRerecordButton.setOnClickListener(null);
         mUploadButton.setEnabled(false);
         mUploadButton.setOnClickListener(null);
-        mCancelButton.setOnClickListener(mCancelListener);
     }
 
 
@@ -651,6 +626,8 @@ public class SpeakActivity extends Activity {
      * Updates the UI for recording in progress state.
      */
     private void changeToRecordingUIState() {
+        showRecord();
+
         // change record toggle button
         Drawable img = getResources().getDrawable(R.drawable.speak_record_pause_button);
         mRecordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
@@ -667,7 +644,6 @@ public class SpeakActivity extends Activity {
         mRerecordButton.setOnClickListener(null);
         mUploadButton.setEnabled(false);
         mUploadButton.setOnClickListener(null);
-        mCancelButton.setOnClickListener(mCancelListener);
     }
 
 
@@ -675,6 +651,7 @@ public class SpeakActivity extends Activity {
      * Updates the UI for not recording state.
      */
     private void changeToNotRecordingUIState() {
+        showRecord();
         // update counter, level meter and instructions
         mSpeakInstructionsView.setVisibility(View.VISIBLE);
         mRecordingTimeText.setVisibility(View.INVISIBLE);
@@ -690,13 +667,11 @@ public class SpeakActivity extends Activity {
         if (mHasRecording) {
             Drawable img = getResources().getDrawable(R.drawable.speak_play_pause_button);
             mRecordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
-            mCancelButton.setOnClickListener(mCancelListener);
             mRerecordButton.setOnClickListener(new ConfirmDelete(new ContinueRerecord()));
             mUploadButton.setOnClickListener(mSubmitListener);
         } else {
             Drawable img = getResources().getDrawable(R.drawable.speak_record_pause_button);
             mRecordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
-            mCancelButton.setOnClickListener(mCancelListener);
             mRerecordButton.setOnClickListener(null);
             mUploadButton.setOnClickListener(mSubmitListener);
         }
@@ -1044,7 +1019,7 @@ public class SpeakActivity extends Activity {
                     ll.setVisibility(View.VISIBLE);
                     Location loc = mRwBinder.getLastKnownLocation();
                     showMarkerOnMap(loc.getLatitude(), loc.getLongitude());
-                    mViewFlipper.showNext();
+                    mViewFlipper.setDisplayedChild(THANKS_LAYOUT);
                 } else {
                     // no map available, hide view to show background
                     ll.setVisibility(View.INVISIBLE);
@@ -1212,4 +1187,68 @@ public class SpeakActivity extends Activity {
         }
     }
 
+    public static void showLegalDialogIfNeeded(final Context context, RWService rwService) {
+        String legalText = rwService.getConfiguration().getLegalAgreement();
+        boolean accepted = Settings.getSharedPreferences().getBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
+
+        if (accepted) {
+            context.startActivity(new Intent(context, SpeakActivity.class));
+        } else {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.agreement);
+            builder.setMessage(legalText);
+            builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Settings.getSharedPreferences().edit().putBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, true).commit();
+                    context.startActivity(new Intent(context, SpeakActivity.class));
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(R.string.decline, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setCancelable(true);
+            builder.show();
+        }
+    }
+
+    private void showRecord() {
+        mViewFlipper.setDisplayedChild(RECORD_LAYOUT);
+
+        mTitleView.setText(R.string.record_button);
+        mLeftTitleButton.setVisibility(View.INVISIBLE);
+
+        mRightTitleButton.setVisibility(View.VISIBLE);
+        mRightTitleButton.setText(R.string.cancel);
+        mRightTitleButton.setOnClickListener(mCancelListener);
+
+        TextView textView = (TextView) findViewById(R.id.speakTitleTextView);
+        textView.setText(R.string.record_sub_title);
+    }
+
+    private void showFilters() {
+        mViewFlipper.setDisplayedChild(FILTER_LAYOUT);
+    }
+
+    private void showThanks() {
+        mViewFlipper.setDisplayedChild(THANKS_LAYOUT);
+    }
+
+    private void showGeneralFeedback() {
+        mViewFlipper.setDisplayedChild(RECORD_LAYOUT);
+
+        mTitleView.setText(R.string.speak_feedback_header_text);
+
+        mRightTitleButton.setVisibility(View.VISIBLE);
+        mRightTitleButton.setText(R.string.cancel);
+        mRightTitleButton.setOnClickListener(mCancelListener);
+
+        ImageView imageView = (ImageView) findViewById(R.id.recordingInstructionsImageView);
+        imageView.setBackgroundResource(R.drawable.steps_text_feedback);
+    }
 }
