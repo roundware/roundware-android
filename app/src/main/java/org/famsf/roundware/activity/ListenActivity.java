@@ -117,9 +117,8 @@ public class ListenActivity extends Activity {
                     // TODO: dialog?? error??
                 }
             }
-            
-//            String fileUrl = "file:///android_asset/listen-a.html";
-//            mWebView.loadUrl(fileUrl);
+            String fileUrl = "file:///android_asset/listen-a.html";
+            mWebView.loadUrl(fileUrl);
             
             
             updateUIState();
@@ -371,7 +370,7 @@ public class ListenActivity extends Activity {
         mRefineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mViewFlipper.showNext();
             }
         });
 

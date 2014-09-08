@@ -52,6 +52,7 @@ import java.util.UUID;
 
 public class RefineActivity extends Activity {
     public static final String LOGTAG = RefineActivity.class.getSimpleName();
+    private final static boolean D = true;
 
     // view references
     private ViewFlipper mViewFlipper;
@@ -60,6 +61,28 @@ public class RefineActivity extends Activity {
     private View mCommunityOverlay;
     private View mMuseumOverlay;
     private SeekBar mSeekBar;
+
+    private RWService mRwBinder;
+
+    /**
+     * Handles connection state to an RWService Android Service. In this
+     * activity it is assumed that the service has already been started
+     * by another activity and we only need to connect to it.
+     */
+    private ServiceConnection rwConnection = new ServiceConnection() {
+        @SuppressLint("SetJavaScriptEnabled")
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            if (D) { Log.d(LOGTAG, "+++ onServiceConnected +++"); }
+            mRwBinder = ((RWService.RWServiceBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            if (D) { Log.d(LOGTAG, "+++ onServiceDisconnected +++"); }
+            mRwBinder = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

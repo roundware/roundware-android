@@ -1,0 +1,229 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta id="extViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <!--<meta name="viewport" content="width=device-width,user-scalable=no">-->
+
+    <title>Roundware Speak Filtering</title>
+
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+
+    <!-- weinre code
+    // <script src="http://192.168.30.7:8081/target/target-script-min.js#anonymous"></script>-->
+
+</head>
+<body>
+    <div id="content">
+        <div id="nav">
+            <!--<span id="select-all">Select All</span>-->
+            <span id="screen-title">Add a Story</span>
+            <span id="cancel">Cancel</span>
+        </div>
+
+        <div id='gallery'>
+
+            <div id='slider'><ul></ul></div>
+
+            <nav>
+                <!-- <a href='#' id='prev'><em>prev</em></a> -->
+                <span id='position'></span>
+                <!-- <a href='#' id='next'><em>next</em></a> -->
+            </nav>
+            <!-- <div id="divider"><img class="hires" src="img/"></div> -->
+        </div>
+
+        <div id="scroller">
+            <div id="container" class="clearfix"></div>
+        </div>
+    </div>
+
+<!-- include individual files for development -->
+<script>document.write('<link rel="stylesheet" href="css/webview-a.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
+<script>window.jQuery || document.write('<script src="js/jquery-1.7.1.min.js"><\/script>')</script>
+<script src="js/modernizr-2.5.3.min.js"></script>
+<script src="js/jquery.tappable.js"></script>
+<script src="js/swipe.js"></script>
+<script src="js/jquery.isotope.min.js"></script>
+<script>document.write('<script src="js/roundware-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
+<script>document.write('<script src="js/speak-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
+
+<!-- include this for production; all js minimized into a single file -->
+<!--<script>document.write('<link rel="stylesheet" href="css/webview.min.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
+<script>document.write('<script src="js/rw.speak.full.min.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>-->
+
+<script>
+if ( Modernizr.csstransforms ) {
+	window.mySwipe = new Swipe(document.getElementById('slider'));
+}
+
+Roundware.tags = {
+    "speak": [
+        {
+            "code": "usertype",
+            "defaults": [],
+            "header_text": "",
+            "name": "Who are you?",
+            "options": [
+                {
+                    "data": "class=tag-one",
+                    "order": 2,
+                    "relationships": [
+                        154,
+                        155,
+                        156,
+                        157,
+                        158,
+                        159
+                    ],
+                    "tag_id": 153,
+                    "value": "Visitor"
+                },
+                {
+                    "data": "class=tag-one",
+                    "order": 8,
+                    "relationships": [
+                        153,
+                        154,
+                        155,
+                        157,
+                        158,
+                        159
+                    ],
+                    "tag_id": 156,
+                    "value": "Dog"
+                }
+            ],
+            "order": 2,
+            "select": "single"
+        },
+        {
+            "code": "question",
+            "defaults": [],
+            "header_text": "",
+            "name": "What do you want to talk about?",
+            "options": [
+                {
+                    "data": "class=tag-two",
+                    "order": 2,
+                    "relationships": [
+                        153,
+                        154,
+                        155,
+                        156,
+                        158,
+                        159
+                    ],
+                    "tag_id": 157,
+                    "value": "Why are you here in Golden Gate Park?"
+                },
+                {
+                    "data": "class=tag-two",
+                    "order": 4,
+                    "relationships": [
+                        153,
+                        154,
+                        155,
+                        156,
+                        157,
+                        159
+                    ],
+                    "tag_id": 158,
+                    "value": "Describe something you see what what it reminds you of."
+                },
+                {
+                    "data": "class=tag-two",
+                    "order": 6,
+                    "relationships": [
+                        153,
+                        154,
+                        155,
+                        156,
+                        157,
+                        158
+                    ],
+                    "tag_id": 159,
+                    "value": "Pretend you are this sculpture and tell us about your day."
+                }
+            ],
+            "order": 4,
+            "select": "single"
+        }
+    ]
+};
+
+// The following line is replaced by the app
+/*%roundware_tags%*/
+
+// turn off scrolling for the entire page
+document.ontouchmove = function(e) {e.preventDefault()};
+
+// enable scrolling within a particular div
+scroller.ontouchmove = function(e) { e.stopPropagation(); };
+
+// disable rubberband scrolling in safari
+document.body.addEventListener('touchmove', function(event) {
+	console.log(event.source);
+  	//if (event.source == document.body)
+	event.preventDefault();
+}, false);
+
+window.onresize = function() {
+  //$(document.body).width(window.innerWidth).height(window.innerHeight);
+}
+
+$(function() {
+  window.onresize();
+
+    if (window.devicePixelRatio == 2) {
+        var images = $(".hires");
+
+        // loop through the images and make them hi-res
+        for(var i = 0; i < images.length; i++) {
+          	// create new image name
+          	var imageType = images[i].src.substr(-4);
+         	var imageName = images[i].src.substr(0, images[i].src.length - 4);
+          	imageName += "@2x" + imageType;
+
+          	//rename image
+          	images[i].src = imageName;
+			console.log("retina");
+ 		 }
+	}
+
+	// allow for list area #scroller to expand to fit whatever space is available in lower portion of window
+	var upper_height = $('#gallery').height() + $('#nav').height();
+    remaining_height = parseInt($(window).height() - upper_height); // subtract sum of margins and padding values to match properly
+    $('#scroller').height(remaining_height);
+
+	window.onresize = function() {
+  		var upper_height = $('#gallery').height() + $('#nav').height();
+        remaining_height = parseInt($(window).height() - upper_height);
+        $('#scroller').height(remaining_height);
+	}
+
+});
+
+var slider_pos = 0;
+
+
+
+function select_all() {
+	$(".isotope-item").not(".isotope-hidden").removeClass('unselected').addClass('selected').addClass('tag');
+
+	// clear selected tags ...
+	Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code] = [];
+
+	// and turn them all back on
+	$.each(Roundware.tags.listen[slider_pos].options, function(t, tag) {
+		Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code].push(tag.tag_id);
+	});
+	do_the_magic();
+}
+
+</script>
+
+</body>
+</html>
