@@ -229,10 +229,8 @@ public class RWTags {
 		
 		try {
 			JSONObject root = new JSONObject(jsonResponse);
-			if (root != null) {
-	 			parseTagsFromJson(JSON_KEY_MODE_LISTEN, root);
-	 			parseTagsFromJson(JSON_KEY_MODE_SPEAK, root);
-			}
+			parseTagsFromJson(JSON_KEY_MODE_LISTEN, root);
+			parseTagsFromJson(JSON_KEY_MODE_SPEAK, root);
 		} catch (JSONException e) {
 			Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE, e);
 		}

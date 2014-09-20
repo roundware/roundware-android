@@ -1035,11 +1035,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	public boolean isPlayingStaticSoundtrack() {
 		String val = getString(R.string.rw_spec_static_soundtrack_session_id);
 		String sessionId = configuration.getSessionId();
-		if ((val != null) && (sessionId != null) && (sessionId.equals(val))) {
-			return true;
-		} else {
-			return false;
-		}
+		return (sessionId != null) && sessionId.equals(val);
 	}
 
 

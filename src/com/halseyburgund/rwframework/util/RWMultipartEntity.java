@@ -124,7 +124,7 @@ public class RWMultipartEntity implements HttpEntity {
 			out.write("Content-Transfer-Encoding: binary\r\n\r\n".getBytes());
 
 			final byte[] tmp = new byte[4096];
-			int l = 0;
+			int l;
 			while ((l = fin.read(tmp)) != -1) {
 				out.write(tmp, 0, l);
 			}

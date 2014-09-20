@@ -117,9 +117,11 @@ public class RWAction {
             noteFile.delete();
             return "";
         } else {
-            if (D) { Log.d(TAG, "Sending GET to : " + getUrl(), null); }
-            String response = RWHttpManager.doGet(getUrl(), getServerProperties(), timeOutSec);
-            return response;
+            if (D) {
+                Log.d(TAG, "Sending GET to : " + getUrl(), null);
+            }
+
+            return RWHttpManager.doGet(getUrl(), getServerProperties(), timeOutSec);
         }
     }
 

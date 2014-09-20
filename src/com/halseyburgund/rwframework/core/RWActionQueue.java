@@ -99,9 +99,7 @@ public class RWActionQueue {
         int count = 0;
         try {
             db = new RWDbAdapter(mContext);
-            if (db != null) {
-                count = db.count();
-            }
+            count = db.count();
         } finally {
             if (db != null) {
                 db.close();
@@ -121,9 +119,7 @@ public class RWActionQueue {
         RWDbAdapter db = null;
         try {
             db = new RWDbAdapter(mContext);
-            if (db != null) {
-                db.insert(props);
-            }
+            db.insert(props);
         } finally {
             if (db != null) {
                 db.close();
@@ -142,9 +138,7 @@ public class RWActionQueue {
         RWAction action = null;
         try {
             db = new RWDbAdapter(mContext);
-            if (db != null) {
-                action = db.getAction();
-            }
+            action = db.getAction();
         } finally {
             if (db != null) {
                 db.close();
@@ -170,9 +164,7 @@ public class RWActionQueue {
         RWDbAdapter db = null;
         try {
             db = new RWDbAdapter(mContext);
-            if (db != null) {
-                db.delete(action.getDatabaseId());
-            }
+            db.delete(action.getDatabaseId());
         } finally {
             if (db != null) {
                 db.close();
@@ -206,8 +198,8 @@ public class RWActionQueue {
     private boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (String aChildren : children) {
+                boolean success = deleteDir(new File(dir, aChildren));
                 if (!success) {
                     return false;
                 }

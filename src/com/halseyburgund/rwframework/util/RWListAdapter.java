@@ -77,15 +77,15 @@ public class RWListAdapter extends BaseAdapter {
             if (text != null) {
                 text.setText(q.getText());
             }
-        }
 
-        boolean selected = q.isOn();
-    	if (image != null) {
-    		image.setSelected(selected);
-    	}
-    	if (text != null) {
-    		text.setSelected(selected);
-    	}
+            boolean selected = q.isOn();
+            if (image != null) {
+                image.setSelected(selected);
+            }
+            if (text != null) {
+                text.setSelected(selected);
+            }
+        }
 
         return v;
     }

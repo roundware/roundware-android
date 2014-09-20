@@ -121,8 +121,8 @@ public class RWHttpManager {
         HttpClient httpClient = new DefaultHttpClient(httpParams);
 
         HttpPost request = new HttpPost(page);
-        HttpResponse response = null;
-        HttpEntity entity = null;
+        HttpResponse response;
+        HttpEntity entity;
 
         StringBuffer sbResponse = new StringBuffer();
 

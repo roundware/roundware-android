@@ -144,7 +144,7 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 	    			FileOutputStream outputStream = new FileOutputStream(innerFile);
 	    			final int BUFFER_SIZE = 2048;
 	    			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
-	    			int count = 0;
+	    			int count;
 	    			byte[] buffer = new byte[BUFFER_SIZE];
 	    			while ((count = zipInputStream.read(buffer, 0, BUFFER_SIZE)) != -1) {
 	    				bufferedOutputStream.write(buffer, 0, count);
