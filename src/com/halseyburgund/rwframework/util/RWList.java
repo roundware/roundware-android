@@ -407,7 +407,7 @@ public class RWList extends ArrayList<RWListItem> {
     public boolean select(RWListItem item) {
     	RWTag tag = item.getTag();
     	RWList sublist = filter(tag);
-    	if ((item != null) && (!item.isOn())) {
+    	if (!item.isOn()) {
 	    	// only allow if does not break max selections
 	    	if (sublist.getSelectedCount(tag) >= sublist.mMaxSelectionAllowed) {
 	    		if (sublist.isSingleSelect(tag)) {
@@ -435,7 +435,7 @@ public class RWList extends ArrayList<RWListItem> {
      */
     public boolean deselect(RWListItem item) {
     	RWTag tag = item.getTag();
-    	if ((item != null) && (item.isOn())) {
+    	if (item.isOn()) {
     		// only allow if does not break min selections
     		if (getSelectedCount(tag) > mMinSelectionRequired) {
     			item.setOff();

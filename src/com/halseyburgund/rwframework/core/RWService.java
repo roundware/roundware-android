@@ -119,12 +119,12 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 		 * Session is off-line; last tried server operation timed out. 
 		 */
 		OFF_LINE 
-	};
+	}
 	
 	/**
 	 * Types of server messages that can be decoded.
 	 */
-    private enum ServerMessageType { ERROR, USER, SHARING, TRACEBACK };
+    private enum ServerMessageType { ERROR, USER, SHARING, TRACEBACK }
 	
 	// service binder
 	private final IBinder mBinder = new RWServiceBinder();
@@ -376,7 +376,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 					if (!mOnlyConnectOverWiFi) {
 						manageSessionState(SessionState.ON_LINE);
 					} else {
-						NetworkInfo currentNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+						NetworkInfo currentNetworkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 						if (currentNetworkInfo != null) {
 							if ((currentNetworkInfo.isConnected()) && (currentNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 								manageSessionState(SessionState.ON_LINE);
@@ -1168,8 +1168,8 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	public boolean isConnected() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
-		if ((ni != null) && (ni.isConnected())) {
-			if ((mOnlyConnectOverWiFi) && (!(ni.getType() == ConnectivityManager.TYPE_WIFI))) {
+		if ((ni != null) && ni.isConnected()) {
+			if (mOnlyConnectOverWiFi && ni.getType() != ConnectivityManager.TYPE_WIFI) {
 				return false;
 			}
 			return true;
@@ -1462,8 +1462,8 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
         	if ((now) && (sharingBroadcast)) {
 	        	String envId = String.valueOf(envelopeId);
 				String msg = configuration.getSharingMessage();
-				String url = "";
-				
+				String url;
+
 				// url might be encoded in the sharing message
 				if ((msg != null) && (msg.contains("|"))) {
 					String[] parts = msg.split("\\|");
