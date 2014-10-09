@@ -65,6 +65,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 // import android.os.StrictMode;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.halseyburgund.rwframework.R;
@@ -442,7 +443,8 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 					final Writer result = new StringWriter();
 				    final PrintWriter printWriter = new PrintWriter(result);
 				    e.printStackTrace(printWriter);
-					rwSendLogEvent(R.string.rw_et_client_error, null, result.toString(), true);
+                    // DO NOT DO THIS ON MAIN THREAD!!
+					//rwSendLogEvent(R.string.rw_et_client_error, null, result.toString(), true);
 				}
 			}
 
@@ -741,6 +743,10 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 	 * @param tags of tags options for the audio
 	 */
 	public void playbackStart(RWList tags) {
+        // FIXME: Not the correct way to handle this.  Don't run on the main thread!!!!!
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         if (D) { Log.d(TAG, "+++ playbackStart +++"); }
 		if (!isPlaying()) {
 			createPlayer();
