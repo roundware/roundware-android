@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="app_info_url">***REMOVED***</string>
-<string name="app_web_url">http://www.storiesfrommainstreet.org/</string>
+<string name="explore_url">***REMOVED***</string>
+<string name="refine_url">"file:///android_asset/listen-a.html"</string>
 
 <string name="app_name">FAMscapes</string>
 <string name="app_title">FAMscapes</string>
@@ -156,7 +157,9 @@
 <!-- Speak screen content descriptions (for Talk Back) -->
 <string name="speak_screen_description">Speak</string>
 <string name="speak_main_screen_description">Make a recording</string>
-<string name="speak_instructions_description">Record your comments. Listen to your recording. Upload for others to hear.</string>
+<string name="speak_instructions_record">1. Record</string>
+<string name="speak_instructions_listen">2. Listen</string>
+<string name="speak_instructions_upload">3. Upload</string>
 <string name="speak_record_button_description">record button</string>
 <string name="speak_rerecord_button_description">re-record button</string>
 <string name="speak_submit_button_description">upload button</string>

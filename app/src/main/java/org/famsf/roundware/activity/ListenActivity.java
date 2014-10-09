@@ -62,7 +62,7 @@ public class ListenActivity extends Activity {
     private ViewFlipper mViewFlipper;
     private WebView mWebView;
     private Button mHomeButton;
-    private Button mListenModifyButton;
+    private Button mExploreButton;
 
     private Button mRefineButton;
     private ToggleButton mPlayButton;
@@ -98,28 +98,6 @@ public class ListenActivity extends Activity {
             mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
             mTagsList = new RWList(mProjectTags);
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
-
-            
-            // get the folder where the web content files are stored
-            
-            mContentFileDir = mRwBinder.getContentFilesDir();
-            if ((mWebView != null) && (mContentFileDir != null)) {
-                String contentFileName = mContentFileDir + "listen-a.html";
-                try {
-                    String data = mRwBinder.readContentFile(contentFileName);
-                  //String data = mRwBinder.readAssetFile("listen-a.html");
-                    data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
-                    // mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
-                    mWebView.loadDataWithBaseURL("file:///android_asset/listen-a.html", data, null, null, null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(LOGTAG, "Problem loading content file: listen-a.html");
-                    // TODO: dialog?? error??
-                }
-            }
-            String fileUrl = "file:///android_asset/listen-a.html";
-            mWebView.loadUrl(fileUrl);
-            
             
             updateUIState();
 
@@ -308,6 +286,8 @@ public class ListenActivity extends Activity {
                         }
                         mViewFlipper.showPrevious();
                         updateUIState();
+                    } else if ("//webview_done".equalsIgnoreCase((schemeSpecificPart))) {
+                        mViewFlipper.showPrevious();
                     } else {
                         if (mTagsList != null) {
                             mTagsList.setSelectionFromWebViewMessageUri(uri);
@@ -321,26 +301,20 @@ public class ListenActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (mListenModifyButton != null) {
-                    mListenModifyButton.setEnabled(true);
+                if (mViewFlipper.getCurrentView().getId() != R.id.web_layout) {
+                    mViewFlipper.showNext();
                 }
                 super.onPageFinished(view, url);
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (mListenModifyButton != null) {
-                    mListenModifyButton.setEnabled(false);
-                }
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
               Log.d(LOGTAG, "Error: " + description);
-                if (mListenModifyButton != null) {
-                    mListenModifyButton.setEnabled(false);
-                }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
         });
@@ -356,12 +330,12 @@ public class ListenActivity extends Activity {
             }
         });
 
-        mListenModifyButton = (Button) findViewById(R.id.right_title_button);
-        mListenModifyButton.setOnClickListener(new View.OnClickListener() {
+        mExploreButton = (Button) findViewById(R.id.right_title_button);
+        mExploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mViewFlipper != null) {
-                    mViewFlipper.showNext();
+                    mWebView.loadUrl(getString(R.string.explore_url));
                 }
             }
         });
@@ -370,7 +344,24 @@ public class ListenActivity extends Activity {
         mRefineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mViewFlipper.showNext();
+                // get the folder where the web content files are stored
+                String fileUrl = getString(R.string.refine_url);
+                mContentFileDir = mRwBinder.getContentFilesDir();
+                if ((mWebView != null) && (mContentFileDir != null)) {
+                    String contentFileName = mContentFileDir + "listen-a.html";
+                    try {
+                        String data = mRwBinder.readContentFile(contentFileName);
+                        //String data = mRwBinder.readAssetFile("listen-a.html");
+                        data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                        // mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
+                        mWebView.loadDataWithBaseURL(fileUrl, data, null, null, null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e(LOGTAG, "Problem loading content file: listen-a.html");
+                        // TODO: dialog?? error??
+                    }
+                }
+                mWebView.loadUrl(fileUrl);
             }
         });
 
@@ -480,7 +471,7 @@ public class ListenActivity extends Activity {
 //            mLikeButton.setEnabled(false);
 //            mFlagButton.setChecked(false);
 //            mFlagButton.setEnabled(false);
-            mListenModifyButton.setEnabled(false);
+            //mExploreButton.setEnabled(false);
         } else {
             // connected to RWService
             boolean isPlaying = mRwBinder.isPlaying();
@@ -517,7 +508,7 @@ public class ListenActivity extends Activity {
                 if (resId != 0) {
                     mViewFlipper.setBackgroundResource(resId);
                 } else {
-                    mViewFlipper.setBackgroundResource(R.drawable.bg_90);
+                    mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
                 }
             }
         }

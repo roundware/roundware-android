@@ -106,7 +106,7 @@ public class SpeakActivity extends Activity {
     private WebView mWebView;
     private Button mAgreeButton;
     private Button mDeclineButton;
-    private ImageView mSpeakInstructionsView;
+    private View mSpeakInstructionsView;
     private TextView mRecordingTimeText;
     private LinearLayout mRecordingLevelMeterLayout;
     private LevelMeterView mRecordingLevelMeterView;
@@ -496,7 +496,7 @@ public class SpeakActivity extends Activity {
         });
 
         mRecordingTimeText = (TextView) findViewById(R.id.recordingTimeTextView);
-        mSpeakInstructionsView = (ImageView) findViewById(R.id.recordingInstructionsImageView);
+        mSpeakInstructionsView = findViewById(R.id.instruction_layout);
         mRecordingLevelMeterLayout = (LinearLayout) findViewById(R.id.recordingLevelMeterLinearLayout);
         mRecordingLevelMeterView = (LevelMeterView) findViewById(R.id.recordingLevelMeterView);
 
@@ -702,7 +702,7 @@ public class SpeakActivity extends Activity {
                 if (resId != 0) {
                     mViewFlipper.setBackgroundResource(resId);
                 } else {
-                    mViewFlipper.setBackgroundResource(R.drawable.bg_90);
+                    mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
                 }
             }
         }
@@ -1247,8 +1247,5 @@ public class SpeakActivity extends Activity {
         mRightTitleButton.setVisibility(View.VISIBLE);
         mRightTitleButton.setText(R.string.cancel);
         mRightTitleButton.setOnClickListener(mCancelListener);
-
-        ImageView imageView = (ImageView) findViewById(R.id.recordingInstructionsImageView);
-        imageView.setBackgroundResource(R.drawable.steps_text_feedback);
     }
 }
