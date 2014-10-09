@@ -20,7 +20,7 @@
 <string name="info">Legal Notice</string>
 <string name="legal_notice_title">Legal Notice</string>
 <string name="notification_title">SFMS</string>
-<string name="notification_default_text">Press to return to Stories from Main Street</string>
+<string name="notification_default_text">Press to return to Explore the Art: Perspectives</string>
 <string name="error_title">Roundware Error</string>
 <string name="message_title">Roundware Message</string>
 <string name="record_counter_zero">0:00</string>
@@ -49,7 +49,7 @@
 <!-- version info (Android open source license text will be appended) -->
 <string name="version_text">
     \n
-    \nStories from Main Street was made using the open-source Roundware media platform, see
+    \nExplore the Art: Perspectives was made using the open-source Roundware media platform, see
     \nhttp://www.roundware.org for more information.
     \n
     \n
@@ -127,16 +127,16 @@
 <!-- label text items -->
 <string name="listen_main_header_text">Listen</string>
 <string name="speak_submitted_header_text">Thank You!</string>
-<string name="speak_submitted_recording_text">Your recording is currently being uploaded to Stories from Main Street. It will be available for everyone to hear momentarily!</string>
+<string name="speak_submitted_recording_text">Your recording is currently being uploaded to Explore the Art: Perspectives. It will be available for everyone to hear momentarily!</string>
 <string name="speak_feedback_header_text">Leave Feedback</string>
-<string name="speak_feedback_message_text">Please tell us what you think about Stories from Main Street.</string>
+<string name="speak_feedback_message_text">Please tell us what you think about Explore the Art: Perspectives.</string>
 
 <!-- button text items -->
 <string name="button_feedback">RECORD FEEDBACK</string>
 <string name="button_cancel_sharing">No, Thanks!</string>
 
 <!-- Home screen content descriptions (for Talk Back) -->
-<string name="home_screen_description">Stories from Main Street</string>
+<string name="home_screen_description">Explore the Art: Perspectives</string>
 <string name="home_listen_button_description">Listen</string>
 <string name="home_speak_button_description">Speak</string>
 <string name="home_info_button_description">Info</string>
