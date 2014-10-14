@@ -12,53 +12,52 @@
 
     <meta name="viewport" content="width=device-width,user-scalable=no">
 
-    <!-- weinre code
-    <script src="http://192.168.30.7:8081/target/target-script-min.js#anonymous"></script>-->
-    <!--<script src="http://debug.phonegap.com/target/target-script-min.js#halsey"></script> -->
+    <!--<link rel="stylesheet" href="css/sfms.css">-->
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <script>document.write('<link rel="stylesheet" href="css/webview.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
 
 </head>
-
 <body>
-    <div id="content">
-        <div id="nav">
-            <span id="select-all">Select All</span>
-            <span id="screen-title">Refine Audio</span>
-            <span id="done">Done</span>
-        </div>
 
-        <div id='gallery'>
-            <div id='slider'><ul></ul></div>
+  <div id="nav">
+    <span id="select-all">SELECT ALL</span>
+    <span id="screen-title">Refine</span>
+    <span id="done">DONE</span>
+  </div>
 
-            <nav class="listen">
-                <a href='#' id='prev'></a>
-                <span id='position'></span>
-                <a href='#' id='next'></a>
-            </nav>
+<div id='gallery'>
 
-            <!-- <div id="divider"></div> -->
-        </div>
+  <nav class="listen">
+    <a href='#' id='prev'></a>
+    <span id='position'></span>
+    <a href='#' id='next'></a>
+  </nav>
+
+  <div id='slider'><ul></ul></div>
+
+  <!-- <div id="divider"></div> -->
+
+</div>
 
 
-    <!--<div id="wrapper">-->
-    	<div id="scroller">
-    		<div id="container" class="clearfix"></div>
-        </div>
-    <!--</div>-->
+<!--<div id="wrapper">-->
+	<div id="scroller">
+		<div id="container" class="clearfix"></div>
+        <div id="usertype-slider"></div>
     </div>
+<!--</div>-->
 
-<!-- include individual files for development -->
-<script>document.write('<link rel="stylesheet" href="css/webview-a.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
 <script>window.jQuery || document.write('<script src="js/jquery-1.7.1.min.js"><\/script>')</script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
 <script src="js/modernizr-2.5.3.min.js"></script>
+<script src="js/roundware.js"></script>
 <script src="js/jquery.tappable.js"></script>
 <script src="js/swipe.min.js"></script>
 <script src="js/jquery.isotope.min.js"></script>
-<script>document.write('<script src="js/roundware-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
-<script>document.write('<script src="js/listen-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
-
-<!-- include this for production; all js minimized into a single file -->
-<!-- <script>document.write('<link rel="stylesheet" href="css/webview.min.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
-    <script>document.write('<script src="js/rw.listen.full.min.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script> -->
+<!--<script src="js/listen.js"></script>-->
+<!--force reload of js each time-->
+<script>document.write('<script src="js/listen.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
 
 <script>
 if ( Modernizr.csstransforms ) {
@@ -70,16 +69,14 @@ Roundware.tags = {
         {
             "code": "usertype",
             "defaults": [
-                153,
                 154,
-                155,
-                156
+                153
             ],
             "header_text": "",
             "name": "Who do you want to hear?",
             "options": [
                 {
-                    "data": "class=tag-one",
+                    "data": "class=tag-one community",
                     "order": 2,
                     "relationships": [
                         154,
@@ -90,10 +87,10 @@ Roundware.tags = {
                         159
                     ],
                     "tag_id": 153,
-                    "value": "Visitor"
+                    "value": "Community"
                 },
                 {
-                    "data": "class=tag-one",
+                    "data": "class=tag-one museum",
                     "order": 4,
                     "relationships": [
                         153,
@@ -104,35 +101,7 @@ Roundware.tags = {
                         159
                     ],
                     "tag_id": 154,
-                    "value": "Curator"
-                },
-                {
-                    "data": "class=tag-one",
-                    "order": 6,
-                    "relationships": [
-                        153,
-                        154,
-                        156,
-                        157,
-                        158,
-                        159
-                    ],
-                    "tag_id": 155,
-                    "value": "Educator"
-                },
-                {
-                    "data": "class=tag-one",
-                    "order": 8,
-                    "relationships": [
-                        153,
-                        154,
-                        155,
-                        157,
-                        158,
-                        159
-                    ],
-                    "tag_id": 156,
-                    "value": "Dog"
+                    "value": "Museum"
                 }
             ],
             "order": 2,
@@ -197,9 +166,20 @@ Roundware.tags = {
     ]
 };
 
-
 // The following line is replaced by the app
 /*%roundware_tags%*/
+
+var roundware_theme = '_dy';
+// The following line is replaced by the app
+/*%roundware_theme%*/
+
+// bg graphic swap based on roundware_theme variable sent from app
+if (roundware_theme == '_dy') {
+    $('body').removeClass('theme_lh').addClass('theme_dy');
+}
+else if (roundware_theme == '_lh') {
+    $('body').removeClass('theme_dy').addClass('theme_lh');
+}
 
 // turn off scrolling for the entire page
 document.ontouchmove = function(e) {e.preventDefault()};
@@ -215,7 +195,7 @@ document.body.addEventListener('touchmove', function(event) {
 }, false);
 
 window.onresize = function() {
-  //$(document.body).width(window.innerWidth).height(window.innerHeight);
+  $(document.body).width(window.innerWidth).height(window.innerHeight);
 }
 
 $(function() {
@@ -240,16 +220,15 @@ $(function() {
 //	}
 
 	// allow for list area #scroller to expand to fit whatever space is available in lower portion of window
-	var upper_height = $('#gallery').height() + $('#nav').height();
-	remaining_height = parseInt($(window).height() - upper_height); // subtract sum of margins and padding values to match properly
+	var gallery_height = $('#gallery').height();
+	remaining_height = parseInt($(window).height() - gallery_height - 44); // subtract sum of margins and padding values to match properly (44 w/ nav controls)
 	$('#scroller').height(remaining_height);
 
 	window.onresize = function() {
-  		var upper_height = $('#gallery').height() + $('#nav').height();
-		remaining_height = parseInt($(window).height() - upper_height);
+  		var gallery_height = $('#gallery').height();
+		remaining_height = parseInt($(window).height() - gallery_height - 44);
 		$('#scroller').height(remaining_height);
 	}
-
 
 });
 
@@ -257,8 +236,6 @@ var slider_pos = 0;
 
 
 </script>
-
-
 
 </body>
 </html>

@@ -16,6 +16,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -42,6 +45,7 @@ import com.halseyburgund.rwframework.util.RWListItem;
 
 import java.io.IOException;
 
+import org.famsf.roundware.MyApplication;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
@@ -78,6 +82,21 @@ public class ListenActivity extends Activity {
     private int mCurrentAssetId;
     private int mPreviousAssetId;
 
+    LocationListener mLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            if (MyApplication.getSite(location) == MyApplication.DE_YOUNG) {
+                mViewFlipper.setBackgroundResource(R.drawable.bg_listen_dy);
+            } else {
+                mViewFlipper.setBackgroundResource(R.drawable.bg_listen_lh);
+            }
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        public void onProviderEnabled(String provider) {}
+
+        public void onProviderDisabled(String provider) {}
+    };
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -203,6 +222,9 @@ public class ListenActivity extends Activity {
         if (mTagsList != null) {
             mTagsList.saveSelectionState(Settings.getSharedPreferences());
         }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.removeUpdates(mLocationListener);
     }
 
 
@@ -223,6 +245,9 @@ public class ListenActivity extends Activity {
         registerReceiver(rwReceiver, filter);
 
         startPlayback();
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, mLocationListener);
     }
 
 

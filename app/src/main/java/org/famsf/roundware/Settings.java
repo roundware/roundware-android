@@ -13,7 +13,6 @@ public class Settings {
     // preferences keys for parameter storage
     public final static String PREFS_KEY_RW_DEVICE_ID = "SavedRoundwareDeviceId";
 
-
     private Settings() {
     }
 

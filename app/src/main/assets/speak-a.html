@@ -1,58 +1,59 @@
+
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta id="extViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <!--<meta name="viewport" content="width=device-width,user-scalable=no">-->
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta id="extViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <!--<meta name="viewport" content="width=device-width,user-scalable=no">-->
 
-    <title>Roundware Speak Filtering</title>
+  <title>Roundware Speak Filtering</title>
 
-    <meta name="viewport" content="width=device-width,user-scalable=no">
+  <meta name="viewport" content="width=device-width,user-scalable=no">
 
-    <!-- weinre code
-    // <script src="http://192.168.30.7:8081/target/target-script-min.js#anonymous"></script>-->
+  <!--<link rel="stylesheet" href="css/sfms.css">-->
+  <script>document.write('<link rel="stylesheet" href="css/webview.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
+  <!--<<script>window.jQuery || document.write('<script src="js/jquery-1.7.1.min.js"><\/script>')</script>
+  <script src="js/modernizr-2.5.3.min.js"></script>
+  <script src="js/roundware.js"></script>
+  <script src="js/jquery.tappable.js"></script>
+  script src="js/swipe.min.js"></script>-->
+  <!--<script src="js/swipe.js"></script>
+  <script src="js/jquery.isotope.min.js"></script>
+  <script src="js/speak.js"></script>-->
+  <!--force reload of js each time-->
+  <script>document.write('<script src="js/speak.min.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
 
 </head>
 <body>
-    <div id="content">
-        <div id="nav">
-            <!--<span id="select-all">Select All</span>-->
-            <span id="screen-title">Add a Story</span>
-            <span id="cancel">Cancel</span>
-        </div>
 
-        <div id='gallery'>
+  <div id="nav">
+    <!--<span id="select-all">Select All</span>-->
+    <span id="screen-title">Speak</span>
+    <span id="cancel">CANCEL</span>
+  </div>
 
-            <div id='slider'><ul></ul></div>
+<div id='gallery'>
 
-            <nav>
-                <!-- <a href='#' id='prev'><em>prev</em></a> -->
-                <span id='position'></span>
-                <!-- <a href='#' id='next'><em>next</em></a> -->
-            </nav>
-            <!-- <div id="divider"><img class="hires" src="img/"></div> -->
-        </div>
+  <div id='slider'><ul></ul></div>
 
-        <div id="scroller">
-            <div id="container" class="clearfix"></div>
-        </div>
-    </div>
+  <nav>
+    <!--<a href='#' id='prev'><em>prev</em></a>-->
+    <span id='position'></span>
+    <!--<a href='#' id='next'><em>next</em></a>-->
 
-<!-- include individual files for development -->
-<script>document.write('<link rel="stylesheet" href="css/webview-a.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
-<script>window.jQuery || document.write('<script src="js/jquery-1.7.1.min.js"><\/script>')</script>
-<script src="js/modernizr-2.5.3.min.js"></script>
-<script src="js/jquery.tappable.js"></script>
-<script src="js/swipe.js"></script>
-<script src="js/jquery.isotope.min.js"></script>
-<script>document.write('<script src="js/roundware-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
-<script>document.write('<script src="js/speak-a.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>
+  </nav>
+  <!-- <div id="divider"><img class="hires" src="img/"></div> -->
 
-<!-- include this for production; all js minimized into a single file -->
-<!--<script>document.write('<link rel="stylesheet" href="css/webview.min.css?v=' + Math.floor(Math.random() * 100000) + '"\>');</script>
-<script>document.write('<script src="js/rw.speak.full.min.js?v=' + Math.floor(Math.random() * 100000) + '"\><\/script>');</script>-->
+</div>
+
+<div id="scroller">
+	<div id="container" class="clearfix"></div>
+</div>
+
+
+
 
 <script>
 if ( Modernizr.csstransforms ) {
@@ -157,6 +158,20 @@ Roundware.tags = {
 // The following line is replaced by the app
 /*%roundware_tags%*/
 
+var roundware_theme = '_lh';
+// The following line is replaced by the app
+/*%roundware_theme%*/
+
+// bg graphic swap based on roundware_theme variable sent from app
+if (roundware_theme == '_dy') {
+    // $('#screen-title').text(roundware_theme);
+    $('body').removeClass('theme_lh').addClass('theme_dy');
+}
+else if (roundware_theme == '_lh') {
+    // $('#screen-title').text(roundware_theme);
+    $('body').removeClass('theme_dy').addClass('theme_lh');
+}
+
 // turn off scrolling for the entire page
 document.ontouchmove = function(e) {e.preventDefault()};
 
@@ -171,17 +186,19 @@ document.body.addEventListener('touchmove', function(event) {
 }, false);
 
 window.onresize = function() {
-  //$(document.body).width(window.innerWidth).height(window.innerHeight);
+  $(document.body).width(window.innerWidth).height(window.innerHeight);
 }
 
 $(function() {
   window.onresize();
 
-    if (window.devicePixelRatio == 2) {
-        var images = $(".hires");
+  if (window.devicePixelRatio == 2) {
 
-        // loop through the images and make them hi-res
-        for(var i = 0; i < images.length; i++) {
+          var images = $(".hires");
+
+          // loop through the images and make them hi-res
+          for(var i = 0; i < images.length; i++) {
+
           	// create new image name
           	var imageType = images[i].src.substr(-4);
          	var imageName = images[i].src.substr(0, images[i].src.length - 4);
@@ -194,14 +211,14 @@ $(function() {
 	}
 
 	// allow for list area #scroller to expand to fit whatever space is available in lower portion of window
-	var upper_height = $('#gallery').height() + $('#nav').height();
-    remaining_height = parseInt($(window).height() - upper_height); // subtract sum of margins and padding values to match properly
-    $('#scroller').height(remaining_height);
+	var gallery_height = $('#gallery').height();
+	remaining_height = parseInt($(window).height() - gallery_height - 44);
+	$('#scroller').height(remaining_height);
 
 	window.onresize = function() {
-  		var upper_height = $('#gallery').height() + $('#nav').height();
-        remaining_height = parseInt($(window).height() - upper_height);
-        $('#scroller').height(remaining_height);
+  		var gallery_height = $('#gallery').height();
+		remaining_height = parseInt($(window).height() - gallery_height - 44);
+		$('#scroller').height(remaining_height);
 	}
 
 });
@@ -211,17 +228,19 @@ var slider_pos = 0;
 
 
 function select_all() {
-	$(".isotope-item").not(".isotope-hidden").removeClass('unselected').addClass('selected').addClass('tag');
 
-	// clear selected tags ...
-	Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code] = [];
+			$(".isotope-item").not(".isotope-hidden").removeClass('unselected').addClass('selected').addClass('tag');
 
-	// and turn them all back on
-	$.each(Roundware.tags.listen[slider_pos].options, function(t, tag) {
-		Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code].push(tag.tag_id);
-	});
-	do_the_magic();
-}
+			// clear selected tags ...
+			Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code] = [];
+
+			// and turn them all back on
+ 			$.each(Roundware.tags.listen[slider_pos].options, function(t, tag) {
+ 				Roundware.selected_tags_by_category[Roundware.tags.listen[slider_pos].code].push(tag.tag_id);
+ 			});
+
+ 			do_the_magic();
+		}
 
 </script>
 
