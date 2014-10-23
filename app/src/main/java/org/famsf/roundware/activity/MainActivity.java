@@ -150,15 +150,15 @@ public class MainActivity extends Activity {
                     allTags.saveSelectionState(Settings.getSharedPreferences());
                 }
             } else if (RW.CONTENT_LOADED.equals(intent.getAction())) {
-                String contentFileName = mRwBinder.getContentFilesDir() + "home-a.html";
-                try {
-                    String data = mRwBinder.readContentFile(contentFileName);
-                    mHiddenWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(LOGTAG, "Problem loading content file: " + contentFileName);
+                //String contentFileName = mRwBinder.getContentFilesDir() + "home-a.html";
+                //try {
+                //    String data = mRwBinder.readContentFile(contentFileName);
+                //    mHiddenWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
+                //} catch (IOException e) {
+                //    e.printStackTrace();
+                //    Log.e(LOGTAG, "Problem loading content file: " + contentFileName);
                     // TODO: dialog?? error??
-                }
+                //}
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), false, false);
             } else if (RW.ERROR_MESSAGE.equals(intent.getAction())) {

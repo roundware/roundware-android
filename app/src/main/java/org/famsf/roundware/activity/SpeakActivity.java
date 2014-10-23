@@ -218,7 +218,7 @@ public class SpeakActivity extends Activity {
     private BroadcastReceiver rwReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateUIState();
+            //updateUIState();
             if (RW.SESSION_OFF_LINE.equals(intent.getAction())) {
                 showMessage(getString(R.string.connection_to_server_lost_record), false, false);
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
