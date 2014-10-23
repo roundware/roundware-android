@@ -182,6 +182,7 @@ public class SpeakActivity extends Activity {
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
             // get the folder where the web content files are stored
+            //String fileUrl = getString(R.string.filter_url);
             mContentFileDir = mRwBinder.getContentFilesDir();
             if ((mWebView != null) && (mContentFileDir != null)) {
                 String contentFileName = mRwBinder.getContentFilesDir() + "speak-a.html";
@@ -195,7 +196,7 @@ public class SpeakActivity extends Activity {
                     // TODO: dialog?? error??
                 }
             }
-
+            //mWebView.loadUrl(fileUrl);
             updateUIState();
         }
 
@@ -275,7 +276,8 @@ public class SpeakActivity extends Activity {
         // TODO: test (back) navigation, define tasks and activity stacks
 
         if (mViewFlipper != null) {
-            showRecord();
+            //showRecord();
+            showFilters();
         }
     }
 
@@ -485,8 +487,8 @@ public class SpeakActivity extends Activity {
                         if (mTagsList != null) {
                             boolean done = mTagsList.setSelectionFromWebViewMessageUri(uri);
                             if (done) {
-                                mViewFlipper.showNext();
-                                updateUIState();
+                                updateScreenForSelectedTags();
+                                showRecord();
                             }
                         }
                     }
@@ -578,7 +580,9 @@ public class SpeakActivity extends Activity {
             if (mIsRecordingGeneralFeedback) {
                 showGeneralFeedback();
             } else {
-                showRecord();
+                String fileUrl = getString(R.string.filter_url);
+                mWebView.loadUrl(fileUrl);
+                showFilters();
             }
 
             mRecordButton.setEnabled(true);
@@ -675,7 +679,6 @@ public class SpeakActivity extends Activity {
      * Updates the UI for not recording state.
      */
     private void changeToNotRecordingUIState() {
-        showRecord();
         // update counter, level meter and instructions
         mSpeakInstructionsView.setVisibility(View.VISIBLE);
         mRecordingTimeText.setVisibility(View.INVISIBLE);
@@ -1250,9 +1253,6 @@ public class SpeakActivity extends Activity {
         mRightTitleButton.setVisibility(View.VISIBLE);
         mRightTitleButton.setText(R.string.cancel);
         mRightTitleButton.setOnClickListener(mCancelListener);
-
-        TextView textView = (TextView) findViewById(R.id.speakTitleTextView);
-        textView.setText(R.string.record_sub_title);
     }
 
     private void showFilters() {

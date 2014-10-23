@@ -6,9 +6,6 @@
     android:background="@drawable/bg_speak"
     >
 
-    <include layout="@layout/title_bar"
-        android:id="@+id/title_bar"/>
-
     <ViewFlipper
         android:id="@+id/viewFlipper"
         android:contentDescription="@string/speak_screen_description"
@@ -21,7 +18,7 @@
         android:visibility="gone">
 
         <!-- recording view -->
-        <FrameLayout
+        <RelativeLayout
                 android:id="@+id/recordingFrameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -30,22 +27,35 @@
                 android:background="#55ffffff"
                 >
 
+            <include layout="@layout/title_bar"
+                android:id="@+id/title_bar"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"/>
+
             <!-- bottom layer with header, buttons and counter -->
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@id/title_bar"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
                     >
                 <TextView
                         style="@style/AppTheme.Shadow.SpeakTitleText"
                         android:id="@+id/speakTitleTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Life in Your Community"
+                        android:text="@string/default_speak_question"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
                         android:singleLine="false"
                         android:padding="16dp"
+                        android:layout_margin="16dp"
                         android:background="@drawable/bubble_bg"
                         android:layout_marginTop="20dp"/>
 
@@ -146,6 +156,7 @@
                     android:paddingRight="16dp"
                     android:orientation="vertical"
                     android:layout_gravity="center"
+                    android:layout_centerInParent="true"
                     android:gravity="left"
                     >
 
@@ -155,7 +166,8 @@
                     android:text="@string/speak_instructions_record"
                     android:textAppearance="@style/Text.Large"
                     android:shadowColor="@color/black"
-                    android:shadowRadius="1"/>
+                    android:shadowRadius="2"
+                    android:shadowDy="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,7 +176,8 @@
                     android:textAppearance="@style/Text.Large"
                     android:paddingTop="16dp"
                     android:shadowColor="@color/black"
-                    android:shadowRadius="1"/>
+                    android:shadowRadius="2"
+                    android:shadowDy="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -173,13 +186,15 @@
                     android:textAppearance="@style/Text.Large"
                     android:paddingTop="16dp"
                     android:shadowColor="@color/black"
-                    android:shadowRadius="1"/>
+                    android:shadowRadius="2"
+                    android:shadowDy="1"/>
 
             </LinearLayout>
-        </FrameLayout>
+        </RelativeLayout>
 
         <!-- web view (filters) -->
         <RelativeLayout
+            android:id="@+id/speakFilterLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#55ffffff">

@@ -3,6 +3,7 @@
 <string name="app_info_url">***REMOVED***</string>
 <string name="explore_url">***REMOVED***</string>
 <string name="refine_url">"file:///android_asset/listen-a.html"</string>
+<string name="filter_url">"file:///android_asset/speak-a.html"</string>
 
 <string name="app_name">FAMscapes</string>
 <string name="app_title">FAMscapes</string>
@@ -171,7 +172,7 @@
 <string name="accept">Accept</string>
 <string name="decline">Decline</string>
 <string name="cancel">Cancel</string>
-<string name="record_sub_title">Life in Your Community</string>
+<string name="default_speak_question">What do you want to talk about?</string>
 
 <string name="please_wait">Please wait...</string>
 
