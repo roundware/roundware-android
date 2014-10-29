@@ -370,23 +370,23 @@ public class ListenActivity extends Activity {
             @Override
             public void onClick(View view) {
                 // get the folder where the web content files are stored
-                String fileUrl = getString(R.string.refine_url);
+                //String fileUrl = getString(R.string.refine_url);
                 mContentFileDir = mRwBinder.getContentFilesDir();
                 if ((mWebView != null) && (mContentFileDir != null)) {
-                    String contentFileName = mContentFileDir + "listen-a.html";
+                    String contentFileName = mContentFileDir + "listen.html";
                     try {
                         String data = mRwBinder.readContentFile(contentFileName);
                         //String data = mRwBinder.readAssetFile("listen-a.html");
                         data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
-                        // mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
-                        mWebView.loadDataWithBaseURL(fileUrl, data, null, null, null);
+                        mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
+                        //mWebView.loadDataWithBaseURL(fileUrl, data, null, null, null);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e(LOGTAG, "Problem loading content file: listen-a.html");
+                        Log.e(LOGTAG, "Problem loading content file: listen.html");
                         // TODO: dialog?? error??
                     }
                 }
-                mWebView.loadUrl(fileUrl);
+                //mWebView.loadUrl(fileUrl);
             }
         });
 

@@ -185,7 +185,7 @@ public class SpeakActivity extends Activity {
             //String fileUrl = getString(R.string.filter_url);
             mContentFileDir = mRwBinder.getContentFilesDir();
             if ((mWebView != null) && (mContentFileDir != null)) {
-                String contentFileName = mRwBinder.getContentFilesDir() + "speak-a.html";
+                String contentFileName = mRwBinder.getContentFilesDir() + "speak.html";
                 try {
                     String data = mRwBinder.readContentFile(contentFileName);
                     data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
@@ -580,8 +580,6 @@ public class SpeakActivity extends Activity {
             if (mIsRecordingGeneralFeedback) {
                 showGeneralFeedback();
             } else {
-                String fileUrl = getString(R.string.filter_url);
-                mWebView.loadUrl(fileUrl);
                 showFilters();
             }
 
