@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 /**
  * Created by jschnall on 8/13/14.
@@ -39,6 +40,11 @@ public class MyApplication extends Application {
     }
 
     public static int getSite(Location location) {
+        if (location == null) {
+            Log.d(LOGTAG, "Location is null, returning De Young by default.");
+            return DE_YOUNG;
+        }
+
         Location dy = new Location("");
         dy.setLatitude(DY_LATITUDE);
         dy.setLongitude((DY_LONGITUDE));
