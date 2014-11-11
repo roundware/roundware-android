@@ -805,7 +805,7 @@ import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
 					mNotificationActivity = Class.forName(className);
 				}
 			} catch (Exception e) {
-				Log.e(TAG, "Unknown class specificied for handling " + "notification: " + className);
+				Log.e(TAG, "Unknown class specified for handling " + "notification: " + className);
 				mNotificationActivity = null;
 			}
 		}

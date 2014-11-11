@@ -217,48 +217,57 @@ import com.halseyburgund.rwframework.R;
 			try {
 				// retrieve info about current playing (or last played) asset
 				String jsonResponse = mRwService.rwGetCurrentStreamingAsset();
-				if (jsonResponse != null) {
-			        JSONObject jsonObj = new JSONObject(jsonResponse);
-			        int assetId = jsonObj.optInt(mAssetIdJsonKey, -1);
-	
-			        // calculate already playing time
-			        String currentServerTimeStr = jsonObj.optString(mCurrentServerTimeJsonKey, "");
-			        String startTimeStr = jsonObj.optString(mStartTimeJsonKey, "");
-			        long currentServerTimeMs = mServerTimeDateFormat.parse(currentServerTimeStr).getTime();
-			        long assetStartTimeMs = mServerTimeDateFormat.parse(startTimeStr).getTime();
-			        long assetPlayedTimeMs = currentServerTimeMs - assetStartTimeMs;
-			        
-			        // update info in list or add entry
-			        StreamedAssetInfo info = assetInfoForId(assetId);
-			        if (info == null) {
-			        	info = new StreamedAssetInfo();
-			        	info.assetId = assetId;
-			        	info.assetDurationInStreamMs = jsonObj.optInt(mDurationInStreamMsJsonKey, 0);
-	
-				        // get asset duration information
-			        	jsonResponse = mRwService.rwGetAssetInfo(assetId);
-				        jsonObj = new JSONObject(jsonResponse);
-				        info.assetDurationMs = jsonObj.optInt(mDurationInMsJsonKey, -1);
 
-				        info.estimatedStartedPlayingTimeMs = currentMillis + mAverageBufferLengthMsec;
-	
-				        // check if still worth to add to list
-				        if (info.assetDurationInStreamMs + mAverageBufferLengthMsec - assetPlayedTimeMs > 0) {
-				        	mAssets.add(info);
-				        }
-			        }
-			        // update the stored info
-			        info.lastClientUpdateTimeMs = currentMillis;
-			        info.startedPlayingOnServerTimeMs = assetStartTimeMs;
-			        info.hasBeenPlayingOnServerForTimeMs = assetPlayedTimeMs;
-			        
-			        // calculate expected next update time and send broadcast
-			        if (info.hasBeenPlayingOnServerForTimeMs > info.assetDurationInStreamMs) {
-			        	mNextUpdateTimeMsec = -1; // on next interval
-			        } else {
-			        	mNextUpdateTimeMsec = currentMillis + info.assetDurationInStreamMs - assetPlayedTimeMs;
-			        }
-				}
+                if (jsonResponse == null) {
+                    return;
+                }
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String userErrorMessage = jsonObj.optString("user_error_message", null);
+
+                if (userErrorMessage != null) {
+                    // Exit if no asset found
+                    return;
+                }
+
+                int assetId = jsonObj.optInt(mAssetIdJsonKey, -1);
+
+                // calculate already playing time
+                String currentServerTimeStr = jsonObj.optString(mCurrentServerTimeJsonKey, "");
+                String startTimeStr = jsonObj.optString(mStartTimeJsonKey, "");
+                long currentServerTimeMs = mServerTimeDateFormat.parse(currentServerTimeStr).getTime();
+                long assetStartTimeMs = mServerTimeDateFormat.parse(startTimeStr).getTime();
+                long assetPlayedTimeMs = currentServerTimeMs - assetStartTimeMs;
+
+                // update info in list or add entry
+                StreamedAssetInfo info = assetInfoForId(assetId);
+                if (info == null) {
+                    info = new StreamedAssetInfo();
+                    info.assetId = assetId;
+                    info.assetDurationInStreamMs = jsonObj.optInt(mDurationInStreamMsJsonKey, 0);
+
+                    // get asset duration information
+                    jsonResponse = mRwService.rwGetAssetInfo(assetId);
+                    jsonObj = new JSONObject(jsonResponse);
+                    info.assetDurationMs = jsonObj.optInt(mDurationInMsJsonKey, -1);
+
+                    info.estimatedStartedPlayingTimeMs = currentMillis + mAverageBufferLengthMsec;
+
+                    // check if still worth to add to list
+                    if (info.assetDurationInStreamMs + mAverageBufferLengthMsec - assetPlayedTimeMs > 0) {
+                        mAssets.add(info);
+                    }
+                }
+                // update the stored info
+                info.lastClientUpdateTimeMs = currentMillis;
+                info.startedPlayingOnServerTimeMs = assetStartTimeMs;
+                info.hasBeenPlayingOnServerForTimeMs = assetPlayedTimeMs;
+
+                // calculate expected next update time and send broadcast
+                if (info.hasBeenPlayingOnServerForTimeMs > info.assetDurationInStreamMs) {
+                    mNextUpdateTimeMsec = -1; // on next interval
+                } else {
+                    mNextUpdateTimeMsec = currentMillis + info.assetDurationInStreamMs - assetPlayedTimeMs;
+                }
 			} catch (Exception e) {
 				Log.w(TAG, "Error processing server stream metadata", e);
 			}

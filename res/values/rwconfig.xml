@@ -24,12 +24,12 @@
     <string name="rw_spec_speak_enabled_yn">Y</string>
     <string name="rw_spec_geo_speak_enabled_yn">N</string>
 
-    <string name="rw_spec_min_location_update_time_msec">60000</string>
-    <string name="rw_spec_min_location_update_distance_meters">5</string>
-    <string name="rw_spec_use_gps_if_possible">N</string>
+    <string name="rw_spec_min_location_update_time_msec">10000</string>
+    <string name="rw_spec_min_location_update_distance_meters">4</string>
+    <string name="rw_spec_use_gps_if_possible">Y</string>
 
 	<string name="rw_spec_stream_metadata_enabled_yn">N</string>
-	<string name="rw_spec_stream_metadata_timer_interval_in_msec">1000</string>
+	<string name="rw_spec_stream_metadata_timer_interval_in_msec">5000</string>
 
 	<string name="rw_spec_reset_tag_defaults_on_startup_yn">Y</string>    
 		

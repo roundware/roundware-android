@@ -313,7 +313,7 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		try {
-			out.write(new byte[] {'R','I','F','F'});
+		    out.write(new byte[] {'R','I','F','F'});
 			out.write(lengthData);
 			out.write(new byte[] {'W','A','V','E'});
 
@@ -353,7 +353,7 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
 	 * Post execute - currently nothing to be done here.
 	 */
 	@Override
-	protected void onPostExecute(String result) {
+    protected void onPostExecute(String result) {
 		super.onPostExecute(result);
 	}
 
