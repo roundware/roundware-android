@@ -17,7 +17,7 @@
     <string name="rw_spec_geo_listen_enabled_yn">N</string>
     <string name="rw_spec_geo_speak_enabled_yn">Y</string>
     
-    <string name="rw_spec_min_location_update_time_msec">3000</string>
+    <string name="rw_spec_min_location_update_time_msec">10000</string>
     <string name="rw_spec_min_location_update_distance_meters">4</string>
     <string name="rw_spec_use_gps_if_possible">Y</string>
 	
