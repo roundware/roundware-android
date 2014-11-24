@@ -1,23 +1,23 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.halseyburgund.rwframework.core;
 
@@ -28,312 +28,312 @@ package com.halseyburgund.rwframework.core;
  */
 public class RW {
 
-	// --- Roundware framework naming prefixes ----------------------------------------------------
+    // --- Roundware framework naming prefixes ----------------------------------------------------
 
-	/**
-	 * Base prefix to use for all defines in this package.
-	 */
-	protected final static String FRAMEWORK_PREFIX = "com.halseyburgund.rwframework.";
-	
-	/**
-	 * Base prefix for intent extras used by this package.
-	 */
-	protected final static String INTENT_EXTRA_PREFIX = FRAMEWORK_PREFIX + "extra.";
-	
-	/**
-	 * Base prefix for shared preferences used by this package.
-	 */
-	protected final static String PREFERENCES_PREFIX = FRAMEWORK_PREFIX + "preferences.";
+    /**
+     * Base prefix to use for all defines in this package.
+     */
+    protected final static String FRAMEWORK_PREFIX = "com.halseyburgund.rwframework.";
 
-	// --- Intent extras for RWService initialization ---------------------------------------------
-	
-	/**
-	 * Allows specifying the device ID in the intent used to start RWService. 
-	 */
-	public final static String EXTRA_DEVICE_ID = INTENT_EXTRA_PREFIX + "device_id";
-	
-	/**
-	 * Allows specifying the project ID in the intent used to start RWService.
-	 */
-	public final static String EXTRA_PROJECT_ID = INTENT_EXTRA_PREFIX + "project_id";
-	
-	/**
-	 * Allows last-minute overriding of the server URL to be used by RWService
-	 * when it is started. 
-	 */
-	public final static String EXTRA_SERVER_URL_OVERRIDE = INTENT_EXTRA_PREFIX + "server_url";
-	
-	/**
-	 * Can be used to specify an app specific title to be used in the
-	 * notifications placed in the standard Android notification bar by
-	 * the RWService.
-	 */
-	public final static String EXTRA_NOTIFICATION_TITLE = INTENT_EXTRA_PREFIX + "notification_title";
+    /**
+     * Base prefix for intent extras used by this package.
+     */
+    protected final static String INTENT_EXTRA_PREFIX = FRAMEWORK_PREFIX + "extra.";
 
-	/**
-	 * Can be used to specify an app specific default text to be used in
-	 * the notifications placed in the standard Android notification bar
-	 * by the RWService.
-	 */
-	public final static String EXTRA_NOTIFICATION_DEFAULT_TEXT = INTENT_EXTRA_PREFIX + "notification_default_text";
+    /**
+     * Base prefix for shared preferences used by this package.
+     */
+    protected final static String PREFERENCES_PREFIX = FRAMEWORK_PREFIX + "preferences.";
 
-	/**
-	 * Can be used to specify an app specific icon resource ID to be used
-	 * in the notifications placed in the standard Android notification bar
-	 * by the RWService.
-	 */
-	public final static String EXTRA_NOTIFICATION_ICON_ID = INTENT_EXTRA_PREFIX + "notification_icon_id";
-	
-	/**
-	 * Can be used to specify an app specific Activity to be activated when
-	 * the user clicks on the notifications placed in the standard Android 
-	 * notification bar by the RWService.
-	 */
-	public final static String EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME = INTENT_EXTRA_PREFIX + "notification_activity_class_name";
+    // --- Intent extras for RWService initialization ---------------------------------------------
 
-	/**
-	 * Apps that use web content in the user interface can use this setting
-	 * to force downloading of files. The default is false, and in this case
-	 * the files version info from the project configuration is used to
-	 * determine if already downloaded web content needs to be refreshed or
-	 * not.
-	 */
-	public final static String EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD = INTENT_EXTRA_PREFIX + "web_content_always_download";
+    /**
+     * Allows specifying the device ID in the intent used to start RWService.
+     */
+    public final static String EXTRA_DEVICE_ID = INTENT_EXTRA_PREFIX + "device_id";
 
-	/**
-	 * Downloaded web content for apps is by default stored as internal and
-	 * private files. Set this parameter to true to use external storage for
-	 * the files instead. Note that this does make the files readable and
-	 * editable by other apps and by the user. 
-	 */
-	public final static String EXTRA_WEB_CONTENT_EXTERNAL_STORAGE = INTENT_EXTRA_PREFIX + "web_content_external_storage";
-	
-	// --- Intent extras for broadcasts -----------------------------------------------------------
-	
-	/**
-	 * Message generated on the server that needs to be displayed by the app.
-	 */
-	public final static String EXTRA_SERVER_MESSAGE = INTENT_EXTRA_PREFIX + "server_message";
-	
-	/**
-	 * Message generated by the server and the framework for social media
-	 * sharing purposes after a contribution has been made (i.e. an asset
-	 * has been or will be uploaded).
-	 */
-	public final static String EXTRA_SHARING_MESSAGE = INTENT_EXTRA_PREFIX + "sharing_message";
-	
-	/**
-	 * URL of an asset that has been uploaded to the server, or will be 
-	 * when it is processed from the queue. To be used by the app for e.g.
-	 * social media sharing purposes.
-	 */
-	public final static String EXTRA_SHARING_URL = INTENT_EXTRA_PREFIX + "sharing_url";
-	
-	/**
-	 * ID of the 'envelope' on the server a contributed asset is or will be
-	 * placed in.
-	 */
-	public final static String EXTRA_ENVELOPE_ID = INTENT_EXTRA_PREFIX + "envelope_id";
-	
-	/**
-	 * Latitude coordinate of a location update.
-	 */
-	public final static String EXTRA_LOCATION_LAT = INTENT_EXTRA_PREFIX + "latitude";
+    /**
+     * Allows specifying the project ID in the intent used to start RWService.
+     */
+    public final static String EXTRA_PROJECT_ID = INTENT_EXTRA_PREFIX + "project_id";
 
-	/**
-	 * Longitude coordinate of a location update.
-	 */
-	public final static String EXTRA_LOCATION_LON = INTENT_EXTRA_PREFIX + "longitude";
+    /**
+     * Allows last-minute overriding of the server URL to be used by RWService
+     * when it is started.
+     */
+    public final static String EXTRA_SERVER_URL_OVERRIDE = INTENT_EXTRA_PREFIX + "server_url";
 
-	/**
-	 * The location provider (e.g. GPS, Network) that provided the location information. 
-	 */
-	public final static String EXTRA_LOCATION_PROVIDER = INTENT_EXTRA_PREFIX + "location_provider";
+    /**
+     * Can be used to specify an app specific title to be used in the
+     * notifications placed in the standard Android notification bar by
+     * the RWService.
+     */
+    public final static String EXTRA_NOTIFICATION_TITLE = INTENT_EXTRA_PREFIX + "notification_title";
 
-	/**
-	 * Horizontal accuracy (in meters) of the location information. This will
-	 * depend on the location provider used and e.g. the number of satellites
-	 * visible to the GPS.
-	 */
-	public final static String EXTRA_LOCATION_ACCURACY_M = INTENT_EXTRA_PREFIX + "accuracy";
+    /**
+     * Can be used to specify an app specific default text to be used in
+     * the notifications placed in the standard Android notification bar
+     * by the RWService.
+     */
+    public final static String EXTRA_NOTIFICATION_DEFAULT_TEXT = INTENT_EXTRA_PREFIX + "notification_default_text";
 
-	/**
-	 * Asset ID of the recording currently being played on the device (estimated).
-	 */
-	public final static String EXTRA_STREAM_METADATA_CURRENT_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_current_asset_id";
-	
-	/**
-	 * Asset ID of the previous recording that was played on the device (estimated).
-	 */
-	public final static String EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_previous_asset_id";
-	
-	/**
-	 * Title metadata of the recording currently being played on the device (estimated).
-	 */
-	public final static String EXTRA_STREAM_METADATA_TITLE = INTENT_EXTRA_PREFIX + "stream_metadata_title";
-	
-	/**
-	 * Extra for the generic server operation success or failure broadcast
-	 * intents, an instance of the Properties class taken from the RWAction
-	 * object that was performed.
-	 */
-	public final static String EXTRA_ACTION_PROPERTIES = INTENT_EXTRA_PREFIX + "action_properties";
-	
-	/**
-	 * Extra for the generic server operation success broadcast intents, a
-	 * String with the raw server response (e.g. the raw JSON data).
-	 */
-	public final static String EXTRA_SUCCESS_RESULT = INTENT_EXTRA_PREFIX + "success_result";
+    /**
+     * Can be used to specify an app specific icon resource ID to be used
+     * in the notifications placed in the standard Android notification bar
+     * by the RWService.
+     */
+    public final static String EXTRA_NOTIFICATION_ICON_ID = INTENT_EXTRA_PREFIX + "notification_icon_id";
 
-	/**
-	 * Extra for the generic server operation failure broadcast intents, a
-	 * String with the reason of the failure.
-	 */
-	public final static String EXTRA_FAILURE_REASON = INTENT_EXTRA_PREFIX + "failure_reason";
+    /**
+     * Can be used to specify an app specific Activity to be activated when
+     * the user clicks on the notifications placed in the standard Android
+     * notification bar by the RWService.
+     */
+    public final static String EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME = INTENT_EXTRA_PREFIX + "notification_activity_class_name";
 
-	/**
-	 * Extra for the generic server operation failure broadcast intents, a
-	 * Throwable instance of the Exception that caused the failure. Might not
-	 * always be available.
-	 */
-	public final static String EXTRA_FAILURE_EXCEPTION = INTENT_EXTRA_PREFIX + "failure_exception";
+    /**
+     * Apps that use web content in the user interface can use this setting
+     * to force downloading of files. The default is false, and in this case
+     * the files version info from the project configuration is used to
+     * determine if already downloaded web content needs to be refreshed or
+     * not.
+     */
+    public final static String EXTRA_WEB_CONTENT_ALWAYS_DOWNLOAD = INTENT_EXTRA_PREFIX + "web_content_always_download";
 
-	// --- Broadcast messages ---------------------------------------------------------------------
-	
-	/**
-	 * Prefix for the action of generic broadcast intents. This will be
-	 * formatted as:
-	 * 
-	 * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
-	 */
-	public final static String BROADCAST_PREFIX = FRAMEWORK_PREFIX + "action.";
-	
-	/**
-	 * Postfix for the action of generic broadcast intents to indicated server
-	 * operations that completed successfully. They will be formatted as:
-	 * 
-	 * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
-	 */
-	public final static String BROADCAST_SUCCESS_POSTFIX = "_success";
-	
-	/**
-	 * Postfix for the action of generic broadcast intents to indicated server
-	 * operations that failed. They will be formatted as:
-	 * 
-	 * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
-	 */
-	public final static String BROADCAST_FAILURE_POSTFIX = "_failure";
+    /**
+     * Downloaded web content for apps is by default stored as internal and
+     * private files. Set this parameter to true to use external storage for
+     * the files instead. Note that this does make the files readable and
+     * editable by other apps and by the user.
+     */
+    public final static String EXTRA_WEB_CONTENT_EXTERNAL_STORAGE = INTENT_EXTRA_PREFIX + "web_content_external_storage";
 
-	/**
-	 * Postfix for the action of generic broadcast intents to indicated server
-	 * operations that failed. They will be formatted as:
-	 * 
-	 * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
-	 */
-	public final static String BROADCAST_QUEUED_POSTFIX = "_queued";
-	
-	/**
-	 * Connection to Roundware server successfully established, configuration retrieved and session id available.
-	 */
-	public final static String SESSION_ON_LINE = BROADCAST_PREFIX + "session_on_line";
+    // --- Intent extras for broadcasts -----------------------------------------------------------
+
+    /**
+     * Message generated on the server that needs to be displayed by the app.
+     */
+    public final static String EXTRA_SERVER_MESSAGE = INTENT_EXTRA_PREFIX + "server_message";
+
+    /**
+     * Message generated by the server and the framework for social media
+     * sharing purposes after a contribution has been made (i.e. an asset
+     * has been or will be uploaded).
+     */
+    public final static String EXTRA_SHARING_MESSAGE = INTENT_EXTRA_PREFIX + "sharing_message";
+
+    /**
+     * URL of an asset that has been uploaded to the server, or will be
+     * when it is processed from the queue. To be used by the app for e.g.
+     * social media sharing purposes.
+     */
+    public final static String EXTRA_SHARING_URL = INTENT_EXTRA_PREFIX + "sharing_url";
+
+    /**
+     * ID of the 'envelope' on the server a contributed asset is or will be
+     * placed in.
+     */
+    public final static String EXTRA_ENVELOPE_ID = INTENT_EXTRA_PREFIX + "envelope_id";
+
+    /**
+     * Latitude coordinate of a location update.
+     */
+    public final static String EXTRA_LOCATION_LAT = INTENT_EXTRA_PREFIX + "latitude";
+
+    /**
+     * Longitude coordinate of a location update.
+     */
+    public final static String EXTRA_LOCATION_LON = INTENT_EXTRA_PREFIX + "longitude";
+
+    /**
+     * The location provider (e.g. GPS, Network) that provided the location information.
+     */
+    public final static String EXTRA_LOCATION_PROVIDER = INTENT_EXTRA_PREFIX + "location_provider";
+
+    /**
+     * Horizontal accuracy (in meters) of the location information. This will
+     * depend on the location provider used and e.g. the number of satellites
+     * visible to the GPS.
+     */
+    public final static String EXTRA_LOCATION_ACCURACY_M = INTENT_EXTRA_PREFIX + "accuracy";
+
+    /**
+     * Asset ID of the recording currently being played on the device (estimated).
+     */
+    public final static String EXTRA_STREAM_METADATA_CURRENT_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_current_asset_id";
+
+    /**
+     * Asset ID of the previous recording that was played on the device (estimated).
+     */
+    public final static String EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_previous_asset_id";
+
+    /**
+     * Title metadata of the recording currently being played on the device (estimated).
+     */
+    public final static String EXTRA_STREAM_METADATA_TITLE = INTENT_EXTRA_PREFIX + "stream_metadata_title";
+
+    /**
+     * Extra for the generic server operation success or failure broadcast
+     * intents, an instance of the Properties class taken from the RWAction
+     * object that was performed.
+     */
+    public final static String EXTRA_ACTION_PROPERTIES = INTENT_EXTRA_PREFIX + "action_properties";
+
+    /**
+     * Extra for the generic server operation success broadcast intents, a
+     * String with the raw server response (e.g. the raw JSON data).
+     */
+    public final static String EXTRA_SUCCESS_RESULT = INTENT_EXTRA_PREFIX + "success_result";
+
+    /**
+     * Extra for the generic server operation failure broadcast intents, a
+     * String with the reason of the failure.
+     */
+    public final static String EXTRA_FAILURE_REASON = INTENT_EXTRA_PREFIX + "failure_reason";
+
+    /**
+     * Extra for the generic server operation failure broadcast intents, a
+     * Throwable instance of the Exception that caused the failure. Might not
+     * always be available.
+     */
+    public final static String EXTRA_FAILURE_EXCEPTION = INTENT_EXTRA_PREFIX + "failure_exception";
+
+    // --- Broadcast messages ---------------------------------------------------------------------
+
+    /**
+     * Prefix for the action of generic broadcast intents. This will be
+     * formatted as:
+     *
+     * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
+     */
+    public final static String BROADCAST_PREFIX = FRAMEWORK_PREFIX + "action.";
+
+    /**
+     * Postfix for the action of generic broadcast intents to indicated server
+     * operations that completed successfully. They will be formatted as:
+     *
+     * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
+     */
+    public final static String BROADCAST_SUCCESS_POSTFIX = "_success";
+
+    /**
+     * Postfix for the action of generic broadcast intents to indicated server
+     * operations that failed. They will be formatted as:
+     *
+     * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
+     */
+    public final static String BROADCAST_FAILURE_POSTFIX = "_failure";
+
+    /**
+     * Postfix for the action of generic broadcast intents to indicated server
+     * operations that failed. They will be formatted as:
+     *
+     * BROADCAST_PREFIX_<server operation>_BROADCAST_[SUCCESS | FAILURE | QUEUED ]_POSTFIX
+     */
+    public final static String BROADCAST_QUEUED_POSTFIX = "_queued";
+
+    /**
+     * Connection to Roundware server successfully established, configuration retrieved and session id available.
+     */
+    public final static String SESSION_ON_LINE = BROADCAST_PREFIX + "session_on_line";
  
-	/**
-	 * Connection to Roundware server not available, configuration restored from cache, no session id available.
-	 */
-	public final static String SESSION_OFF_LINE = BROADCAST_PREFIX + "session_off_line";
+    /**
+     * Connection to Roundware server not available, configuration restored from cache, no session id available.
+     */
+    public final static String SESSION_OFF_LINE = BROADCAST_PREFIX + "session_off_line";
 
-	/**
-	 * Project configuration successfully retrieved from the server or read from cache.
-	 */
-	public final static String CONFIGURATION_LOADED = BROADCAST_PREFIX + "configuration_loaded";
+    /**
+     * Project configuration successfully retrieved from the server or read from cache.
+     */
+    public final static String CONFIGURATION_LOADED = BROADCAST_PREFIX + "configuration_loaded";
 
-	/**
-	 * Project configuration could not be retrieved or read from cache.
-	 */
-	public final static String NO_CONFIGURATION = BROADCAST_PREFIX + "no_configuration";
-	
-	/**
-	 * Project tags successfully retrieved from the server or read from cache.
-	 */
-	public final static String TAGS_LOADED = BROADCAST_PREFIX + "tags_loaded";
+    /**
+     * Project configuration could not be retrieved or read from cache.
+     */
+    public final static String NO_CONFIGURATION = BROADCAST_PREFIX + "no_configuration";
 
-	/**
-	 * Project tags could not be retrieved or read from cache.
-	 */
-	public final static String NO_TAGS = BROADCAST_PREFIX + "no_tags";
+    /**
+     * Project tags successfully retrieved from the server or read from cache.
+     */
+    public final static String TAGS_LOADED = BROADCAST_PREFIX + "tags_loaded";
 
-	/**
-	 * Content for displaying in web views successfully retrieved and unpacked.
-	 */
-	public final static String CONTENT_LOADED = BROADCAST_PREFIX + "content_loaded";
-	
-	/**
-	 * Content for displaying in web views could not be retrieved.
-	 */
-	public final static String NO_CONTENT = BROADCAST_PREFIX + "no_content";
-	
-	/**
-	 * Ready for playback, connected to audio stream from server.
-	 */
-	public final static String READY_TO_PLAY = BROADCAST_PREFIX + "ready_to_play";
+    /**
+     * Project tags could not be retrieved or read from cache.
+     */
+    public final static String NO_TAGS = BROADCAST_PREFIX + "no_tags";
 
-	/**
-	 * Prepare for playback failed, unable to connect to server audio stream.
-	 */
-	public final static String UNABLE_TO_PLAY = BROADCAST_PREFIX + "unable_to_play";
+    /**
+     * Content for displaying in web views successfully retrieved and unpacked.
+     */
+    public final static String CONTENT_LOADED = BROADCAST_PREFIX + "content_loaded";
 
-	/**
-	 * End of server audio stream has been reached.
-	 */
-	public final static String PLAYBACK_FINISHED = BROADCAST_PREFIX + "playback_finished";
+    /**
+     * Content for displaying in web views could not be retrieved.
+     */
+    public final static String NO_CONTENT = BROADCAST_PREFIX + "no_content";
 
-	/**
-	 * Location update was triggered and new position has been sent to the server.
-	 */
-	public final static String LOCATION_UPDATED = BROADCAST_PREFIX + "location_updated";
+    /**
+     * Ready for playback, connected to audio stream from server.
+     */
+    public final static String READY_TO_PLAY = BROADCAST_PREFIX + "ready_to_play";
 
-	/**
-	 * The stream metadata has changed.
-	 */
-	public final static String STREAM_METADATA_UPDATED = BROADCAST_PREFIX + "stream_metadata_updated";
-	
-	/**
-	 * Heartbeat was triggered and has been sent to the server.
-	 */
-	public final static String HEARTBEAT_SENT = BROADCAST_PREFIX + "heartbeat_sent";
+    /**
+     * Prepare for playback failed, unable to connect to server audio stream.
+     */
+    public final static String UNABLE_TO_PLAY = BROADCAST_PREFIX + "unable_to_play";
 
-	/**
-	 * Error reported by server as result to an operation.
-	 */
-	public final static String ERROR_MESSAGE = BROADCAST_PREFIX + "server_error";
+    /**
+     * End of server audio stream has been reached.
+     */
+    public final static String PLAYBACK_FINISHED = BROADCAST_PREFIX + "playback_finished";
 
-	/**
-	 * Warning (user message) reported by server as result to an operation.
-	 */
-	public final static String USER_MESSAGE = BROADCAST_PREFIX + "user_message";
+    /**
+     * Location update was triggered and new position has been sent to the server.
+     */
+    public final static String LOCATION_UPDATED = BROADCAST_PREFIX + "location_updated";
 
-	/**
-	 * Social media sharing message created for latest upload, can be handled by app.
-	 */
-	public final static String SHARING_MESSAGE = BROADCAST_PREFIX + "sharing_message";
-	
-	// --- Shared preferences ---------------------------------------------------------------------
-	
-	/**
-	 * Name of SharedPreferences cache for configurations of projects.
-	 */
-	public final static String PROJECT_CONFIG_CACHE = PREFERENCES_PREFIX + "cached_project_configurations";
+    /**
+     * The stream metadata has changed.
+     */
+    public final static String STREAM_METADATA_UPDATED = BROADCAST_PREFIX + "stream_metadata_updated";
 
-	/**
-	 * Name of SharedPreferences cache for tags of projects.
-	 */
-	public final static String PROJECT_TAGS_CACHE = PREFERENCES_PREFIX + "cached_project_tags";
-	
-	/**
-	 * Name of SharedPreferences for content files info.
-	 */
-	public final static String LAST_DOWNLOADED_CONTENT_FILES_INFO = PREFERENCES_PREFIX + "last_downloaded_content_files_info";
+    /**
+     * Heartbeat was triggered and has been sent to the server.
+     */
+    public final static String HEARTBEAT_SENT = BROADCAST_PREFIX + "heartbeat_sent";
 
-	// --------------------------------------------------------------------------------------------
-	
+    /**
+     * Error reported by server as result to an operation.
+     */
+    public final static String ERROR_MESSAGE = BROADCAST_PREFIX + "server_error";
+
+    /**
+     * Warning (user message) reported by server as result to an operation.
+     */
+    public final static String USER_MESSAGE = BROADCAST_PREFIX + "user_message";
+
+    /**
+     * Social media sharing message created for latest upload, can be handled by app.
+     */
+    public final static String SHARING_MESSAGE = BROADCAST_PREFIX + "sharing_message";
+
+    // --- Shared preferences ---------------------------------------------------------------------
+
+    /**
+     * Name of SharedPreferences cache for configurations of projects.
+     */
+    public final static String PROJECT_CONFIG_CACHE = PREFERENCES_PREFIX + "cached_project_configurations";
+
+    /**
+     * Name of SharedPreferences cache for tags of projects.
+     */
+    public final static String PROJECT_TAGS_CACHE = PREFERENCES_PREFIX + "cached_project_tags";
+
+    /**
+     * Name of SharedPreferences for content files info.
+     */
+    public final static String LAST_DOWNLOADED_CONTENT_FILES_INFO = PREFERENCES_PREFIX + "last_downloaded_content_files_info";
+
+    // --------------------------------------------------------------------------------------------
+
 }

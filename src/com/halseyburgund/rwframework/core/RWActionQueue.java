@@ -1,24 +1,24 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ 		
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.halseyburgund.rwframework.core;
 
 import android.content.Context;
@@ -44,11 +44,11 @@ import com.halseyburgund.rwframework.R;
  */
 public class RWActionQueue {
 
-	// debugging
-	private final static String TAG = "RWActionQueue";
-	private final static boolean D = false;
-	
-	// external storage location for Roundware purposes
+    // debugging
+    private final static String TAG = "RWActionQueue";
+    private final static boolean D = false;
+
+    // external storage location for Roundware purposes
     public final static String STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/roundware/";
     // folder to store queued files, waiting for processing
     public final static String NOTE_QUEUE_PATH = STORAGE_PATH + "queue/";
@@ -259,7 +259,7 @@ public class RWActionQueue {
             Log.e(TAG, "Name of file attempted to create: " + queueFilename, null);
             throw new IOException(msg);
         } else {
-        	if (D) { Log.d(TAG, "Temporary file created for queued action: " + queueFilename); }
+            if (D) { Log.d(TAG, "Temporary file created for queued action: " + queueFilename); }
         }
 
         return queueFile;

@@ -1,24 +1,24 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ 		
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.halseyburgund.rwframework.core;
 
 import android.annotation.SuppressLint;
@@ -115,7 +115,7 @@ public class RWActionFactory {
      * @param projectId to retrieve configuration parameters for
      * @return RWAction instance for the server call
      */
-	public RWAction createRetrieveProjectConfigurationAction(String deviceId, String projectId) {
+    public RWAction createRetrieveProjectConfigurationAction(String deviceId, String projectId) {
         RWAction action = createDefaultAction(true);
         action.add(R.string.rw_key_label,
                 R.string.roundware_notification_retrieve_configuration)
@@ -133,17 +133,17 @@ public class RWActionFactory {
         }
 
         return action;
-	}
+    }
 
 
-	/**
-	 * Creates an action to retrieve the tags (for marking, filtering and
-	 * selecting) for the specified project from the server.
-	 * 
+    /**
+     * Creates an action to retrieve the tags (for marking, filtering and
+     * selecting) for the specified project from the server.
+     *
      * @param projectId to retrieve tags for
      * @return RWAction instance for the server call
-	 */
-	public RWAction createRetrieveTagsForProjectAction(String projectId) {
+     */
+    public RWAction createRetrieveTagsForProjectAction(String projectId) {
         RWAction action = createDefaultAction(true);
         action.add(R.string.rw_key_label,
                 R.string.roundware_notification_retrieving_tags)
@@ -152,26 +152,26 @@ public class RWActionFactory {
                 .add(R.string.rw_key_language, Locale.getDefault().getLanguage());
 
         return action;
-	}
-	
-	
-	/**
-	 * Creates a heartbeat action. This can be used to let the server know
-	 * the client is still around (e.g. when listening to an audio stream),
-	 * or as a simple command to check if the server is still responding.
-	 *  
+    }
+
+
+    /**
+     * Creates a heartbeat action. This can be used to let the server know
+     * the client is still around (e.g. when listening to an audio stream),
+     * or as a simple command to check if the server is still responding.
+     *
      * @return RWAction instance for the server call
-	 */
+     */
     public RWAction createHeartbeatAction() {
         RWAction action = createDefaultAction(true);
         action.add(R.string.rw_key_label,
                 R.string.roundware_notification_heartbeat)
                 .add(R.string.rw_key_operation, R.string.rw_op_heartbeat);
         
-    	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-    		addCoordinates(action);
-    	}
-    	
+        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
+            addCoordinates(action);
+        }
+
         return action;
     }
     
@@ -195,10 +195,10 @@ public class RWActionFactory {
         addClientTime(action);
 
         if (tags != null) {
-        	addTags(action, tags);
+            addTags(action, tags);
         }
         if (data != null) {
-        	action.add(R.string.rw_key_data, data);
+            action.add(R.string.rw_key_data, data);
         }
         
         return action;
@@ -255,10 +255,10 @@ public class RWActionFactory {
                 R.string.roundware_notification_voting_on_asset)
                 .add(R.string.rw_key_operation, R.string.rw_op_vote_asset)
                 .add(R.string.rw_key_asset_id, String.valueOf(assetId))
-		        .add(R.string.rw_key_vote_type, voteType);
+                .add(R.string.rw_key_vote_type, voteType);
         
         if (voteValue != null) {
-		        action.add(R.string.rw_key_vote_value, voteValue);
+                action.add(R.string.rw_key_vote_value, voteValue);
         }
         
         return action;
@@ -315,9 +315,9 @@ public class RWActionFactory {
         // can skip adding coordinates for debugging purposes
         String str = mService.getString(R.string.rw_debug_open_audio_stream_without_location_yn);
         if ((str != null) && ("N".equals(str.toUpperCase(Locale.US)))) {
-        	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-        		addCoordinates(action);
-        	}
+            if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
+                addCoordinates(action);
+            }
         }
 
         return action;
@@ -337,9 +337,9 @@ public class RWActionFactory {
                 R.string.roundware_notification_modifying_stream)
                 .add(R.string.rw_key_operation, R.string.rw_op_modify_stream);
         
-    	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-    		addCoordinates(action);
-    	}
+        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
+            addCoordinates(action);
+        }
 
         return action;
     }
@@ -376,9 +376,9 @@ public class RWActionFactory {
                 .add(R.string.rw_key_operation, R.string.rw_op_create_envelope);
         addTags(action, tags);
         
-    	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-    		addCoordinates(action);
-    	}
+        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
+            addCoordinates(action);
+        }
         
         return action;
     }
@@ -400,9 +400,9 @@ public class RWActionFactory {
                 .add(R.string.rw_key_operation, R.string.rw_op_create_envelope)
                 .add(R.string.rw_key_tags, selectedTagsOptions);
         
-    	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-    		addCoordinates(action);
-    	}
+        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
+            addCoordinates(action);
+        }
         
         return action;
     }
@@ -429,15 +429,15 @@ public class RWActionFactory {
                 .add(R.string.rw_key_filename, filename);
         
         if (submitted != null) {
-        	action.add(R.string.rw_key_submitted, submitted);
+            action.add(R.string.rw_key_submitted, submitted);
         }
         
         addTags(action, tags);
         
-    	if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-    		addCoordinates(action);
-    	}
-    	
+        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
+            addCoordinates(action);
+        }
+
         return action;
     }
 
@@ -453,7 +453,7 @@ public class RWActionFactory {
      */
     private RWAction addCoordinates(RWAction action) {
         if (action != null) {
-        	if ((mService != null) && (mService.getConfiguration().isUsingLocation())) {
+            if ((mService != null) && (mService.getConfiguration().isUsingLocation())) {
                 // get last known location from service
                 Location loc = mService.getLastKnownLocation();
                 if (loc != null) {
@@ -485,11 +485,11 @@ public class RWActionFactory {
      * @return updated action
      */
     private RWAction addClientTime(RWAction action) {
-    	if (action != null) {
-	        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z", Locale.US);
-	        action.add(R.string.rw_key_client_time, sf.format(new Date()));
-    	}
-    	return action;
+        if (action != null) {
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z", Locale.US);
+            action.add(R.string.rw_key_client_time, sf.format(new Date()));
+        }
+        return action;
     }
 
 

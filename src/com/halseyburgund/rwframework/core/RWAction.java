@@ -1,24 +1,24 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ 		
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.halseyburgund.rwframework.core;
 
 import android.content.Context;
@@ -87,11 +87,11 @@ public class RWAction {
     
     @Override
     public String toString() {
-    	if (mProperties != null) {
-    		return mProperties.toString();
-    	} else {
-    		return super.toString();
-    	}
+        if (mProperties != null) {
+            return mProperties.toString();
+        } else {
+            return super.toString();
+        }
     }
 
 
@@ -355,7 +355,7 @@ public class RWAction {
      * @param sessionId to set for the action
      */
     public void setSessionId(String sessionId) {
-    	add(R.string.rw_key_session_id, sessionId);
+        add(R.string.rw_key_session_id, sessionId);
     }
 
 
@@ -389,7 +389,7 @@ public class RWAction {
     public String getEnvelopeId() {
         Object value = get(R.string.rw_key_envelope_id);
         if (value != null) {
-        	return value.toString();
+            return value.toString();
         }
         return null;
     }
@@ -403,7 +403,7 @@ public class RWAction {
      * @param envelopeId to set for the action
      */
     public void setEnvelopeId(String envelopeId) {
-    	add(R.string.rw_key_envelope_id, envelopeId);
+        add(R.string.rw_key_envelope_id, envelopeId);
     }
     
     
@@ -507,11 +507,11 @@ public class RWAction {
      * @return accuracy (in meters), or NaN when not available
      */
     public Double getAccuracy() {
-    	Object value = get(R.string.rw_key_accuracy);
-    	if (value != null) {
-    		return Double.valueOf(value.toString());
-    	}
-    	return Double.NaN;
+        Object value = get(R.string.rw_key_accuracy);
+        if (value != null) {
+            return Double.valueOf(value.toString());
+        }
+        return Double.NaN;
     }
     
     
@@ -525,6 +525,6 @@ public class RWAction {
      * @return String stored for the selected tags options
      */
     public String getSelectedTagsOptions() {
-    	return (String) get(R.string.rw_key_tags);
+        return (String) get(R.string.rw_key_tags);
     }
 }

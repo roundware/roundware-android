@@ -1,24 +1,24 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ 		
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.halseyburgund.rwframework.util;
 
 import java.util.ArrayList;
@@ -48,15 +48,15 @@ import com.halseyburgund.rwframework.core.RWTags.RWTag;
  */
 public class RWList extends ArrayList<RWListItem> {
 
-	// serializable UID of this implementation version
+    // serializable UID of this implementation version
     private final static long serialVersionUID = 1L;
 
     // debugging
     private final static String TAG = "RWList";
     private final static boolean D = false;
 
-	// json parsing error message
-	private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
+    // json parsing error message
+    private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
     
     // fields
     private RWTags mTags;
@@ -68,8 +68,8 @@ public class RWList extends ArrayList<RWListItem> {
      * Creates an empty instance.
      */
     public RWList() {
-    	super();
-    	mTags = new RWTags();
+        super();
+        mTags = new RWTags();
     }
     
     
@@ -79,8 +79,8 @@ public class RWList extends ArrayList<RWListItem> {
      * @param tags to include in the RWList
      */
     public RWList(RWTags tags) {
-    	super();
-    	initFromTags(tags);
+        super();
+        initFromTags(tags);
     }
     
     
@@ -93,27 +93,27 @@ public class RWList extends ArrayList<RWListItem> {
      * @param tags to initialize the list with
      */
     public void initFromTags(RWTags tags) {
-    	mTags = new RWTags();
-    	clear();
-    	if (tags != null) {
-    		mTags.fromJson(tags.toJsonString(), tags.getDataSource());
-    		for (RWTag tag : tags.getTags()) {
-    			if (tag.options != null) {
-    				// assume options are already in the right order
-    				for (RWOption option : tag.options) {
-    					add(RWListItem.create(tag, option.tagId, option.value, option.selectByDefault));
-    				}
-    			}
-    		}
-    	}
+        mTags = new RWTags();
+        clear();
+        if (tags != null) {
+            mTags.fromJson(tags.toJsonString(), tags.getDataSource());
+            for (RWTag tag : tags.getTags()) {
+                if (tag.options != null) {
+                    // assume options are already in the right order
+                    for (RWOption option : tag.options) {
+                        add(RWListItem.create(tag, option.tagId, option.value, option.selectByDefault));
+                    }
+                }
+            }
+        }
 
-    	if ((tags != null) && (tags.getTags().size() == 1)) {
-	    	mMinSelectionRequired = tags.getTags().get(0).getMinSelectedOptions();
-	    	mMaxSelectionAllowed = tags.getTags().get(0).getMaxSelectedOptions();
-    	} else {
-	    	mMinSelectionRequired = 0;
-	    	mMaxSelectionAllowed = this.size();
-    	}
+        if ((tags != null) && (tags.getTags().size() == 1)) {
+            mMinSelectionRequired = tags.getTags().get(0).getMinSelectedOptions();
+            mMaxSelectionAllowed = tags.getTags().get(0).getMaxSelectedOptions();
+        } else {
+            mMinSelectionRequired = 0;
+            mMaxSelectionAllowed = this.size();
+        }
     }
     
     
@@ -128,55 +128,55 @@ public class RWList extends ArrayList<RWListItem> {
      * @param type (e.g. "listen", "speak") to create json data for
      * @return string with JavaScript Roundware.tags assignment
      */
-	public String toJsonForWebView(String type) {
-		if (mTags != null) {
-			// create json from tags (with original defaults)
-			JSONObject root = mTags.toJson();
-			
-			// overwrite defaults with current selected options
-			try {
-				JSONArray entries = root.getJSONArray(type);
-				if (entries != null) {
-			        for (int i = 0; i < entries.length(); i++) {
-			        	JSONObject jsonObj = entries.getJSONObject(i);
-			        	
-			        	String tagCode = jsonObj.optString(RWTags.JSON_KEY_TAG_CODE);
-			        	// String tagSelect = jsonObj.getString(RWTags.JSON_KEY_TAG_SELECTION_TYPE);
-	
-						JSONArray newDefaults = new JSONArray();
-				
-						for (RWListItem item : this) {
-							RWTag tag = item.getTag();
-							if (tag.code.equals(tagCode) && item.isOn()) {
-								newDefaults.put(item.getTagId());
-							}
-						}
-						
-						jsonObj.put(RWTags.JSON_KEY_TAG_DEFAULT_OPTIONS, newDefaults);
-					}
-				}
-				return "Roundware.tags = " + root.toString() + ";";
-			} catch (JSONException e) {
-				Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE + " - " + e.getMessage());
-			}
-		}
+    public String toJsonForWebView(String type) {
+        if (mTags != null) {
+            // create json from tags (with original defaults)
+            JSONObject root = mTags.toJson();
 
-		return "Roundware.tags = {}";
-	}
-	
-	
-	/**
-	 * Deciphers the Roundware information in the specified URI and uses it
-	 * to update the selection state of the tags options. The URI is expected
-	 * to have a format like:
-	 * 
-	 * roundware://project?demographic=35,36&question=38,40[&done=true]
-	 * 
-	 * @param webViewMessageUri to process and set selection from
-	 * @return true when the uri contains done=true, false otherwise
-	 */
-	public boolean setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
-		boolean done = false;
+            // overwrite defaults with current selected options
+            try {
+                JSONArray entries = root.getJSONArray(type);
+                if (entries != null) {
+                    for (int i = 0; i < entries.length(); i++) {
+                        JSONObject jsonObj = entries.getJSONObject(i);
+
+                        String tagCode = jsonObj.optString(RWTags.JSON_KEY_TAG_CODE);
+                        // String tagSelect = jsonObj.getString(RWTags.JSON_KEY_TAG_SELECTION_TYPE);
+
+                        JSONArray newDefaults = new JSONArray();
+
+                        for (RWListItem item : this) {
+                            RWTag tag = item.getTag();
+                            if (tag.code.equals(tagCode) && item.isOn()) {
+                                newDefaults.put(item.getTagId());
+                            }
+                        }
+
+                        jsonObj.put(RWTags.JSON_KEY_TAG_DEFAULT_OPTIONS, newDefaults);
+                    }
+                }
+                return "Roundware.tags = " + root.toString() + ";";
+            } catch (JSONException e) {
+                Log.e(TAG, JSON_SYNTAX_ERROR_MESSAGE + " - " + e.getMessage());
+            }
+        }
+
+        return "Roundware.tags = {}";
+    }
+
+
+    /**
+     * Deciphers the Roundware information in the specified URI and uses it
+     * to update the selection state of the tags options. The URI is expected
+     * to have a format like:
+     *
+     * roundware://project?demographic=35,36&question=38,40[&done=true]
+     *
+     * @param webViewMessageUri to process and set selection from
+     * @return true when the uri contains done=true, false otherwise
+     */
+    public boolean setSelectionFromWebViewMessageUri(Uri webViewMessageUri) {
+        boolean done = false;
 
         // set all tags to off
         for (RWListItem item : this) {
@@ -185,51 +185,51 @@ public class RWList extends ArrayList<RWListItem> {
 
         // process the url
         String query = webViewMessageUri.getQuery(); // everything after ? to #
-		if ((query != null) && (query.length() > 0)) {
-			String[] parameters = query.split("&");
-			for (String parameter : parameters) {
-				if (parameter.lastIndexOf("=") < 0) {
-					break;
-				}
-				
-				String parameterName = parameter.substring(0, parameter.lastIndexOf("="));
-				String parameterValues = parameter.substring(parameter.lastIndexOf("=") + 1);
-				if (D) { Log.d(TAG, "Parameter name: " + parameterName + " values: " + parameterValues); }
+        if ((query != null) && (query.length() > 0)) {
+            String[] parameters = query.split("&");
+            for (String parameter : parameters) {
+                if (parameter.lastIndexOf("=") < 0) {
+                    break;
+                }
 
-				if ((parameterName == null) || (parameterName.length() == 0)) {
-					break;
-				}
+                String parameterName = parameter.substring(0, parameter.lastIndexOf("="));
+                String parameterValues = parameter.substring(parameter.lastIndexOf("=") + 1);
+                if (D) { Log.d(TAG, "Parameter name: " + parameterName + " values: " + parameterValues); }
 
-				String values[];
-				if ((parameterValues != null) && (parameterValues.length() >= 0)) {
-					values = parameterValues.split(",");
-				} else {
-					values = new String[]{};
-				}
-				
-				// check done parameter
-				if ("done".equalsIgnoreCase(parameterName) && (values.length > 0) && ("true".equalsIgnoreCase(values[0]))) {
-					done = true;
-					break;
-				}
+                if ((parameterName == null) || (parameterName.length() == 0)) {
+                    break;
+                }
+
+                String values[];
+                if ((parameterValues != null) && (parameterValues.length() >= 0)) {
+                    values = parameterValues.split(",");
+                } else {
+                    values = new String[]{};
+                }
+
+                // check done parameter
+                if ("done".equalsIgnoreCase(parameterName) && (values.length > 0) && ("true".equalsIgnoreCase(values[0]))) {
+                    done = true;
+                    break;
+                }
 
                 // check tags
-				for (RWListItem item : this) {
-					RWTag tag = item.getTag();
-					String tagId = String.valueOf(item.getTagId());
-					if (tag.code.equals(parameterName)) {
-						for (String value : values) {
-							if (tagId.equals(value)) {
-								item.setOn();
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-		return done;
-	}
+                for (RWListItem item : this) {
+                    RWTag tag = item.getTag();
+                    String tagId = String.valueOf(item.getTagId());
+                    if (tag.code.equals(parameterName)) {
+                        for (String value : values) {
+                            if (tagId.equals(value)) {
+                                item.setOn();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return done;
+    }
 
     
     /**
@@ -338,13 +338,13 @@ public class RWList extends ArrayList<RWListItem> {
      * @return number of selected items
      */
     public int getSelectedCount() {
-    	int result = 0;
-    	for (RWListItem item : this) {
-    		if (item.isOn()) {
-    			result++;
-    		}
-    	}
-    	return result;
+        int result = 0;
+        for (RWListItem item : this) {
+            if (item.isOn()) {
+                result++;
+            }
+        }
+        return result;
     }
 
     
@@ -355,15 +355,15 @@ public class RWList extends ArrayList<RWListItem> {
      * @return number of selected items
      */
     public int getSelectedCount(RWTag tag) {
-    	int result = 0;
-    	for (RWListItem item : this) {
+        int result = 0;
+        for (RWListItem item : this) {
             if (tag.equals(item.getTag())) {
-	    		if (item.isOn()) {
-	    			result++;
-	    		}
+                if (item.isOn()) {
+                    result++;
+                }
             }
-    	}
-    	return result;
+        }
+        return result;
     }
     
     
@@ -374,8 +374,8 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true if the list is single select
      */
     public boolean isSingleSelect(RWTag tag) {
-    	RWList sublist = filter(tag);
-    	return ((sublist.mMinSelectionRequired == 1) && (sublist.mMaxSelectionAllowed == 1));
+        RWList sublist = filter(tag);
+        return ((sublist.mMinSelectionRequired == 1) && (sublist.mMaxSelectionAllowed == 1));
     }
     
     
@@ -385,13 +385,13 @@ public class RWList extends ArrayList<RWListItem> {
      * of allowed selected items is reached.
      */
     private void deselectFirstSelected(RWTag tag) {
-    	RWList sublist = filter(tag);
-    	for (RWListItem item : sublist) {
-    		if (item.isOn()) {
-    			item.setOff();
-    			return;
-    		}
-    	}
+        RWList sublist = filter(tag);
+        for (RWListItem item : sublist) {
+            if (item.isOn()) {
+                item.setOff();
+                return;
+            }
+        }
     }
     
     
@@ -405,23 +405,23 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true if the item is set to selected
      */
     public boolean select(RWListItem item) {
-    	RWTag tag = item.getTag();
-    	RWList sublist = filter(tag);
-    	if (!item.isOn()) {
-	    	// only allow if does not break max selections
-	    	if (sublist.getSelectedCount(tag) >= sublist.mMaxSelectionAllowed) {
-	    		if (sublist.isSingleSelect(tag)) {
-	    			// for single select auto switch the selection
-	    			sublist.deselectFirstSelected(tag);
-	    			item.setOn();
-	    			return true;
-	    		}
-	    	} else {
-	    		item.setOn();
-	    		return true;
-	    	}
-    	}
-    	return false;
+        RWTag tag = item.getTag();
+        RWList sublist = filter(tag);
+        if (!item.isOn()) {
+            // only allow if does not break max selections
+            if (sublist.getSelectedCount(tag) >= sublist.mMaxSelectionAllowed) {
+                if (sublist.isSingleSelect(tag)) {
+                    // for single select auto switch the selection
+                    sublist.deselectFirstSelected(tag);
+                    item.setOn();
+                    return true;
+                }
+            } else {
+                item.setOn();
+                return true;
+            }
+        }
+        return false;
     }
     
     
@@ -434,15 +434,15 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true if the item is set to not selected
      */
     public boolean deselect(RWListItem item) {
-    	RWTag tag = item.getTag();
-    	if (item.isOn()) {
-    		// only allow if does not break min selections
-    		if (getSelectedCount(tag) > mMinSelectionRequired) {
-    			item.setOff();
-    			return true;
-    		}
-    	}
-    	return false;
+        RWTag tag = item.getTag();
+        if (item.isOn()) {
+            // only allow if does not break min selections
+            if (getSelectedCount(tag) > mMinSelectionRequired) {
+                item.setOff();
+                return true;
+            }
+        }
+        return false;
     }
     
     
@@ -452,13 +452,13 @@ public class RWList extends ArrayList<RWListItem> {
      * @return RWList with the selected RWListItems
      */
     public RWList getSelectedItems() {
-    	RWList result = new RWList();
-    	for (RWListItem item : this) {
-    		if (item.isOn()) {
-    			result.add(item);
-    		}
-    	}
-    	return result;
+        RWList result = new RWList();
+        for (RWListItem item : this) {
+            if (item.isOn()) {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
     
@@ -469,13 +469,13 @@ public class RWList extends ArrayList<RWListItem> {
      * @return RWList with the selected RWListItems
      */
     public RWList getSelectedItems(RWTag tag) {
-    	RWList result = new RWList();
-    	for (RWListItem item : this) {
-    		if ((tag.equals(item.getTag())) && (item.isOn())) {
-    			result.add(item);
-    		}
-    	}
-    	return result;
+        RWList result = new RWList();
+        for (RWListItem item : this) {
+            if ((tag.equals(item.getTag())) && (item.isOn())) {
+                result.add(item);
+            }
+        }
+        return result;
     }
     
     
@@ -560,13 +560,13 @@ public class RWList extends ArrayList<RWListItem> {
      * @return list of all RWTag instances referenced
      */
     public RWTag[] getAllTags() {
-    	List<RWTag> result = new ArrayList<RWTag>();
-    	for (RWListItem item : this) {
-    		if (!result.contains(item.getTag())) {
-    			result.add(item.getTag());
-    		}
-    	}
-    	return result.toArray(new RWTag[]{});
+        List<RWTag> result = new ArrayList<RWTag>();
+        for (RWListItem item : this) {
+            if (!result.contains(item.getTag())) {
+                result.add(item.getTag());
+            }
+        }
+        return result.toArray(new RWTag[]{});
     }
     
     
@@ -580,15 +580,15 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true if for each of the tags there is a valid selection
      */
     public boolean hasValidSelectionsForTags(RWTag... tags) {
-    	for (RWTag tag : tags) {
-    		RWList sublist = filter(tag);
-    		int selected = sublist.getSelectedCount();
-    		if ((selected < sublist.mMinSelectionRequired) || (selected > sublist.mMaxSelectionAllowed)) {
-    			if (D) { Log.d(TAG, "Invalid selection for tag " + tag + " " + sublist.mMinSelectionRequired + " < " + selected + " < " + sublist.mMaxSelectionAllowed); }
-    			return false;
-    		}
-    	}
-    	return true;
+        for (RWTag tag : tags) {
+            RWList sublist = filter(tag);
+            int selected = sublist.getSelectedCount();
+            if ((selected < sublist.mMinSelectionRequired) || (selected > sublist.mMaxSelectionAllowed)) {
+                if (D) { Log.d(TAG, "Invalid selection for tag " + tag + " " + sublist.mMinSelectionRequired + " < " + selected + " < " + sublist.mMaxSelectionAllowed); }
+                return false;
+            }
+        }
+        return true;
     }
 
     
@@ -601,7 +601,7 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true if the list has valid selections for all tags
      */
     public boolean hasValidSelectionsForTags() {
-    	return hasValidSelectionsForTags(getAllTags());
+        return hasValidSelectionsForTags(getAllTags());
     }
     
 
@@ -613,16 +613,16 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true when successful
      */
     public boolean saveSelectionState(SharedPreferences prefs) {
-    	if (prefs != null) {
-    		Editor editor = prefs.edit();
-    		for (RWListItem item : this) {
-    			String key = item.getTag().type + "_" + item.getTag().code + "_" + item.getTagId();
-    			editor.putBoolean(key, item.isOn());
-    		}
-    		editor.commit();
-    		return true;
-    	}
-    	return false;
+        if (prefs != null) {
+            Editor editor = prefs.edit();
+            for (RWListItem item : this) {
+                String key = item.getTag().type + "_" + item.getTag().code + "_" + item.getTagId();
+                editor.putBoolean(key, item.isOn());
+            }
+            editor.commit();
+            return true;
+        }
+        return false;
     }
     
     
@@ -634,34 +634,34 @@ public class RWList extends ArrayList<RWListItem> {
      * @return true when successful
      */
     public boolean restoreSelectionState(SharedPreferences prefs) {
-    	if (prefs != null) {
-    		for (RWListItem item : this) {
-    			String key = item.getTag().type + "_" + item.getTag().code + "_" + item.getTagId();
-    			item.set(prefs.getBoolean(key, item.isOn()));
-    		}
-    		return true;
-    	}
-    	return false;
+        if (prefs != null) {
+            for (RWListItem item : this) {
+                String key = item.getTag().type + "_" + item.getTag().code + "_" + item.getTagId();
+                item.set(prefs.getBoolean(key, item.isOn()));
+            }
+            return true;
+        }
+        return false;
     }
 
 
-	public int getMinSelectionRequired() {
-		return mMinSelectionRequired;
-	}
+    public int getMinSelectionRequired() {
+        return mMinSelectionRequired;
+    }
 
 
-	public void setMinSelectionRequired(int minSelectionRequired) {
-		mMinSelectionRequired = minSelectionRequired;
-	}
+    public void setMinSelectionRequired(int minSelectionRequired) {
+        mMinSelectionRequired = minSelectionRequired;
+    }
 
 
-	public int getMaxSelectionAllowed() {
-		return mMaxSelectionAllowed;
-	}
+    public int getMaxSelectionAllowed() {
+        return mMaxSelectionAllowed;
+    }
 
 
-	public void setMaxSelectionAllowed(int maxSelectionAllowed) {
-		mMaxSelectionAllowed = maxSelectionAllowed;
-	}
+    public void setMaxSelectionAllowed(int maxSelectionAllowed) {
+        mMaxSelectionAllowed = maxSelectionAllowed;
+    }
     
 }

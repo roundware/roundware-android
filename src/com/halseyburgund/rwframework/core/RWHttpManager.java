@@ -1,24 +1,24 @@
 /*
     ROUNDWARE
-	a participatory, location-aware media platform
-	Android client library
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-	http://roundware.org | contact@roundware.org
+    a participatory, location-aware media platform
+    Android client library
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
+    http://roundware.org | contact@roundware.org
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- 	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 	GNU General Public License for more details.
+     This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
 
- 	You should have received a copy of the GNU General Public License
- 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ 		
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.halseyburgund.rwframework.core;
 
 import android.util.Log;
@@ -171,24 +171,24 @@ public class RWHttpManager {
     
     
     public static String uploadFile(String page, Properties properties, String fileParam, String file, int timeOutSec) throws Exception {
-    	if (D) { Log.d(TAG, "Starting upload of file: " + file, null); }
+        if (D) { Log.d(TAG, "Starting upload of file: " + file, null); }
 
-    	// build GET-like page name that includes the RW operation
+        // build GET-like page name that includes the RW operation
         Enumeration<Object> enumProps = properties.keys();
         StringBuilder uriBuilder = new StringBuilder(page).append('?');
         while (enumProps.hasMoreElements()) {
             String key = enumProps.nextElement().toString();
             String value = properties.get(key).toString();
             if ("operation".equals(key)) {
-	            uriBuilder.append(key);
-	            uriBuilder.append('=');
-	            uriBuilder.append(java.net.URLEncoder.encode(value, "UTF-8"));
-	            break;
+                uriBuilder.append(key);
+                uriBuilder.append('=');
+                uriBuilder.append(java.net.URLEncoder.encode(value, "UTF-8"));
+                break;
             }
         }
         
         if (D) { Log.d(TAG, "GET request: " + uriBuilder.toString(), null); }
-    	
+
         HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, timeOutSec * 1000);
         HttpConnectionParams.setSoTimeout(httpParams, timeOutSec * 1000);
