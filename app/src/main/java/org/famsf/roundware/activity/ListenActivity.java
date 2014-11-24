@@ -1,9 +1,9 @@
 /*
     STORIES FROM MAIN STREET
-	Android client application
-   	Copyright (C) 2008-2013 Halsey Solutions, LLC
-	with contributions by Rob Knapen
-	ALL RIGHTS RESERVED
+    Android client application
+       Copyright (C) 2008-2013 Halsey Solutions, LLC
+    with contributions by Rob Knapen
+    ALL RIGHTS RESERVED
 */
 package org.famsf.roundware.activity;
 
