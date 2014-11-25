@@ -245,7 +245,7 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putString(PrefsActivity.ROUNDWARE_DEVICE_ID, mDeviceId);
-        prefsEditor.commit();
+        prefsEditor.apply();
 
         // add the option menu items
         menu.add(0, MENU_ITEM_INFO, Menu.NONE, R.string.info)
@@ -445,7 +445,7 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = Settings.getSharedPreferences();
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putBoolean(SpeakActivity.PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
 
 
@@ -456,7 +456,7 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = Settings.getSharedPreferences();
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putString(Settings.PREFS_KEY_RW_DEVICE_ID, mDeviceId);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
 
 

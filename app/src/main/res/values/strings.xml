@@ -29,7 +29,7 @@
 <string name="confirm_message">Are you sure you want to delete your recording and re-record it?</string>
 <string name="confirm_sharing_message">Do you want to submit your last recording?</string>
 <string name="confirm_sharing_title">Tell a Friend</string>
-<string name="confirm_sharing_ok">Ok</string>
+<string name="confirm_sharing_ok">OK</string>
 <string name="confirm_sharing_cancel">No Thanks</string>
 <string name="confirm_exit">Pending Uploads</string>
 <string name="sharing_subject">Roundware Sharing</string>

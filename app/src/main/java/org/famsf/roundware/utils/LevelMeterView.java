@@ -65,7 +65,7 @@ public class LevelMeterView extends ImageView {
 
 
     protected void init() {
-      Log.d(TAG, "Initiailizing levelmeter...");
+        Log.d(TAG, "Initiailizing levelmeter...");
         meterBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.level_meter);
         Log.d(TAG, "Initialized.");
     }

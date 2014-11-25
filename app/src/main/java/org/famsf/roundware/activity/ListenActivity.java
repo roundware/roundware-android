@@ -502,12 +502,12 @@ public class ListenActivity extends Activity {
             boolean isPlaying = mRwBinder.isPlaying();
             mPlayButton.setEnabled(true);
             mPlayButton.setChecked(isPlaying);
-            if (!isPlaying) {
+//          if (!isPlaying) {
 //                mLikeButton.setChecked(false);
 //                mLikeButton.setEnabled(false);
 //                mFlagButton.setChecked(false);
 //                mFlagButton.setEnabled(false);
-            }
+//            }
         }
         updateScreenForSelectedTags();
     }
