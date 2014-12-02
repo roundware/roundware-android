@@ -45,7 +45,7 @@ import com.halseyburgund.rwframework.util.RWListItem;
 
 import java.io.IOException;
 
-import org.famsf.roundware.MyApplication;
+import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
@@ -84,7 +84,7 @@ public class ListenActivity extends Activity {
 
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            if (MyApplication.getSite(location) == MyApplication.DE_YOUNG) {
+            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_listen_dy);
             } else {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_listen_lh);

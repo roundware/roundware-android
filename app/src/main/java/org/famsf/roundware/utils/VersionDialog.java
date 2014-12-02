@@ -96,7 +96,7 @@ public class VersionDialog {
         SharedPreferences prefs = context.getSharedPreferences(VERSION_DIALOG_PREFERENCE, Activity.MODE_PRIVATE);
         Editor editor = prefs.edit();
         editor.putString(PREF_VERSION_NAME_CHECK, versionName);
-        editor.commit();
+        editor.apply();
     }
 
 

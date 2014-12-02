@@ -37,7 +37,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -61,11 +60,11 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.famsf.roundware.MyApplication;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.LevelMeterView;
 import org.famsf.roundware.utils.Utils;
+import org.famsf.roundware.utils.LocationBg;
 
 public class SpeakActivity extends Activity {
     public static final String LOGTAG = SpeakActivity.class.getSimpleName();
@@ -149,7 +148,7 @@ public class SpeakActivity extends Activity {
 
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            if (MyApplication.getSite(location) == MyApplication.DE_YOUNG) {
+            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
             } else {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_speak_lh);

@@ -42,10 +42,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import org.famsf.roundware.MyApplication;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.Utils;
+import org.famsf.roundware.utils.LocationBg;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.halseyburgund.rwframework.core.RW;
@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
     private final static int MENU_ITEM_INFO = Menu.FIRST;
     private final static int MENU_ITEM_PREFERENCES = Menu.FIRST + 1;
     private final static int MENU_ITEM_EXIT = Menu.FIRST + 2;
-
 
     // view references
     private Animation mFadeInAnimation;
@@ -83,7 +82,7 @@ public class MainActivity extends Activity {
 
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            if (MyApplication.getSite(location) == MyApplication.DE_YOUNG) {
+            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_home_dy);
             } else {
                 mViewFlipper.setBackgroundResource(R.drawable.bg_home_lh);
@@ -248,7 +247,7 @@ public class MainActivity extends Activity {
         prefsEditor.apply();
 
         // add the option menu items
-        menu.add(0, MENU_ITEM_INFO, Menu.NONE, R.string.info)
+        menu.add(0, MENU_ITEM_INFO, Menu.NONE, R.string.legal_notice_title)
                 .setShortcut('1', 'i')
                 .setIcon(android.R.drawable.ic_menu_info_details);
 
@@ -306,7 +305,7 @@ public class MainActivity extends Activity {
 
         mProjectId = getString(R.string.rw_spec_project_id);
 
-       showProgress(getString(R.string.initializing), getString(R.string.connecting_to_server_message), true, false);
+        showProgress(getString(R.string.initializing), getString(R.string.connecting_to_server_message), true, false);
         try {
             // create connection to the RW service
             Intent bindIntent = new Intent(MainActivity.this, RWService.class);
@@ -343,10 +342,9 @@ public class MainActivity extends Activity {
         if (mRwBinder != null) {
             mRwBinder.stopService();
             unbindService(rwConnection);
-        } else {
-            if (mRwService != null) {
-                return stopService(mRwService);
-            }
+        }
+        if (mRwService != null) {
+            return stopService(mRwService);
         }
         return true;
     }
