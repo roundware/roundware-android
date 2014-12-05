@@ -268,7 +268,6 @@ public class ListenActivity extends Activity {
         return true;
     }
 
-
     /**
      * Sets up the primary UI widgets (spinner and buttons), and how to
      * handle interactions.
@@ -359,9 +358,7 @@ public class ListenActivity extends Activity {
         mExploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mViewFlipper != null) {
-                    mWebView.loadUrl(getString(R.string.explore_url));
-                }
+                startActivity(new Intent(getApplicationContext(), ExploreActivity.class));
             }
         });
 
@@ -370,23 +367,19 @@ public class ListenActivity extends Activity {
             @Override
             public void onClick(View view) {
                 // get the folder where the web content files are stored
-                //String fileUrl = getString(R.string.refine_url);
                 mContentFileDir = mRwBinder.getContentFilesDir();
                 if ((mWebView != null) && (mContentFileDir != null)) {
                     String contentFileName = mContentFileDir + "listen.html";
                     try {
                         String data = mRwBinder.readContentFile(contentFileName);
-                        //String data = mRwBinder.readAssetFile("listen-a.html");
                         data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
                         mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
-                        //mWebView.loadDataWithBaseURL(fileUrl, data, null, null, null);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e(LOGTAG, "Problem loading content file: listen.html");
-                        // TODO: dialog?? error??
+                        // TODO: dialog?? error?? Don't let it get this far?
                     }
                 }
-                //mWebView.loadUrl(fileUrl);
             }
         });
 
@@ -488,6 +481,7 @@ public class ListenActivity extends Activity {
      * connection state and other state variables.
      */
     private void updateUIState() {
+        // TODO: Only allow this activity to be current when the RwService is running.
         if (mRwBinder == null) {
             // not connected to RWService
             mPlayButton.setChecked(false);
@@ -496,7 +490,6 @@ public class ListenActivity extends Activity {
 //            mLikeButton.setEnabled(false);
 //            mFlagButton.setChecked(false);
 //            mFlagButton.setEnabled(false);
-            //mExploreButton.setEnabled(false);
         } else {
             // connected to RWService
             boolean isPlaying = mRwBinder.isPlaying();

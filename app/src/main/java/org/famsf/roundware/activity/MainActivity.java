@@ -7,7 +7,6 @@
 */
 package org.famsf.roundware.activity;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -118,7 +117,7 @@ public class MainActivity extends Activity {
 
     /**
      * Handles events received from the RWService Android Service that we
-     * connect to. Sinds most operations of the service involve making calls
+     * connect to. Since most operations of the service involve making calls
      * to the Roundware server, the response is handle asynchronously with
      * results passed back as broadcast intents. An IntentFilter is set up
      * in the onResume method of this activity and controls which intents
@@ -256,6 +255,7 @@ public class MainActivity extends Activity {
                     .setIcon(android.R.drawable.ic_menu_preferences);
         }
 
+        // TODO: The Exit item should be removed and confirmedExit() code called in onBackPressed()
         menu.add(0, MENU_ITEM_EXIT, Menu.NONE, R.string.exit).setShortcut('3', 'e')
                 .setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 

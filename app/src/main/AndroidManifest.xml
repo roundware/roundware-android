@@ -61,6 +61,15 @@
             android:label="@string/title_activity_prefs" >
         </activity>
 
+        <activity
+            android:name=".activity.ExploreActivity"
+            android:label= "@string/title_activity_explore"
+            android:launchMode="singleInstance"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+
         <service android:label="RoundwareService" android:name="com.halseyburgund.rwframework.core.RWService">
             <meta-data android:name="com.google.android.gms.version" android:value="3265130" />
         </service>

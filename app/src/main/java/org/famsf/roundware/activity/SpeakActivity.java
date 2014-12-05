@@ -181,7 +181,6 @@ public class SpeakActivity extends Activity {
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
             // get the folder where the web content files are stored
-            //String fileUrl = getString(R.string.filter_url);
             mContentFileDir = mRwBinder.getContentFilesDir();
             if ((mWebView != null) && (mContentFileDir != null)) {
                 String contentFileName = mRwBinder.getContentFilesDir() + "speak.html";
@@ -195,7 +194,6 @@ public class SpeakActivity extends Activity {
                     // TODO: dialog?? error??
                 }
             }
-            //mWebView.loadUrl(fileUrl);
             updateUIState();
         }
 
@@ -208,7 +206,7 @@ public class SpeakActivity extends Activity {
 
     /**
      * Handles events received from the RWService Android Service that we
-     * connect to. Sinds most operations of the service involve making calls
+     * connect to. Since most operations of the service involve making calls
      * to the Roundware server, the response is handle asynchronously with
      * results passed back as broadcast intents. An IntentFilter is set up
      * in the onResume method of this activity and controls which intents
