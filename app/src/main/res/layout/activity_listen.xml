@@ -52,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/refine_button"
+                android:textSize="16sp"
                 android:singleLine="true"
                 android:layout_alignParentRight="true"
                 android:background="#00FFFFFF"
@@ -72,6 +73,7 @@
                 android:paddingRight="16dp"
                 android:textOff="@string/play"
                 android:textOn="@string/pause"
+                android:textSize="16sp"
                 />
 
             <Button
@@ -84,6 +86,7 @@
                 android:layout_alignParentRight="true"
                 android:background="#00FFFFFF"
                 android:drawableTop="@drawable/mic_button"
+                android:textSize="16sp"
                 android:drawablePadding="2dp"
                 android:visibility="visible"
                 android:layout_weight="1"
