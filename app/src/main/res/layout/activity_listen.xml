@@ -70,6 +70,8 @@
                 android:drawableTop="@drawable/listen_play_pause_button"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:textOff="@string/play"
+                android:textOn="@string/pause"
                 />
 
             <Button

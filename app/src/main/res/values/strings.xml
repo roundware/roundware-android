@@ -183,6 +183,8 @@
 <string name="refine_help">Select from the options below</string>
 <string name="community_button">Community</string>
 <string name="museum_button">Museum</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
 
 
 </resources>
