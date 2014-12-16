@@ -75,6 +75,7 @@
     <string name="rw_key_vote_type">vote_type</string>
     <string name="rw_key_vote_value">value</string>
     <string name="rw_key_submitted">submitted</string>
+    <string name="rw_key_audio_bitrate">audio_stream_bitrate</string>
         
     <string name="rw_key_file">file</string>
     <string name="rw_key_filename">filename</string>

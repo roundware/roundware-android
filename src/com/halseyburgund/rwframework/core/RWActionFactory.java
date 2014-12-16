@@ -309,7 +309,10 @@ public class RWActionFactory {
         RWAction action = createDefaultAction(true);
         action.add(R.string.rw_key_label,
                 R.string.roundware_notification_requesting_stream)
-                .add(R.string.rw_key_operation, R.string.rw_op_get_stream);
+                .add(R.string.rw_key_operation, R.string.rw_op_get_stream)
+                /*Valid options are: 64, 96, 112, 128, 160, 192, 256 and 320*/
+                .add(R.string.rw_key_audio_bitrate, "128");
+
         addTags(action, tags);
 
         // can skip adding coordinates for debugging purposes
