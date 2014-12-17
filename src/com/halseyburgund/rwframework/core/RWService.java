@@ -44,6 +44,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.halseyburgund.rwframework.R;
@@ -95,6 +96,7 @@ import java.util.TimerTask;
 
     // playback notification
     private final static int NOTIFICATION_ID = 10001;
+    private final static int ERROR_RETRY_COUNT = 3;
 
     /**
      * Connection states of the Roundware session.
@@ -131,9 +133,14 @@ import java.util.TimerTask;
     // service binder
     private final IBinder mBinder = new RWServiceBinder();
 
-    // fields
     private RWActionFactory mActionFactory;
+
     private MediaPlayer mPlayer;
+    private RWAudioManager mAudioManager;
+    private int errorCount = 0;
+    private boolean isPrepared = false;
+
+    private RWStreamProxy mProxy;
     private WifiLock mWifiLock;
     private Timer mQueueTimer;
     private long mLastRequestMsec;
@@ -166,7 +173,7 @@ import java.util.TimerTask;
     
     private RWConfiguration configuration;
     private RWTags tags;
-    
+    //TODO support telephony interruption support?
     /**
      * Service binder used to communicate with the Roundware service.
      * 
@@ -199,14 +206,14 @@ import java.util.TimerTask;
 
         @Override
         protected String doInBackground(Void... params) {
-            if (D) { Log.d(TAG, "Retrieving configuration for project", null); }
+            debugLog("Retrieving configuration for project");
             return perform(mActionFactory.createRetrieveProjectConfigurationAction(deviceId, projectId), true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (D) { Log.d(TAG, "Retrieve project configuration result: " + result, null); }
+            debugLog("Retrieve project configuration result: " + result);
 
             // try to use cache when no server data received
             boolean usingCache = false;
@@ -250,14 +257,14 @@ import java.util.TimerTask;
 
         @Override
         protected String doInBackground(Void... params) {
-            if (D) { Log.d(TAG, "Retrieving tags for project", null); }
+            debugLog("Retrieving tags for project");
             return perform(mActionFactory.createRetrieveTagsForProjectAction(projectId), true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (D) { Log.d(TAG, "Retrieve project tags result: " + result, null); }
+            debugLog("Retrieve project tags result: " + result);
 
             // try to use cache when no server data received
             boolean usingCache = false;
@@ -296,14 +303,14 @@ import java.util.TimerTask;
         @Override
         protected String doInBackground(Void... params) {
             // start initial stream without selection
-            if (D) { Log.d(TAG, "Starting Playback from Service", null); }
+            debugLog("Starting Playback from Service");
             return perform(mActionFactory.createRequestStreamAction(selections), true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (D) { Log.d(TAG, "Starting Playback from Service result: " + result, null); }
+            debugLog("Starting Playback from Service result: " + result);
             // check for errors
             mStreamUrl = null;
             if (result == null) {
@@ -322,41 +329,82 @@ import java.util.TimerTask;
                 if ((mStreamUrl == null) || (mStreamUrl.length() == 0)) {
                     broadcast(RW.UNABLE_TO_PLAY);
                 } else {
-                    if (D) { Log.d(TAG, "Starting MediaPlayer for stream: " + mStreamUrl, null); }
-                    try {
-                        mPlayer.reset();
-                        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mPlayer.setDataSource(mStreamUrl);
-                        mPlayer.prepareAsync();
-                        
-                        // get wifi lock, will be released when playback is stopped
-                        mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-                                .createWifiLock(WifiManager.WIFI_MODE_FULL, "roundware_playback_wifilock");
-
-                        mWifiLock.setReferenceCounted(false);
-                        mWifiLock.acquire();                        
-
-                        // send log message about stream started
-                        rwSendLogEvent(R.string.rw_et_start_listen, null, null, true);
-                    } catch (Exception ex) {
-                        if (mWifiLock != null) {
-                            mWifiLock.release();
-                        }
-                        
-                        Log.e(TAG, ex.toString());
-                        broadcast(RW.UNABLE_TO_PLAY);
-
-                        // broadcast error message
-                        Intent intent = new Intent();
-                        String message = getString(R.string.roundware_error_mediaplayer_problem);
-                        message = message + "\n\nException: " + ex.getMessage();
-                        intent.setAction(RW.ERROR_MESSAGE);
-                        intent.putExtra(RW.EXTRA_SERVER_MESSAGE, message);
-                        if (D) { Log.d(TAG, "Going to send broadcast event, error message = " + message, null); }
-                        sendBroadcast(intent);
-                    }
+                    preparePlayer(0);
                 }
             }
+        }
+    }
+    private void preparePlayer(int startingErrorCount ){
+        this.errorCount = startingErrorCount;
+        preparePlayer();
+    }
+
+    private void preparePlayer(){
+
+        debugLog("Starting MediaPlayer for stream: " + mStreamUrl);
+        stopPlayer();
+
+        if( TextUtils.isEmpty(mStreamUrl) ) {
+            Log.w(TAG, "preparePlayer with no url!");
+        }else{
+            //TODO if android 4.1+ use exoPlayer instead of mediaPlayer
+            if (mProxy == null) {
+                mProxy = new RWStreamProxy();
+                mProxy.init();
+                mProxy.start();
+            }
+            String playUrl = String.format("http://127.0.0.1:%d/%s",
+                    mProxy.getPort(), mStreamUrl);
+
+            try {
+                debugLog("reset: " + playUrl);
+                synchronized (this) {
+                    mPlayer.reset();
+                    mPlayer.setDataSource(playUrl);
+                    mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    debugLog("Preparing: " + playUrl);
+                    mPlayer.prepareAsync();
+                }
+                debugLog("Waiting for prepare");
+                // get wifi lock, will be released when playback is stopped
+                mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                        .createWifiLock(WifiManager.WIFI_MODE_FULL, "roundware_playback_wifilock");
+
+                mWifiLock.setReferenceCounted(false);
+                mWifiLock.acquire();
+
+                // send log message about stream started
+                rwSendLogEvent(R.string.rw_et_start_listen, null, null, true);
+            } catch (Exception ex) {
+                if (mWifiLock != null) {
+                    mWifiLock.release();
+                }
+
+                Log.e(TAG, ex.toString());
+                broadcast(RW.UNABLE_TO_PLAY);
+
+                // broadcast error message
+                Intent intent = new Intent();
+                String message = getString(R.string.roundware_error_mediaplayer_problem);
+                message = message + "\n\nException: " + ex.getMessage();
+                intent.setAction(RW.ERROR_MESSAGE);
+                intent.putExtra(RW.EXTRA_SERVER_MESSAGE, message);
+                debugLog("Going to send broadcast event, error message = " + message);
+                sendBroadcast(intent);
+            }
+        }
+    }
+
+    private void stopPlayer(){
+        debugLog("stop");
+        mAudioManager.releaseAudioFocus();
+        if(isPrepared) {
+            if (mProxy != null) {
+                mProxy.stop();
+                mProxy = null;
+            }
+            mPlayer.stop();
+            isPrepared = false;
         }
     }
 
@@ -398,7 +446,7 @@ import java.util.TimerTask;
     private BroadcastReceiver rwReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (D) { Log.d(TAG, "Received broadcast intent with action: " + intent.getAction()); }
+            debugLog("Received broadcast intent with action: " + intent.getAction());
             
             if (RW.CONFIGURATION_LOADED.equalsIgnoreCase(intent.getAction())) {
                 if (mSessionState != SessionState.ON_LINE) {
@@ -474,7 +522,7 @@ import java.util.TimerTask;
      * @return true when downloading content files makes sense
      */
     private boolean isContentDownloadRequired(Context context) {
-        if (D) { Log.d(TAG, "Checking if new content files need to be downloaded"); }
+        debugLog("Checking if new content files need to be downloaded");
 
         // configuration does not exist or does not use content files
         if ((configuration == null) || (configuration.getContentFilesUrl() == null) || (configuration.getContentFilesVersion() < 0)) {
@@ -512,7 +560,7 @@ import java.util.TimerTask;
     
     
     private void startContentDownload(Context context) {
-        if (D) { Log.d(TAG, "Starting download of new content files"); }
+        debugLog("Starting download of new content files");
         
         // figure out where to store the files
         final Context ctx = context;
@@ -643,9 +691,11 @@ import java.util.TimerTask;
         
         // setup a tracker for assets streamed by the server
         mAssetTracker = new RWStreamAssetsTracker(this);
+
+        // simple audio management
+        mAudioManager = new RWAudioManager( getApplicationContext() );
     }
 
-    
     /**
      * Checks if the device's GPS is available and switched on.
      * 
@@ -716,6 +766,7 @@ import java.util.TimerTask;
         
         // create a pending intent to start the specified activity from the notification
         Intent ovIntent = new Intent(this, mNotificationActivity);
+        //FIXME new_task?
         mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
         // create a notification and move service to foreground
@@ -748,7 +799,7 @@ import java.util.TimerTask;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        if (D) { Log.d(TAG, "+++ playbackStart +++"); }
+        debugLog("+++ playbackStart +++");
         if (!isPlaying()) {
             createPlayer();
             new StartPlaybackTask(tags).execute();
@@ -819,6 +870,7 @@ import java.util.TimerTask;
         stopLocationUpdates();
         unregisterReceiver(connectivityReceiver);
         unregisterReceiver(rwReceiver);
+        stopForeground(true);
         super.onDestroy();
     }
 
@@ -843,7 +895,7 @@ import java.util.TimerTask;
     public void update(Observable observable, Object data) {
         Location location = RWLocationTracker.instance().getLastLocation();
         if (location == null) {
-            if (D) { Log.d(TAG, getString(R.string.roundware_no_location_info), null); }
+            debugLog( getString(R.string.roundware_no_location_info));
         } else {
             double lat = location.getLatitude();
             double lon = location.getLongitude();
@@ -1052,12 +1104,9 @@ import java.util.TimerTask;
      * 
      * @return true if the player is playing and not muted
      */
-    public boolean isPlaying() {
-        if (mPlayer == null) {
-            return false;
-        } else {
-            return mPlayer.isPlaying() && (mVolumeLevel > 0);
-        }
+    synchronized public boolean isPlaying() {
+        return isPrepared && mPlayer != null && mPlayer.isPlaying() && (mVolumeLevel > 0);
+
     }
     
     
@@ -1073,11 +1122,7 @@ import java.util.TimerTask;
      * @return true if the player is playing and the volume is muted
      */
     public boolean isPlayingMuted() {
-        if (mPlayer == null) {
-            return false;
-        } else {
-            return mPlayer.isPlaying() && (mVolumeLevel == 0);
-        }
+        return mPlayer != null && isPrepared && mPlayer.isPlaying() && (mVolumeLevel == 0);
     }
 
 
@@ -1249,7 +1294,7 @@ import java.util.TimerTask;
             stopQueueTimer();
         }
 
-        if (D) { Log.d(TAG, "Starting queue processing", null); }
+        debugLog("Starting queue processing");
         mQueueTimer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
@@ -1262,7 +1307,7 @@ import java.util.TimerTask;
     
     private void stopQueueTimer() {
         if (mQueueTimer != null) {
-            if (D) { Log.d(TAG, "Stopping queue processing", null); }
+            debugLog("Stopping queue processing");
             mQueueTimer.cancel();
             mQueueTimer.purge();
             mQueueTimer = null;
@@ -1648,14 +1693,14 @@ import java.util.TimerTask;
                     JSONArray entries = (JSONArray) json;
                     for (int i = 0; i < entries.length(); i++) {
                         JSONObject jsonObj = entries.getJSONObject(i);
-                        if (D) { Log.d(TAG, jsonObj.toString()); }
+                        debugLog( jsonObj.toString());
                         if (jsonObj.has(key)) {
                             return jsonObj.getString(key);
                         }
                     }
                 } else if (json instanceof JSONObject) {
                     JSONObject jsonObj = (JSONObject) json;
-                    if (D) { Log.d(TAG, jsonObj.toString()); }
+                    debugLog( jsonObj.toString());
                     if (jsonObj.has(key)) {
                         return jsonObj.getString(key);
                     }
@@ -1696,7 +1741,7 @@ import java.util.TimerTask;
             sendBroadcast(intent);
         }
 
-        // process critical messages that stop further handling of the response
+        // process critical messages that stopPlayer further handling of the response
 
         message = retrieveServerMessage(ServerMessageType.ERROR, response);
         if (message != null) {
@@ -1747,7 +1792,7 @@ import java.util.TimerTask;
                     intent.putExtra(RW.EXTRA_LOCATION_ACCURACY_M, accuracy);
                 }
             }
-            if (D) { Log.d(TAG, "Going to send broadcast event, sharing message = " + message + " url = " + url, null); }
+            debugLog("Going to send broadcast event, sharing message = " + message + " url = " + url);
             sendBroadcast(intent);
         }
     }
@@ -1766,7 +1811,7 @@ import java.util.TimerTask;
         }
         mSessionState = newState;
         
-        if (D) { Log.d(TAG, "Changing session state to: " + mSessionState, null); }
+        debugLog("Changing session state to: " + mSessionState);
         
         switch (mSessionState) {
             case UNINITIALIZED:
@@ -1815,7 +1860,7 @@ import java.util.TimerTask;
     private void broadcast(String action) {
         Intent intent = new Intent();
         intent.setAction(action);
-        if (D) { Log.d(TAG, "Going to send broadcast event, action=" + action, null); }
+        debugLog("Going to send broadcast event, action=" + action);
         sendBroadcast(intent);
     }
     
@@ -1827,7 +1872,7 @@ import java.util.TimerTask;
         intent.setAction(actionName);
         intent.putExtra(RW.EXTRA_ACTION_PROPERTIES, action.getProperties());
         intent.putExtra(RW.EXTRA_SUCCESS_RESULT, result);
-        if (D) { Log.d(TAG, "Going to send broadcast event, action = " + actionName, null); }
+        debugLog("Going to send broadcast event, action = " + actionName);
         sendBroadcast(intent);
     }
     
@@ -1842,7 +1887,7 @@ import java.util.TimerTask;
         if (e != null) {
             intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION, e);
         }
-        if (D) { Log.d(TAG, "Going to send broadcast event, action = " + actionName, null); }
+        debugLog("Going to send broadcast event, action = " + actionName);
         sendBroadcast(intent);
     }
     
@@ -1857,7 +1902,7 @@ import java.util.TimerTask;
         if (e != null) {
             intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION, e);
         }
-        if (D) { Log.d(TAG, "Going to send broadcast event, action = " + actionName, null); }
+        debugLog("Going to send broadcast event, action = " + actionName);
         sendBroadcast(intent);
     }
     
@@ -1915,20 +1960,19 @@ import java.util.TimerTask;
      * Creates a media player for sound playback, with initial volume of 0.
      */
     private void createPlayer() {
-        if (D) { Log.d(TAG, "+++ createPlayer +++"); }
+        debugLog("+++ createPlayer +++");
         if (mPlayer == null) {
             mPlayer = new MediaPlayer();
-            mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
 
-            float volume = (float) 0.0;
-            mPlayer.setVolume(volume, volume);
-            mVolumeLevel = 0;
-            mPlayer.pause();
 
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    if (D) { Log.d(TAG, "MediaPlayer prepared event"); }
+                    debugLog("MediaPlayer prepared event");
+                    synchronized (this) {
+                        isPrepared = true;
+                    }
+
                     broadcast(RW.READY_TO_PLAY);
                     if (mStartPlayingWhenReady) {
                         playbackFadeIn(mVolumeLevel);
@@ -1953,8 +1997,18 @@ import java.util.TimerTask;
             mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
-                    if (D) { Log.d(TAG, "MediaPlayer error event"); }
+                    debugLog("MediaPlayer error(" + what + ", " + extra + ")");
+                    if(!isPrepared){
+                        Log.e(TAG, "mPlayer error before prepared!");
+                    }else {
+                        isPrepared = false;
+                    }
                     mAssetTracker.reset();
+                    mPlayer.reset();
+                    errorCount++;
+                    if(errorCount < ERROR_RETRY_COUNT){
+                        preparePlayer();
+                    }
                     return true;
                 }
             });
@@ -1962,7 +2016,7 @@ import java.util.TimerTask;
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    if (D) { Log.d(TAG, "MediaPlayer completion event"); }
+                    debugLog("MediaPlayer completion event");
                     mAssetTracker.stop();
                     mp.stop();
                     broadcast(RW.PLAYBACK_FINISHED);
@@ -1972,9 +2026,17 @@ import java.util.TimerTask;
             mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                 @Override
                 public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                    if (D) { Log.d(TAG, "MediaPlayer buffering event, %=" + percent); }
+                    //debugLog("MediaPlayer buffering event, %=" + percent);
                 }
             });
+            mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+
+            float volume = (float) 0.0;
+            mPlayer.setVolume(volume, volume);
+            mVolumeLevel = 0;
+            if(isPrepared && mPlayer.isPlaying()) {
+                mPlayer.pause();
+            }
         }
     }
 
@@ -1986,6 +2048,7 @@ import java.util.TimerTask;
         mAssetTracker.stop();
         if (mPlayer != null) {
             playbackFadeOut();
+            stopPlayer();
             mPlayer.release();
             mPlayer = null;
         }
@@ -2019,11 +2082,13 @@ import java.util.TimerTask;
     public void playbackFadeIn(int endVolumeLevel) {
         mStartPlayingWhenReady = true;
         if (mPlayer != null) {
-            try {
-                mPlayer.start();
-            } catch (Exception ex) {
-                Log.i(TAG, "Fade in to volume level " + endVolumeLevel + " caused " + "MediaPlayer exception, delaying!", ex);
-                setVolumeLevel(endVolumeLevel, true);
+            if(isPrepared) {
+                try {
+                    mPlayer.start();
+                } catch (Exception ex) {
+                    Log.i(TAG, "Fade in to volume level " + endVolumeLevel + " caused " + "MediaPlayer exception, delaying!", ex);
+                    setVolumeLevel(endVolumeLevel, true);
+                }
             }
 
             // let server know user started listening
@@ -2109,11 +2174,15 @@ import java.util.TimerTask;
                 mPlayer.setVolume(newVolume, newVolume);
             }
         } else {
-            if (D) {
-                String msg = String.format(Locale.US, "Volume set to level %d (%1.5f) but MediaPlayer not initialized!", mVolumeLevel, newVolume);
-                Log.d(TAG, msg);
-            }
+                debugLog( String.format(Locale.US,
+                        "Volume set to level %d (%1.5f) but MediaPlayer not initialized!",
+                        mVolumeLevel, newVolume) );
         }
     }
 
+    private void debugLog(String msg){
+        if(D){
+            Log.d(TAG, msg);
+        }
+    }
 }

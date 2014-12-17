@@ -21,17 +21,20 @@
  */
 package com.halseyburgund.rwframework.core;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.util.Log;
+
+import com.halseyburgund.rwframework.R;
+
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.json.JSONObject;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.util.Log;
-import com.halseyburgund.rwframework.R;
 
 /**
  * Class that tracks assets streamed by the Roundware server.
