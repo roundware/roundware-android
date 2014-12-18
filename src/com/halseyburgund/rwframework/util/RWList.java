@@ -21,14 +21,6 @@
 */
 package com.halseyburgund.rwframework.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
@@ -37,6 +29,14 @@ import android.util.Log;
 import com.halseyburgund.rwframework.core.RWTags;
 import com.halseyburgund.rwframework.core.RWTags.RWOption;
 import com.halseyburgund.rwframework.core.RWTags.RWTag;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**

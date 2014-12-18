@@ -21,16 +21,16 @@
  */
 package com.halseyburgund.rwframework.core;
 
-import java.util.UUID;
+import android.content.Context;
+import android.util.Log;
+
+import com.halseyburgund.rwframework.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.halseyburgund.rwframework.R;
-
-import android.content.Context;
-import android.util.Log;
+import java.util.UUID;
 
 
 /**

@@ -19,10 +19,15 @@ import java.util.regex.Pattern;
 public class RWIcecastInputStream extends BufferedInputStream {
     private int metadataInterval;
     private int streamBytesRemaining;
+    private IcyMetaDataListener listener = null;
 
     public RWIcecastInputStream(InputStream in, int size, int metadataInterval) {
         super(in, size);
         this.metadataInterval = streamBytesRemaining = metadataInterval;
+    }
+
+    public void setIcyMetaDataListener(IcyMetaDataListener listener){
+        this.listener = listener;
     }
 
     @Override
@@ -61,6 +66,10 @@ public class RWIcecastInputStream extends BufferedInputStream {
 
             Log.v(this.getClass().getName(), "metadata: " + metadata);
 
+            // notify listener
+            if(listener != null){
+               listener.OnMetaDataReceived(metadata);
+            }
         }
     }
 

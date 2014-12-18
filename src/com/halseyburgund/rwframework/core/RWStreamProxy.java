@@ -78,6 +78,11 @@ public class RWStreamProxy implements Runnable {
     private boolean isRunning = true;
     private ServerSocket socket;
     private Thread thread;
+    RWIcecastInputStream.IcyMetaDataListener metaDataListener = null;
+
+    public RWStreamProxy(RWIcecastInputStream.IcyMetaDataListener listener){
+        this.metaDataListener = listener;
+    }
 
     public void init() {
         try {
@@ -183,6 +188,10 @@ public class RWStreamProxy implements Runnable {
                 new Scheme("http", PlainSocketFactory.getSocketFactory(), port));
         SingleClientConnManager mgr = new MyClientConnManager(seed.getParams(),
                 registry);
+        /* TODO add support for https?
+            Maybe copy class suggested here:
+            http://stackoverflow.com/questions/24104746/econnreset-connection-reset-by-peer-on-a-server-with-authentication
+         */
         DefaultHttpClient http = new DefaultHttpClient(mgr, seed.getParams());
         HttpGet method = new HttpGet(url);
         method.setHeader("Icy-MetaData", "1");
@@ -252,6 +261,7 @@ public class RWStreamProxy implements Runnable {
                 RWIcecastInputStream icy = new RWIcecastInputStream(realResponse.getEntity().getContent(),
                         buff.length, metaInterval);
                 data = icy;
+                icy.setIcyMetaDataListener(metaDataListener);
             } else {
                 data = new BufferedInputStream(realResponse.getEntity().getContent(), buff.length);
             }

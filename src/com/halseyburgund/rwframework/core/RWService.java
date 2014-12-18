@@ -67,6 +67,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.UnknownHostException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -88,7 +89,7 @@ import java.util.TimerTask;
  * 
  * @author Rob Knapen
  */
-@SuppressLint("DefaultLocale") public class RWService extends Service implements Observer {
+@SuppressLint("DefaultLocale") public class RWService extends Service implements Observer, RWIcecastInputStream.IcyMetaDataListener {
     
     // debugging
     private final static String TAG = "RWService";
@@ -146,8 +147,6 @@ import java.util.TimerTask;
     private long mLastRequestMsec;
     private long mLastStateChangeMsec;
     
-    private RWStreamAssetsTracker mAssetTracker;
-
     private PendingIntent mNotificationPendingIntent;
     private Notification mRwNotification;
     private String mNotificationTitle;
@@ -349,7 +348,7 @@ import java.util.TimerTask;
         }else{
             //TODO if android 4.1+ use exoPlayer instead of mediaPlayer
             if (mProxy == null) {
-                mProxy = new RWStreamProxy();
+                mProxy = new RWStreamProxy(this);
                 mProxy.init();
                 mProxy.start();
             }
@@ -689,8 +688,6 @@ import java.util.TimerTask;
         RWLocationTracker.instance().init(this);
         RWLocationTracker.instance().addObserver(this);
         
-        // setup a tracker for assets streamed by the server
-        mAssetTracker = new RWStreamAssetsTracker(this);
 
         // simple audio management
         mAudioManager = new RWAudioManager( getApplicationContext() );
@@ -786,6 +783,12 @@ import java.util.TimerTask;
         return Service.START_STICKY;
     }
 
+
+    @Override
+    public void OnMetaDataReceived(String rawMetaData) {
+        Map<String, String> map = RWIcecastInputStream.parseMetadata(rawMetaData);
+        // TODO broadcast results of map?
+    }
 
     /**
      * When not already playing, create a music player and start its
@@ -1167,45 +1170,7 @@ import java.util.TimerTask;
         }
     }
     
-    
-    /**
-     * Returns the average audio buffer length (in ms) current used by the
-     * RWService to estimate the delay between detecting a new asset starting
-     * to be streamed by the server and it actually becoming audible on the
-     * device.
-     * 
-     * Note: This estimation is needed because currently no good ways exist
-     * in Android OS versions to work with audio stream metadata tags. Future
-     * versions of the OS might do better and the functionality of detecting
-     * streaming assets (mainly done by the RWStreamAssetsTracker class) then
-     * can be improved. 
-     *  
-     * @return average audio stream buffer length in ms
-     */
-    public int getAverageStreamBufferLength() {
-        return mAssetTracker.getAverageStreamBufferLength();
-    }
-    
-    
-    /**
-     * Sets the average audio buffer length (in ms) current used by the
-     * RWService to estimate the delay between detecting a new asset starting
-     * to be streamed by the server and it actually becoming audible on the
-     * device.
-     * 
-     * Note: This estimation is needed because currently no good ways exist
-     * in Android OS versions to work with audio stream metadata tags. Future
-     * versions of the OS might do better and the functionality of detecting
-     * streaming assets (mainly done by the RWStreamAssetsTracker class) then
-     * can be improved. 
-     *  
-     * @param averageBufferLengthMsec average audio stream buffer length in ms
-     */
-    public void setAverageStreamBufferLength(int averageBufferLengthMsec) {
-        mAssetTracker.setAverageStreamBufferLength(averageBufferLengthMsec);
-    }
 
-    
     /**
      * Checks if data connectivity is available, honoring the flag 
      * mOnlyConnectOverWifi to accept only WiFi and not mobile data
@@ -1445,9 +1410,7 @@ import java.util.TimerTask;
      * @return server response, see the Roundware protocol documentation
      */
     public String rwSkipAhead() {
-        if (configuration.isStreamMetadataEnabled() && isPlaying() && !isPlayingStaticSoundtrack()) {
-            mAssetTracker.reset();
-        }
+        //TODO notify metadata listener that current metadata is null
         return perform(mActionFactory.createSkipAheadAction(), true);
     }
     
@@ -1460,9 +1423,6 @@ import java.util.TimerTask;
      * @return server response, see the Roundware protocol documentation
      */
     public String rwPlayAssetInStream(int assetId) {
-        if (configuration.isStreamMetadataEnabled() && isPlaying() && !isPlayingStaticSoundtrack()) {
-            mAssetTracker.reset();
-        }
         return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true);
     }
 
@@ -1817,7 +1777,6 @@ import java.util.TimerTask;
             case UNINITIALIZED:
                 stopQueueTimer();
                 stopLocationUpdates();
-                mAssetTracker.stop();
                 playbackStop();
                 break;
             case INITIALIZING:
@@ -1837,7 +1796,6 @@ import java.util.TimerTask;
                 }
                 startQueueTimer();
                 startLocationUpdates();
-                mAssetTracker.start();
                 broadcast(RW.SESSION_ON_LINE);
                 break;
             case OFF_LINE:
@@ -1977,7 +1935,6 @@ import java.util.TimerTask;
                     if (mStartPlayingWhenReady) {
                         playbackFadeIn(mVolumeLevel);
                     }
-                    mAssetTracker.start();
                 }
             });
 
@@ -2003,7 +1960,6 @@ import java.util.TimerTask;
                     }else {
                         isPrepared = false;
                     }
-                    mAssetTracker.reset();
                     mPlayer.reset();
                     errorCount++;
                     if(errorCount < ERROR_RETRY_COUNT){
@@ -2017,7 +1973,6 @@ import java.util.TimerTask;
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     debugLog("MediaPlayer completion event");
-                    mAssetTracker.stop();
                     mp.stop();
                     broadcast(RW.PLAYBACK_FINISHED);
                 }
@@ -2045,7 +2000,6 @@ import java.util.TimerTask;
      * Releases the media player after fading out the sounds.
      */
     private void releasePlayer() {
-        mAssetTracker.stop();
         if (mPlayer != null) {
             playbackFadeOut();
             stopPlayer();

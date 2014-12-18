@@ -21,15 +21,15 @@
 */
 package com.halseyburgund.rwframework.util;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.halseyburgund.rwframework.core.RWConfiguration;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.halseyburgund.rwframework.core.RWConfiguration;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
