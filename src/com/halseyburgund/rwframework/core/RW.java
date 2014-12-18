@@ -168,6 +168,11 @@ public class RW {
     public final static String EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_previous_asset_id";
 
     /**
+     * Tags of the recording currently being played on the device
+     */
+    public final static String EXTRA_STREAM_METADATA_TAGS = INTENT_EXTRA_PREFIX + "stream_metadata_tags";
+
+    /**
      * Title metadata of the recording currently being played on the device (estimated).
      */
     public final static String EXTRA_STREAM_METADATA_TITLE = INTENT_EXTRA_PREFIX + "stream_metadata_title";
