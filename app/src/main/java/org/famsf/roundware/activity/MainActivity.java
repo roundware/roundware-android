@@ -7,8 +7,6 @@
 */
 package org.famsf.roundware.activity;
 
-import java.util.UUID;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,15 +39,17 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import org.famsf.roundware.R;
-import org.famsf.roundware.Settings;
-import org.famsf.roundware.utils.Utils;
-import org.famsf.roundware.utils.LocationBg;
-
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.halseyburgund.rwframework.core.RW;
 import com.halseyburgund.rwframework.core.RWService;
 import com.halseyburgund.rwframework.util.RWList;
+
+import org.famsf.roundware.R;
+import org.famsf.roundware.Settings;
+import org.famsf.roundware.utils.LocationBg;
+import org.famsf.roundware.utils.Utils;
+
+import java.util.UUID;
 
 public class MainActivity extends Activity {
     public static final String LOGTAG = MainActivity.class.getSimpleName();
@@ -591,13 +591,6 @@ public class MainActivity extends Activity {
             boolean useOnlyWiFi = prefs.getBoolean(PrefsActivity.USE_ONLY_WIFI, false);
             mRwBinder.setOnlyConnectOverWifi(useOnlyWiFi);
             updateUIState(mRwBinder.isConnected());
-
-            String bufferLength = prefs.getString(PrefsActivity.AVERAGE_BUFFER_LENGTH_MSEC, "4000");
-            try {
-                mRwBinder.setAverageStreamBufferLength(Integer.valueOf(bufferLength));
-            } catch (NumberFormatException e) {
-                // skip
-            }
         }
     }
 
