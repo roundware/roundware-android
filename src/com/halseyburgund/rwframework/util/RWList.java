@@ -624,7 +624,7 @@ public class RWList extends ArrayList<RWListItem> {
         }
         return false;
     }
-    
+
     
     /**
      * Restores the selection state of the list from the specified shared

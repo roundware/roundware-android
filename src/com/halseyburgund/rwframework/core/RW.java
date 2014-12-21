@@ -341,4 +341,7 @@ public class RW {
 
     // --------------------------------------------------------------------------------------------
 
+
+    public final static boolean DEBUG_W_FAUX_TAGS = true;
+    public static int DEBUG_FAUX_TAG = 0;
 }

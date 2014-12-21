@@ -61,6 +61,7 @@ public class RWTags {
     public final static String JSON_KEY_TAG_NAME = "name";
     public final static String JSON_KEY_TAG_ORDER = "order";
     public final static String JSON_KEY_TAG_DEFAULT_OPTIONS = "defaults";
+    public final static String JSON_KEY_TAG_DATA = "data";
 
     // json keys - tag selection types
     public final static String JSON_KEY_TAG_SELECTION_TYPE = "select";
@@ -77,6 +78,7 @@ public class RWTags {
 
     // json parsing error message
     private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
+    private static final String CODE_ARTWORK = "artwork";
 
     private int mDataSource = DEFAULTS;
 
@@ -89,6 +91,7 @@ public class RWTags {
         public String name;
         public String headerText;
         public int order;
+        public String data;
         public String select; // e.g. single, multi, multi_at_least_one
         public String type; // e.g. listen, speak
         public List<RWOption> options = new ArrayList<RWOption>();
@@ -182,6 +185,9 @@ public class RWTags {
             return options.size();
         }
 
+        public boolean isArtworkTag() {
+            return this.code.equalsIgnoreCase(CODE_ARTWORK);
+        }
     }
 
 
@@ -348,6 +354,7 @@ public class RWTags {
                 tag.headerText = jsonObj.optString(JSON_KEY_TAG_HEADER_TEXT);
                 tag.order = jsonObj.optInt(JSON_KEY_TAG_ORDER);
                 tag.select = jsonObj.getString(JSON_KEY_TAG_SELECTION_TYPE);
+                tag.data = jsonObj.optString(JSON_KEY_TAG_DATA);
 
                 // retrieve tagIds of options selected by default
                 tag.defaultOptionsTagIds.clear();

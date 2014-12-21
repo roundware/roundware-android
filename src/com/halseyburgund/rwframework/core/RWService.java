@@ -66,11 +66,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -797,6 +797,24 @@ import java.util.TimerTask;
      */
     @Override
     public void OnMetaDataReceived(String rawMetaData) {
+
+        if(RW.DEBUG_W_FAUX_TAGS){
+            Random random =new Random();
+            if(/*random.nextBoolean()*/ true){
+                StringBuilder sb = new StringBuilder();
+                sb.append("StreamTitle='asset=123&tags=");
+                sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
+                sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
+                sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
+                sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
+                sb.append(RW.DEBUG_FAUX_TAG++ %6);
+                sb.append("';\0\0\0");
+                rawMetaData = sb.toString();
+                Log.i(TAG,"Pushing faux meta: " + rawMetaData);
+            }
+        }
+
+
         Map<String, String> map = RWIcecastInputStream.parseMetadata(rawMetaData);
 
         int asset = -1;
