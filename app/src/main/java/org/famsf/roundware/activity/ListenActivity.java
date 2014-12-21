@@ -8,6 +8,7 @@
 package org.famsf.roundware.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -23,8 +24,8 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
@@ -42,13 +44,17 @@ import com.halseyburgund.rwframework.core.RWService;
 import com.halseyburgund.rwframework.core.RWTags;
 import com.halseyburgund.rwframework.util.RWList;
 import com.halseyburgund.rwframework.util.RWListItem;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-
-import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
+import org.famsf.roundware.utils.AssetImageManager;
+import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.utils.Utils;
+
+import java.io.IOException;
+import java.util.Random;
 
 public class ListenActivity extends Activity {
     private final static String LOGTAG = "Listen";
@@ -81,6 +87,7 @@ public class ListenActivity extends Activity {
     private String mContentFileDir;
     private int mCurrentAssetId;
     private int mPreviousAssetId;
+    private AssetImageManager mAssetImageManager = null;
 
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
@@ -117,7 +124,25 @@ public class ListenActivity extends Activity {
             mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
             mTagsList = new RWList(mProjectTags);
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
-            
+            synchronized (this){
+                if(mAssetImageManager == null){
+                    mAssetImageManager = new AssetImageManager();
+                }
+            }
+            mAssetImageManager.addTags(mTagsList);
+            if(RW.DEBUG_W_FAUX_TAGS){
+                Random random = new Random();
+                //huge, causes fault
+                mAssetImageManager.addTag(1, "http://upload.wikimedia.org/wikipedia/commons/9/92/Artwork_by_North_American_Rockwell.jpg");
+                //very small
+                mAssetImageManager.addTag(2, "http://upload.wikimedia.org/wikipedia/en/a/ac/MilesSmile.png");
+                //medium
+                mAssetImageManager.addTag(3, "http://upload.wikimedia.org/wikipedia/commons/7/7e/Tony_Robbin_artwork.JPG");
+                //narrow
+                mAssetImageManager.addTag(4, "http://upload.wikimedia.org/wikipedia/commons/a/ab/Nachi_Falls.jpg");
+                //wide
+                mAssetImageManager.addTag(0, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kano_Eitoku_003.jpg/1280px-Kano_Eitoku_003.jpg");
+            }
             updateUIState();
 
             // auto start playback when connected (and no already playing)
@@ -153,16 +178,16 @@ public class ListenActivity extends Activity {
                 }
             } else if (RW.STREAM_METADATA_UPDATED.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_STREAM_METADATA_UPDATED"); }
-                // new recording started playing - update title display
-                int previousAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID, -1);
-                int currentAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_CURRENT_ASSET_ID, -1);
-                String title = intent.getStringExtra(RW.EXTRA_STREAM_METADATA_TITLE);
-                handleRecordingChange(previousAssetId, currentAssetId, title);
+                // new asset started playing - update image display
                 // remove progress dialog when needed
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
                     mProgressDialog = null;
                 }
+                int currentAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_CURRENT_ASSET_ID, -1);
+                int tags[] = intent.getIntArrayExtra(RW.EXTRA_STREAM_METADATA_TAGS);
+                handleAssetChange(currentAssetId, tags);
+
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_USER_MESSAGE"); }
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), false, false);
@@ -441,24 +466,49 @@ public class ListenActivity extends Activity {
     }
 
 
-    private void handleRecordingChange(int previousAssetId, int currentAssetId, String newTitle) {
+    private void handleAssetChange(int currentAssetId, int[] tags) {
+        mPreviousAssetId = mCurrentAssetId;
         mCurrentAssetId = currentAssetId;
-        mPreviousAssetId = previousAssetId;
 
         // send asset voting if needed
         sendVotingState(mPreviousAssetId);
 
-        // reset vote buttons
-        /*
-        if (mLikeButton != null) {
-            mLikeButton.setEnabled(true);
-            mLikeButton.setChecked(false);
+        // update display
+        boolean hasUrl = false;
+        String url = null;
+        for(int tag : tags){
+            url = mAssetImageManager.getData(tag);
+            if(hasUrl = !TextUtils.isEmpty(url)){
+                // to support multiple images per asset, collect all tag urls and use each url
+                break;
+            }
         }
-        if (mFlagButton != null) {
-            mFlagButton.setEnabled(true);
-            mFlagButton.setChecked(false);
+        final View layout = findViewById(R.id.imageLayout);
+        if(hasUrl){
+            Log.i(LOGTAG,"tag hit url " + url);
+            //load
+            ImageView imageView = (ImageView)findViewById(R.id.image);
+            Picasso picasso = Picasso.with(this);
+            // set below true, to view image src debugging
+            picasso.setIndicatorsEnabled(false);
+
+            picasso.load(url)
+                   .into(imageView, new Callback() {
+                       @Override
+                       public void onSuccess() { }
+
+                       @Override
+                       public void onError() {
+                           Log.w(LOGTAG, "Image failure!");
+                           layout.setVisibility(View.INVISIBLE);
+                       }
+                   });
+        }else{
+            Log.i(LOGTAG,"tag no hit url");
         }
-        */
+
+        //TODO fade
+        layout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
     }
 
 

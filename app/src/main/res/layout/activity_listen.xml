@@ -7,8 +7,9 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@drawable/bg_listen"
+             android:background="@drawable/bg_listen_dy"
              tools:context=".ListenActivity">
+
 
     <!-- listen view -->
 
@@ -19,8 +20,9 @@
             >
 
         <include layout="@layout/title_bar"
-            android:id="@+id/title_bar"/>
+            android:id="@+id/title_bar" />
 
+        <!--unused-->
         <TextView
                 style="@style/AppTheme.Shadow.ListenTitleText"
                 android:id="@+id/listenTitleTextView"
@@ -37,13 +39,17 @@
                 android:layout_marginTop="20dp"
                 android:visibility="gone"/>
 
+
+
+
         <LinearLayout
+            android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:gravity="center_vertical"
-            android:padding="16dp"
+            android:padding="10dp"
             >
 
             <Button
@@ -92,6 +98,44 @@
                 android:layout_weight="1"
                 />
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/listenTitleTextView"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@id/buttonLayout">
+
+            <!-- To support multiple images: use ViewFlipper, inflate below as child in code-->
+            <LinearLayout
+                android:id="@+id/imageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="#a4ffffff"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scaleType="fitCenter"
+                    />
+
+              <!--  <TextView
+                    android:id="@+id/imageDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />-->
+            </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
     <!-- web view (filters, explore) -->

@@ -46,6 +46,7 @@ import com.halseyburgund.rwframework.util.RWList;
 
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
+import org.famsf.roundware.utils.AssetImageManager;
 import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.utils.Utils;
 
@@ -143,10 +144,12 @@ public class MainActivity extends Activity {
                 updateUIState(false);
                 showMessage(getString(R.string.unable_to_retrieve_configuration), true, true);
             } else if (RW.TAGS_LOADED.equals(intent.getAction())) {
+                RWList allTags = new RWList(mRwBinder.getTags());
+                SharedPreferences prefs = Settings.getSharedPreferences();
                 if (mRwBinder.getConfiguration().isResetTagsDefaultOnStartup()) {
-                    RWList allTags = new RWList(mRwBinder.getTags());
-                    allTags.saveSelectionState(Settings.getSharedPreferences());
+                    allTags.saveSelectionState(prefs);
                 }
+                AssetImageManager.saveArtworkTags(prefs, allTags);
             } else if (RW.CONTENT_LOADED.equals(intent.getAction())) {
                 //String contentFileName = mRwBinder.getContentFilesDir() + "home-a.html";
                 //try {
