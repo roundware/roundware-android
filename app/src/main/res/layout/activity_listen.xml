@@ -126,14 +126,14 @@
                     android:scaleType="fitCenter"
                     />
 
-              <!--  <TextView
+              <TextView
                     android:id="@+id/assetImageDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/black"
-                    android:textSize="10sp" />-->
+                    android:textSize="10sp" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

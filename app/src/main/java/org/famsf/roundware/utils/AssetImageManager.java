@@ -22,22 +22,35 @@ public class AssetImageManager {
 
     private final int INITIAL_SIZE = 32;
     private final static String URL_PARAMETER_NAME = "image";
-    public final static String PREFS_ARTWORK_PREFIX = "artwork_";
+    public final static String PREFS_IMAGE_PREFIX = "asset_img_";
+    public final static String PREFS_DESCRIPTION_PREFIX = "asset_txt_";
 
-    private SparseArray<String> map = new SparseArray<String>(INITIAL_SIZE);
+    private static class AssetData {
+        public final String urlSuffix;
+        public final String description;
+
+        public AssetData(String urlSuffix, String description){
+            this.urlSuffix = urlSuffix;
+            this.description = description;
+        }
+    }
+
+    private SparseArray<AssetData> map = new SparseArray<AssetData>(INITIAL_SIZE);
     private final String hostUrl;
 
     public AssetImageManager(String hostUrl){
         this.hostUrl = hostUrl;
     }
 
+    //TODO consider removing sharedprefs cache
     public static boolean saveArtworkTags(SharedPreferences prefs, RWList list) {
         if (prefs != null) {
             SharedPreferences.Editor editor = prefs.edit();
             RWListArtworkIterator iterator = new RWListArtworkIterator(list);
             while(iterator.hasNext()){
                 RWTags.RWOption item = iterator.next();
-                editor.putString(makePrefsKey(item.tagId), item.data);
+                editor.putString(makeImagePrefsKey(item.tagId), item.data);
+                editor.putString(makeDescriptionPrefsKey(item.tagId), item.description);
             }
             editor.commit();
             return true;
@@ -45,39 +58,70 @@ public class AssetImageManager {
         return false;
     }
 
-    private static String makePrefsKey(int tagId){
-        return PREFS_ARTWORK_PREFIX + tagId;
+    private static String makeImagePrefsKey(int tagId){
+        return PREFS_IMAGE_PREFIX + tagId;
+    }
+
+    private static String makeDescriptionPrefsKey(int tagId){
+        return PREFS_DESCRIPTION_PREFIX + tagId;
     }
 
     public void addTags(RWList list){
         RWListArtworkIterator iterator = new RWListArtworkIterator(list);
         while(iterator.hasNext()) {
             RWTags.RWOption item = iterator.next();
-            map.put(item.tagId, item.data);
+            map.put(item.tagId, new AssetData(item.data, item.description));
         }
     }
 
     public void addTag(int id, String data){
         Log.i("AssetMgr", "Added faux url " + id + " " + data);
-        map.put(id, data);
+        map.put(id, new AssetData(data, null));
     }
 
     /**
-     * Get data corresponding to given tagId
+     * Gets data corresponding to given tagId
      * @param tagId
      * @return
      */
-    private String getData(int tagId){
-        String out = map.get(tagId);
+    private String getImageUrlSuffix(int tagId){
+        String out = null;
+        AssetData data = map.get(tagId);
+        if(data != null){
+            out = data.urlSuffix;
+        }
         if(TextUtils.isEmpty(out)){
             // fall back on SharedPreferences cache
-            out = Settings.getSharedPreferences().getString(makePrefsKey(tagId), null);
+            out = Settings.getSharedPreferences().getString(makeImagePrefsKey(tagId), null);
         }
         return out;
     }
 
+    /**
+     * Gets Image description for given tag identifier
+     * @param tagId
+     * @return
+     */
+    public String getImageDescription(int tagId){
+        String out = null;
+        AssetData data = map.get(tagId);
+        if(data != null){
+            out = data.description;
+        }
+        if(TextUtils.isEmpty(out)){
+            // fall back on SharedPreferences cache
+            out = Settings.getSharedPreferences().getString(makeDescriptionPrefsKey(tagId), null);
+        }
+        return out;
+    }
+
+    /**
+     * Gets image url for given tag identifier
+     * @param tagId
+     * @return
+     */
     public String getImageUrl(int tagId){
-        String data = getData(tagId);
+        String data = getImageUrlSuffix(tagId);
         if(!TextUtils.isEmpty(data)){
             Uri uri = RWUriHelper.parse(data);
 

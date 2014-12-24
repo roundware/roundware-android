@@ -82,7 +82,9 @@ public class ListenActivity extends Activity {
 
     private View mAssetImageLayout;
     private ImageView mAssetImageView;
+    private TextView mAssetTextView;
     private String mAssetImageUrl;
+    private String mAssetImageDescription;
     private Object mAssetImageLock = new Object();
 
 //    private ToggleButton mLikeButton;
@@ -446,6 +448,7 @@ public class ListenActivity extends Activity {
 
         mAssetImageLayout = findViewById(R.id.asssetImageLayout);
         mAssetImageView = (ImageView)mAssetImageLayout.findViewById(R.id.assetImage);
+        mAssetTextView = (TextView)mAssetImageLayout.findViewById(R.id.assetImageDescription);
     }
 
 
@@ -457,7 +460,7 @@ public class ListenActivity extends Activity {
                     showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
                     mCurrentAssetId = -1;
                     mPreviousAssetId = -1;
-                    setAssetImageUrl(null);
+                    setAssetImage(null, null);
                     mRwBinder.playbackStart(mTagsList);
                 }
                 mRwBinder.playbackFadeIn(mVolumeLevel);
@@ -473,7 +476,7 @@ public class ListenActivity extends Activity {
         mRwBinder.playbackFadeOut();
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
-        setAssetImageUrl(null);
+        setAssetImage(null, null);
         updateUIState();
     }
 
@@ -503,6 +506,7 @@ public class ListenActivity extends Activity {
 
         // update display
         String url = null;
+        String description = null;
         for (String tag : tags) {
             if (!TextUtils.isEmpty(tag)) {
                 int tagId = -1;
@@ -512,6 +516,7 @@ public class ListenActivity extends Activity {
                 }
                 if (-1 != tagId) {
                     url = mAssetImageManager.getImageUrl(tagId);
+                    description = mAssetImageManager.getImageDescription(tagId);
                     if (!TextUtils.isEmpty(url)) {
                         // to support multiple images per asset, collect all tag urls
                         // for each url inflate a new layout and load url into each layout's image
@@ -522,7 +527,7 @@ public class ListenActivity extends Activity {
             }
         }
 
-        setAssetImageUrl(url);
+        setAssetImage(url, description);
         updateAssetImageUi();
     }
 
@@ -540,9 +545,10 @@ public class ListenActivity extends Activity {
         */
     }
 
-    private void setAssetImageUrl(String url){
+    private void setAssetImage(String url, String description){
         synchronized (mAssetImageLock){
             mAssetImageUrl = url;
+            mAssetImageDescription = description;
         }
     }
     private void updateAssetImageUi(){
@@ -567,6 +573,7 @@ public class ListenActivity extends Activity {
                         });
             }
             //TODO fade?
+            mAssetTextView.setText(mAssetImageDescription);
             mAssetImageLayout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
         }
     }
