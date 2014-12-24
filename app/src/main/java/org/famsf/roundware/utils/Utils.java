@@ -21,14 +21,14 @@
  */
 package org.famsf.roundware.utils;
 
-import org.famsf.roundware.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import org.famsf.roundware.R;
 
 
 /**
@@ -88,5 +88,7 @@ public class Utils {
     public static ProgressDialog showProgressDialog(Context c, String title, String message, boolean indeterminate, boolean cancelable) {
         return ProgressDialog.show(c, title, message, indeterminate, cancelable);
     }
+
+
 
 }

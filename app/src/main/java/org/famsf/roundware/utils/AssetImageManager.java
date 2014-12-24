@@ -1,13 +1,14 @@
 package org.famsf.roundware.utils;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
 import com.halseyburgund.rwframework.core.RWTags;
 import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWListItem;
+import com.halseyburgund.rwframework.util.RWUriHelper;
 
 import org.famsf.roundware.Settings;
 
@@ -20,18 +21,23 @@ import java.util.Iterator;
 public class AssetImageManager {
 
     private final int INITIAL_SIZE = 32;
+    private final static String URL_PARAMETER_NAME = "image";
     public final static String PREFS_ARTWORK_PREFIX = "artwork_";
-    private SparseArray<String> map = new SparseArray<String>(INITIAL_SIZE);
 
+    private SparseArray<String> map = new SparseArray<String>(INITIAL_SIZE);
+    private final String hostUrl;
+
+    public AssetImageManager(String hostUrl){
+        this.hostUrl = hostUrl;
+    }
 
     public static boolean saveArtworkTags(SharedPreferences prefs, RWList list) {
         if (prefs != null) {
             SharedPreferences.Editor editor = prefs.edit();
             RWListArtworkIterator iterator = new RWListArtworkIterator(list);
             while(iterator.hasNext()){
-                RWListItem item = iterator.next();
-                RWTags.RWTag tag = item.getTag();
-                editor.putString(makePrefsKey(item.getTagId()), tag.data);
+                RWTags.RWOption item = iterator.next();
+                editor.putString(makePrefsKey(item.tagId), item.data);
             }
             editor.commit();
             return true;
@@ -46,9 +52,8 @@ public class AssetImageManager {
     public void addTags(RWList list){
         RWListArtworkIterator iterator = new RWListArtworkIterator(list);
         while(iterator.hasNext()) {
-            RWListItem item = iterator.next();
-            RWTags.RWTag tag = item.getTag();
-            map.put(item.getTagId(), tag.data);
+            RWTags.RWOption item = iterator.next();
+            map.put(item.tagId, item.data);
         }
     }
 
@@ -62,7 +67,7 @@ public class AssetImageManager {
      * @param tagId
      * @return
      */
-    public String getData(int tagId){
+    private String getData(int tagId){
         String out = map.get(tagId);
         if(TextUtils.isEmpty(out)){
             // fall back on SharedPreferences cache
@@ -71,9 +76,27 @@ public class AssetImageManager {
         return out;
     }
 
-    private static class RWListArtworkIterator implements Iterator<RWListItem>{
+    public String getImageUrl(int tagId){
+        String data = getData(tagId);
+        if(!TextUtils.isEmpty(data)){
+            Uri uri = RWUriHelper.parse(data);
 
-        private int pos = 0;
+            String suffix = RWUriHelper.getQueryParameter(uri, URL_PARAMETER_NAME);
+            if(!TextUtils.isEmpty(suffix)){
+                if(suffix.startsWith("/")) {
+                    return hostUrl + suffix;
+                }else{
+                    return hostUrl + "/" + suffix;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static class RWListArtworkIterator implements Iterator<RWTags.RWOption>{
+
+        private int tagPos = 0;
+        private int optionPos = 0;
         private RWList list;
 
         RWListArtworkIterator( RWList list ){
@@ -82,23 +105,32 @@ public class AssetImageManager {
 
         @Override
         public boolean hasNext() {
-            while(pos < list.size()){
-                if(list.get(pos).getTag().isArtworkTag()){
-                    return true;
+            while(tagPos < list.size()){
+                RWTags.RWTag tag = getTag(tagPos);
+                if(tag.isPhysicalObjectTag()){
+                    if( optionPos < tag.options.size() ) {
+                        return true;
+                    }
                 }
-                pos++;
+                tagPos++;
+                optionPos = 0;
             }
             return false;
         }
 
         @Override
-        public RWListItem next() {
+        public RWTags.RWOption next() {
             if(hasNext()){
-                int p = pos;
-                pos++;
-                return list.get(p);
+                RWTags.RWTag tag = getTag(tagPos);
+                int p = optionPos;
+                optionPos++;
+                return tag.options.get(p);
             }
             return null;
+        }
+
+        private RWTags.RWTag getTag(int i){
+            return list.get(i).getTag();
         }
 
         @Override

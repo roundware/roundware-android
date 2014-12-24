@@ -3,6 +3,7 @@
     <!-- Test server
 	<string name="rw_spec_server_url">***REMOVED***</string>
 	-->
+    <string name="rw_spec_host_url">***REMOVED***</string>
     <string name="rw_spec_server_url">***REMOVED***</string>
 	<string name="rw_spec_project_id">14</string>
 

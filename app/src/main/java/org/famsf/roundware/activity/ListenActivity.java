@@ -44,6 +44,7 @@ import com.halseyburgund.rwframework.core.RWService;
 import com.halseyburgund.rwframework.core.RWTags;
 import com.halseyburgund.rwframework.util.RWList;
 import com.halseyburgund.rwframework.util.RWListItem;
+import com.halseyburgund.rwframework.util.RWUriHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +55,7 @@ import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.utils.Utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class ListenActivity extends Activity {
@@ -77,6 +79,11 @@ public class ListenActivity extends Activity {
     private Button mRefineButton;
     private ToggleButton mPlayButton;
     private Button mRecordButton;
+
+    private View mAssetImageLayout;
+    private ImageView mAssetImageView;
+    private String mAssetImageUrl;
+    private Object mAssetImageLock = new Object();
 
 //    private ToggleButton mLikeButton;
 //    private ToggleButton mFlagButton;
@@ -126,7 +133,7 @@ public class ListenActivity extends Activity {
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
             synchronized (this){
                 if(mAssetImageManager == null){
-                    mAssetImageManager = new AssetImageManager();
+                    mAssetImageManager = new AssetImageManager(getString(R.string.rw_spec_host_url));
                 }
             }
             mAssetImageManager.addTags(mTagsList);
@@ -184,9 +191,8 @@ public class ListenActivity extends Activity {
                     mProgressDialog.dismiss();
                     mProgressDialog = null;
                 }
-                int currentAssetId = intent.getIntExtra(RW.EXTRA_STREAM_METADATA_CURRENT_ASSET_ID, -1);
-                int tags[] = intent.getIntArrayExtra(RW.EXTRA_STREAM_METADATA_TAGS);
-                handleAssetChange(currentAssetId, tags);
+
+                handleAssetChange( (Uri)intent.getParcelableExtra(RW.EXTRA_STREAM_METADATA_URI) );
 
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_USER_MESSAGE"); }
@@ -200,6 +206,7 @@ public class ListenActivity extends Activity {
             }
         }
     };
+
 
 
     @Override
@@ -436,6 +443,9 @@ public class ListenActivity extends Activity {
                 SpeakActivity.showLegalDialogIfNeeded(ListenActivity.this, mRwBinder);
             }
         });
+
+        mAssetImageLayout = findViewById(R.id.asssetImageLayout);
+        mAssetImageView = (ImageView)mAssetImageLayout.findViewById(R.id.assetImage);
     }
 
 
@@ -447,6 +457,7 @@ public class ListenActivity extends Activity {
                     showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
                     mCurrentAssetId = -1;
                     mPreviousAssetId = -1;
+                    setAssetImageUrl(null);
                     mRwBinder.playbackStart(mTagsList);
                 }
                 mRwBinder.playbackFadeIn(mVolumeLevel);
@@ -462,53 +473,57 @@ public class ListenActivity extends Activity {
         mRwBinder.playbackFadeOut();
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
+        setAssetImageUrl(null);
         updateUIState();
     }
 
 
-    private void handleAssetChange(int currentAssetId, int[] tags) {
+    private void handleAssetChange(Uri uri) {
+
+        if(uri == null){
+            //panic
+            Log.d(LOGTAG, "handleAssetChange param null!");
+            return;
+        }
+        String assetValue = uri.getQueryParameter(RW.METADATA_URI_NAME_ASSET_ID);
+        int assetId = -1;
+        if(!TextUtils.isEmpty(assetValue)){
+            try {
+                assetId = Integer.parseInt(assetValue);
+            }catch (NumberFormatException e) {}
+        }
+
         mPreviousAssetId = mCurrentAssetId;
-        mCurrentAssetId = currentAssetId;
+        mCurrentAssetId = assetId;
 
         // send asset voting if needed
         sendVotingState(mPreviousAssetId);
 
+        List<String> tags = RWUriHelper.getQueryParameterValues(uri, RW.METADATA_URI_NAME_TAGS);
+
         // update display
-        boolean hasUrl = false;
         String url = null;
-        for(int tag : tags){
-            url = mAssetImageManager.getData(tag);
-            if(hasUrl = !TextUtils.isEmpty(url)){
-                // to support multiple images per asset, collect all tag urls and use each url
-                break;
+        for (String tag : tags) {
+            if (!TextUtils.isEmpty(tag)) {
+                int tagId = -1;
+                try {
+                    tagId = Integer.parseInt(tag);
+                } catch (NumberFormatException e) {
+                }
+                if (-1 != tagId) {
+                    url = mAssetImageManager.getImageUrl(tagId);
+                    if (!TextUtils.isEmpty(url)) {
+                        // to support multiple images per asset, collect all tag urls
+                        // for each url inflate a new layout and load url into each layout's image
+                        Log.d(LOGTAG, "asset image " + tag + " hit " + url);
+                        break;
+                    }
+                }
             }
         }
-        final View layout = findViewById(R.id.imageLayout);
-        if(hasUrl){
-            Log.i(LOGTAG,"tag hit url " + url);
-            //load
-            ImageView imageView = (ImageView)findViewById(R.id.image);
-            Picasso picasso = Picasso.with(this);
-            // set below true, to view image src debugging
-            picasso.setIndicatorsEnabled(false);
 
-            picasso.load(url)
-                   .into(imageView, new Callback() {
-                       @Override
-                       public void onSuccess() { }
-
-                       @Override
-                       public void onError() {
-                           Log.w(LOGTAG, "Image failure!");
-                           layout.setVisibility(View.INVISIBLE);
-                       }
-                   });
-        }else{
-            Log.i(LOGTAG,"tag no hit url");
-        }
-
-        //TODO fade
-        layout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
+        setAssetImageUrl(url);
+        updateAssetImageUi();
     }
 
 
@@ -525,6 +540,36 @@ public class ListenActivity extends Activity {
         */
     }
 
+    private void setAssetImageUrl(String url){
+        synchronized (mAssetImageLock){
+            mAssetImageUrl = url;
+        }
+    }
+    private void updateAssetImageUi(){
+        synchronized (mAssetImageLock) {
+            boolean hasUrl = !TextUtils.isEmpty(mAssetImageUrl);
+            if(hasUrl){
+                //load
+                Picasso picasso = Picasso.with(this);
+                // set below true, to view image source debugging
+                picasso.setIndicatorsEnabled(false);
+
+                picasso.load(mAssetImageUrl)
+                        .into(mAssetImageView, new Callback() {
+                            @Override
+                            public void onSuccess() { }
+
+                            @Override
+                            public void onError() {
+                                Log.w(LOGTAG, "Image load failure!");
+                                mAssetImageLayout.setVisibility(View.INVISIBLE);
+                            }
+                        });
+            }
+            //TODO fade?
+            mAssetImageLayout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
 
     /**
      * Updates the state of the primary UI widgets based on current
@@ -553,6 +598,7 @@ public class ListenActivity extends Activity {
 //            }
         }
         updateScreenForSelectedTags();
+        updateAssetImageUi();
     }
 
 
