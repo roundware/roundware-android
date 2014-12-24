@@ -619,7 +619,7 @@ public class RWList extends ArrayList<RWListItem> {
                 String key = item.getTag().type + "_" + item.getTag().code + "_" + item.getTagId();
                 editor.putBoolean(key, item.isOn());
             }
-            editor.commit();
+            editor.apply();
             return true;
         }
         return false;

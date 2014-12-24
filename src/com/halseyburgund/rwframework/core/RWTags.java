@@ -75,10 +75,11 @@ public class RWTags {
     public final static String JSON_KEY_TAG_OPTION_ID = "tag_id";
     public final static String JSON_KEY_TAG_OPTION_VALUE = "value";
     public final static String JSON_KEY_TAG_OPTION_RELATIONSHIPS = "relationships";
+    public final static String JSON_KEY_TAG_OPTION_DESCRIPTION = "description";
 
     // json parsing error message
     private final static String JSON_SYNTAX_ERROR_MESSAGE = "Invalid JSON data!";
-    private static final String CODE_ARTWORK = "artwork";
+    private static final String CODE_PHYSICAL_OBJECT = "physical_object";
 
     private int mDataSource = DEFAULTS;
 
@@ -91,7 +92,6 @@ public class RWTags {
         public String name;
         public String headerText;
         public int order;
-        public String data;
         public String select; // e.g. single, multi, multi_at_least_one
         public String type; // e.g. listen, speak
         public List<RWOption> options = new ArrayList<RWOption>();
@@ -185,8 +185,8 @@ public class RWTags {
             return options.size();
         }
 
-        public boolean isArtworkTag() {
-            return this.code.equalsIgnoreCase(CODE_ARTWORK);
+        public boolean isPhysicalObjectTag() {
+            return this.code.equalsIgnoreCase(CODE_PHYSICAL_OBJECT);
         }
     }
 
@@ -194,6 +194,7 @@ public class RWTags {
     // single option for a tag
     public class RWOption {
         public String data;
+        public String description;
         public int order;
         public int tagId;
         public String value;
@@ -354,7 +355,6 @@ public class RWTags {
                 tag.headerText = jsonObj.optString(JSON_KEY_TAG_HEADER_TEXT);
                 tag.order = jsonObj.optInt(JSON_KEY_TAG_ORDER);
                 tag.select = jsonObj.getString(JSON_KEY_TAG_SELECTION_TYPE);
-                tag.data = jsonObj.optString(JSON_KEY_TAG_DATA);
 
                 // retrieve tagIds of options selected by default
                 tag.defaultOptionsTagIds.clear();
@@ -369,6 +369,7 @@ public class RWTags {
                     RWOption o = new RWOption();
                     o.order = option.getInt(JSON_KEY_TAG_OPTION_ORDER);
                     o.data = option.getString(JSON_KEY_TAG_OPTION_DATA);
+                    o.description = option.optString(JSON_KEY_TAG_OPTION_DESCRIPTION);
                     o.tagId = option.getInt(JSON_KEY_TAG_OPTION_ID);
                     o.value = option.getString(JSON_KEY_TAG_OPTION_VALUE);
 

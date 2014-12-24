@@ -75,6 +75,17 @@ public class RWIcecastInputStream extends BufferedInputStream {
 
 
     /**
+     * Splits a metadata value.
+     *
+     * Often a metadata value is formated like so: "Aritst - Title"
+     * @param meta
+     * @return
+     */
+    public static String[] splitMetaValue(String meta){
+        return meta.split("\\s+-\\s+");
+    }
+
+    /**
      * Parse meta data into mapped name/value pairs
      * http://uniqueculture.net/2010/11/stream-metadata-plain-java/
      * @param metaString

@@ -168,14 +168,50 @@ public class RW {
     public final static String EXTRA_STREAM_METADATA_PREVIOUS_ASSET_ID = INTENT_EXTRA_PREFIX + "stream_metadata_previous_asset_id";
 
     /**
-     * Tags of the recording currently being played on the device
-     */
-    public final static String EXTRA_STREAM_METADATA_TAGS = INTENT_EXTRA_PREFIX + "stream_metadata_tags";
-
-    /**
      * Title metadata of the recording currently being played on the device (estimated).
      */
     public final static String EXTRA_STREAM_METADATA_TITLE = INTENT_EXTRA_PREFIX + "stream_metadata_title";
+
+
+
+    /**
+     * Uri from metadata, extract using below known names
+     */
+    public final static String EXTRA_STREAM_METADATA_URI = INTENT_EXTRA_PREFIX + "stream_metadata_uri";
+    /**
+     * Asset Id - this asset id
+     * value: integer
+     */
+    public final static String METADATA_URI_NAME_ASSET_ID = "asset";
+    /**
+     * Audiotrack - what audiotrack this (relevant for multi-track audio)
+     * value: integer
+     */
+    public final static String METADATA_URI_NAME_AUDIOTRACK = "audiotrack";
+    /**
+     * Complete - is current asset done rendering
+     * value: boolean
+     */
+    public final static String METADATA_URI_NAME_COMPLETE = "complete";
+    /**
+     * Remaining - number of assets remaining or, 0, nothing in range
+     * value: integer
+     */
+    public final static String METADATA_URI_NAME_REMAINING = "remaining";
+    /**
+     * Stream Started - has the stream started
+     * value: boolean
+     */
+    public final static String METADATA_URI_NAME_STREAM_STARTED = "stream_started";
+    /**
+     * Tags - tag identifiers relevant to this asset
+     * Occurs when within range and asset begins to play
+     * value: integer array
+     */
+    public final static String METADATA_URI_NAME_TAGS = "tags";
+
+
+
 
     /**
      * Extra for the generic server operation success or failure broadcast
@@ -342,6 +378,6 @@ public class RW {
     // --------------------------------------------------------------------------------------------
 
 
-    public final static boolean DEBUG_W_FAUX_TAGS = true;
+    public final static boolean DEBUG_W_FAUX_TAGS = false;
     public static int DEBUG_FAUX_TAG = 0;
 }

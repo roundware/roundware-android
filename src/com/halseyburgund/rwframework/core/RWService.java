@@ -36,6 +36,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.AsyncTask;
@@ -50,6 +51,7 @@ import android.util.Log;
 import com.halseyburgund.rwframework.R;
 import com.halseyburgund.rwframework.util.RWList;
 import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
+import com.halseyburgund.rwframework.util.RWUriHelper;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
@@ -64,7 +66,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Map;
@@ -785,11 +789,7 @@ import java.util.TimerTask;
     }
 
 
-    private final static String KEY_METADATA_ASSET = "asset";
-    private final static String KEY_METADATA_TAGS = "tags";
-    private final static String METADATA_PAIR_DELIM = "&";
-    private final static String METADATA_NAME_VALUE_DELIM = "=";
-    private final static String METADATA_VALUE_DELIM = ",";
+
     /**
      * Parse the raw meta data and broadcast. This may likely be somewhat preliminary, so expect
      * this to change.
@@ -800,16 +800,17 @@ import java.util.TimerTask;
 
         if(RW.DEBUG_W_FAUX_TAGS){
             Random random =new Random();
-            if(/*random.nextBoolean()*/ true){
+            if(rawMetaData.contains(RW.METADATA_URI_NAME_TAGS)){
                 StringBuilder sb = new StringBuilder();
-                sb.append("StreamTitle='asset=123&tags=");
+                String param = RW.METADATA_URI_NAME_TAGS + '=';
+                sb.append(param);
                 sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
                 sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
                 sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
                 sb.append(Math.abs(random.nextInt() % 100) + 6).append(",");
                 sb.append(RW.DEBUG_FAUX_TAG++ %6);
-                sb.append("';\0\0\0");
-                rawMetaData = sb.toString();
+
+                rawMetaData = rawMetaData.replace(param, sb.toString());
                 Log.i(TAG,"Pushing faux meta: " + rawMetaData);
             }
         }
@@ -819,32 +820,22 @@ import java.util.TimerTask;
 
         int asset = -1;
         int tags[] = new int[0];
-        // structure is asset=#&tags=#,#
-        // currently we dont care about the map's keys, just the values
-        for(String value : map.values()){
-            String pairs[] = value.split(METADATA_PAIR_DELIM);
-            for(String pair : pairs){
-                String namevalues[] = pair.split(METADATA_NAME_VALUE_DELIM);
-                if(namevalues.length == 2){
-                    if(namevalues[0].equalsIgnoreCase(KEY_METADATA_ASSET)){
-                        // overwrite, or if no asset, send -1: no asset
-                        asset = Integer.decode(namevalues[1]);
-                    }else if(namevalues[0].equalsIgnoreCase(KEY_METADATA_TAGS)){
-                        String valueTags[] = namevalues[1].split(METADATA_VALUE_DELIM);
-                        tags = new int[valueTags.length];
-                        for(int i=0; i<tags.length; i++){
-                            tags[i] = Integer.decode(valueTags[i]);
-                        }
-                    }
-                }
-            }
-
-        }
 
         Intent intent = new Intent();
         intent.setAction(RW.STREAM_METADATA_UPDATED);
-        intent.putExtra(RW.EXTRA_STREAM_METADATA_CURRENT_ASSET_ID, asset);
-        intent.putExtra(RW.EXTRA_STREAM_METADATA_TAGS, tags);
+        // currently we dont care about the map's keys, just the values
+        for(String value : map.values()) {
+            String[] subvalues = RWIcecastInputStream.splitMetaValue(value);
+            if (subvalues.length == 2) {
+                // we want the second value, which contains the metadata
+                if (!TextUtils.isEmpty(subvalues[1])) {
+                    // structure is a uri
+                    // there is just one uri expected
+                    Uri uri = RWUriHelper.parse(subvalues[1]);
+                    intent.putExtra(RW.EXTRA_STREAM_METADATA_URI, uri);
+                }
+            }
+        }
         sendBroadcast(intent);
     }
 
