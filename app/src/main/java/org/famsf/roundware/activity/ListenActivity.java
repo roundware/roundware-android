@@ -72,6 +72,7 @@ public class ListenActivity extends Activity {
     // fields
     private ProgressDialog mProgressDialog;
     private ViewFlipper mViewFlipper;
+    private ImageView mBackgroundImageView;
     private WebView mWebView;
     private Button mHomeButton;
     private Button mExploreButton;
@@ -101,9 +102,9 @@ public class ListenActivity extends Activity {
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_listen_dy);
+                mBackgroundImageView.setImageResource(R.drawable.bg_listen_dy);
             } else {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_listen_lh);
+                mBackgroundImageView.setImageResource(R.drawable.bg_listen_lh);
             }
         }
 
@@ -378,6 +379,7 @@ public class ListenActivity extends Activity {
         });
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        mBackgroundImageView = (ImageView) findViewById(R.id.background);
 
         mHomeButton = (Button) findViewById(R.id.left_title_button);
         mHomeButton.setOnClickListener(new View.OnClickListener() {
@@ -627,9 +629,9 @@ public class ListenActivity extends Activity {
                 String imageName = "bg_" + exhibitId;
                 int resId = getResources().getIdentifier(imageName, "drawable", "com.earprint.rw");
                 if (resId != 0) {
-                    mViewFlipper.setBackgroundResource(resId);
+                    mBackgroundImageView.setImageResource(resId);
                 } else {
-                    mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
+                    mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
                 }
             }
         }

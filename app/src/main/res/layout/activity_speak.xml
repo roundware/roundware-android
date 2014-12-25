@@ -1,311 +1,320 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bg_speak"
-    >
+    android:layout_width="match_parent">
+    <ImageView
+        android:id="@+id/background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_speak"/>
 
-    <ViewFlipper
-        android:id="@+id/viewFlipper"
-        android:contentDescription="@string/speak_screen_description"
-        android:inAnimation="@anim/in_from_right"
-        android:orientation="vertical"
-        android:outAnimation="@anim/out_to_left"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SpeakActivity"
-        android:visibility="gone">
+        android:orientation="vertical">
 
-        <!-- recording view -->
-        <RelativeLayout
-                android:id="@+id/recordingFrameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:background="#55ffffff"
-                >
-
-            <include layout="@layout/title_bar"
-                android:id="@+id/title_bar"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"/>
-
-            <!-- bottom layer with header, buttons and counter -->
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/title_bar"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    >
-                <TextView
-                        style="@style/AppTheme.Shadow.SpeakTitleText"
-                        android:id="@+id/speakTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_speak_question"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center_horizontal"
-                        android:singleLine="false"
-                        android:padding="16dp"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/bubble_bg"
-                        android:layout_marginTop="20dp"/>
-
-                <TextView android:id="@+id/recordingTimeTextView"
-                          android:visibility="invisible"
-                          android:layout_width="fill_parent"
-                          android:layout_height="fill_parent"
-                          android:layout_marginTop="0dp"
-                          android:layout_marginBottom="50dp"
-                          android:layout_marginLeft="5dp"
-                          android:layout_marginRight="5dp"
-                          android:gravity="center_vertical|center_horizontal"
-                          android:textSize="128sp"
-                          android:textColor="#000"
-                          android:text="1:13" />
-
-                <LinearLayout
-                        android:id="@+id/recordingLevelMeterLinearLayout"
-                        android:visibility="invisible"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="150dp"
-                    android:orientation="horizontal"
-                        android:gravity="center"
-                        android:background="#88ffffff"
-
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp">
-                    <org.famsf.roundware.utils.LevelMeterView
-                            android:id="@+id/recordingLevelMeterView"
-                            android:layout_width="fill_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="center"
-                            />
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        >
-
-                    <Button
-                            style="@style/AppTheme.Shadow.SpeakSmallButton"
-                            android:id="@+id/speakReRecordButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Re-record"
-                            android:singleLine="true"
-                            android:drawableTop="@drawable/rerecord_button"
-                            android:background="#00000000"
-                            android:layout_marginRight="30dp"
-                            />
-
-                    <ToggleButton
-                            style="@style/AppTheme.Shadow.SpeakLargeButton"
-                            android:id="@+id/speakRecordPauseToggleButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="#00FFFFFF"
-                            android:drawableTop="@drawable/speak_record_pause_button"
-                            android:drawablePadding="0dp"
-                            android:textOff=""
-                            android:textOn=""
-                            />
-
-                    <Button
-                            style="@style/AppTheme.Shadow.SpeakSmallButton"
-                            android:id="@+id/speakUploadButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Upload"
-                            android:singleLine="true"
-                            android:drawableTop="@drawable/upload_button"
-                            android:background="#00000000"
-                            android:layout_marginLeft="30dp"
-                            />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <!-- top layer with help text overlay -->
-            <LinearLayout
-                    android:id="@+id/instruction_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="left"
-                    >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speak_instructions_record"
-                    android:textAppearance="@style/Text.Large"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="2"
-                    android:shadowDy="1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speak_instructions_listen"
-                    android:textAppearance="@style/Text.Large"
-                    android:paddingTop="16dp"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="2"
-                    android:shadowDy="1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speak_instructions_upload"
-                    android:textAppearance="@style/Text.Large"
-                    android:paddingTop="16dp"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="2"
-                    android:shadowDy="1"/>
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <!-- web view (filters) -->
-        <RelativeLayout
-            android:id="@+id/speakFilterLayout"
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:contentDescription="@string/speak_screen_description"
+            android:inAnimation="@anim/in_from_right"
+            android:orientation="vertical"
+            android:outAnimation="@anim/out_to_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#55ffffff">
+            tools:context=".SpeakActivity"
+            android:visibility="gone">
 
-            <WebView
-                android:id="@+id/speakFilterWebView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <!-- recording view -->
+            <RelativeLayout
+                    android:id="@+id/recordingFrameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:background="#55ffffff"
+                    >
 
-        </RelativeLayout>
+                <include layout="@layout/title_bar"
+                    android:id="@+id/title_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"/>
 
+                <!-- bottom layer with header, buttons and counter -->
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/title_bar"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        >
+                    <TextView
+                            style="@style/AppTheme.Shadow.SpeakTitleText"
+                            android:id="@+id/speakTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_speak_question"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:singleLine="false"
+                            android:padding="16dp"
+                            android:layout_margin="16dp"
+                            android:background="@drawable/bubble_bg"
+                            android:layout_marginTop="20dp"/>
 
-        <!-- thank you view -->
-        <FrameLayout
+                    <TextView android:id="@+id/recordingTimeTextView"
+                              android:visibility="invisible"
+                              android:layout_width="fill_parent"
+                              android:layout_height="fill_parent"
+                              android:layout_marginTop="0dp"
+                              android:layout_marginBottom="50dp"
+                              android:layout_marginLeft="5dp"
+                              android:layout_marginRight="5dp"
+                              android:gravity="center_vertical|center_horizontal"
+                              android:textSize="128sp"
+                              android:textColor="#000"
+                              android:text="1:13" />
+
+                    <LinearLayout
+                            android:id="@+id/recordingLevelMeterLinearLayout"
+                            android:visibility="invisible"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="150dp"
+                        android:orientation="horizontal"
+                            android:gravity="center"
+                            android:background="#88ffffff"
+
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp">
+                        <org.famsf.roundware.utils.LevelMeterView
+                                android:id="@+id/recordingLevelMeterView"
+                                android:layout_width="fill_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:gravity="center"
+                                />
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            >
+
+                        <Button
+                                style="@style/AppTheme.Shadow.SpeakSmallButton"
+                                android:id="@+id/speakReRecordButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Re-record"
+                                android:singleLine="true"
+                                android:drawableTop="@drawable/rerecord_button"
+                                android:background="#00000000"
+                                android:layout_marginRight="30dp"
+                                />
+
+                        <ToggleButton
+                                style="@style/AppTheme.Shadow.SpeakLargeButton"
+                                android:id="@+id/speakRecordPauseToggleButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#00FFFFFF"
+                                android:drawableTop="@drawable/speak_record_pause_button"
+                                android:drawablePadding="0dp"
+                                android:textOff=""
+                                android:textOn=""
+                                />
+
+                        <Button
+                                style="@style/AppTheme.Shadow.SpeakSmallButton"
+                                android:id="@+id/speakUploadButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Upload"
+                                android:singleLine="true"
+                                android:drawableTop="@drawable/upload_button"
+                                android:background="#00000000"
+                                android:layout_marginLeft="30dp"
+                                />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <!-- top layer with help text overlay -->
+                <LinearLayout
+                        android:id="@+id/instruction_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:layout_centerInParent="true"
+                        android:gravity="left"
+                        >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/speak_instructions_record"
+                        android:textAppearance="@style/Text.Large"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="2"
+                        android:shadowDy="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/speak_instructions_listen"
+                        android:textAppearance="@style/Text.Large"
+                        android:paddingTop="16dp"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="2"
+                        android:shadowDy="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/speak_instructions_upload"
+                        android:textAppearance="@style/Text.Large"
+                        android:paddingTop="16dp"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="2"
+                        android:shadowDy="1"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!-- web view (filters) -->
+            <RelativeLayout
+                android:id="@+id/speakFilterLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#55ffffff">
 
-            <!-- Google map as bottom layer -->
-            <LinearLayout
-                    android:id="@+id/speakMapViewLinearLayout"
+                <WebView
+                    android:id="@+id/speakFilterWebView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                <com.google.android.gms.maps.MapView
-                        android:id="@+id/map"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
-            </LinearLayout>
-
-            <!-- overlay with other views -->
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
-
-                <!-- header -->
-                <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/header_background"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_alignParentTop="true"
-                        android:id="@+id/relativeLayout3">
-
-                    <TextView
-                            style="@style/AppTheme.Shadow.HeaderText"
-                            android:id="@+id/speakSubmittedHeaderTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:text="@string/speak_submitted_header_text"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerInParent="true"
-                            android:gravity="center_vertical|center_horizontal"/>
-
-                </RelativeLayout>
-
-                <!-- submitted text -->
-                <TextView
-                        style="@style/AppTheme.SubmittedText"
-                        android:id="@+id/speakSubmittedTitleTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:background="#DDffffff"
-                        android:text="@string/speak_submitted_recording_text"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:layout_gravity="center_horizontal|top"
-                        android:layout_below="@+id/relativeLayout3"
-                        android:layout_alignParentLeft="true"/>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:background="#DDffffff"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center_horizontal"
-                        android:layout_marginBottom="42dp">
-
-                    <Button
-                            style="@style/AppTheme.Shadow.SpeakSmallButton"
-                            android:id="@+id/speakHeadphonesButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Listen More"
-                            android:singleLine="true"
-                            android:background="#00ffffff"
-                            android:drawableTop="@drawable/headphones_button"
-                            android:drawablePadding="2dp"
-                            android:layout_gravity="left"
-                            android:layout_marginRight="40dp"/>
-
-                    <Button
-                            style="@style/AppTheme.Shadow.SpeakSmallButton"
-                            android:id="@+id/speakMicButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Record Again"
-                            android:singleLine="true"
-                            android:background="#00ffffff"
-                            android:drawableTop="@drawable/mic_button"
-                            android:drawablePadding="2dp"
-                            android:layout_gravity="right"
-                            android:layout_marginLeft="40dp"/>
-                </LinearLayout>
+                    android:layout_height="match_parent" />
 
             </RelativeLayout>
-        </FrameLayout>
-    </ViewFlipper>
-</LinearLayout>
+
+
+            <!-- thank you view -->
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#55ffffff">
+
+                <!-- Google map as bottom layer -->
+                <LinearLayout
+                        android:id="@+id/speakMapViewLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <com.google.android.gms.maps.MapView
+                            android:id="@+id/map"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            />
+                </LinearLayout>
+
+                <!-- overlay with other views -->
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                    <!-- header -->
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@drawable/header_background"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:layout_alignParentTop="true"
+                            android:id="@+id/relativeLayout3">
+
+                        <TextView
+                                style="@style/AppTheme.Shadow.HeaderText"
+                                android:id="@+id/speakSubmittedHeaderTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:text="@string/speak_submitted_header_text"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerInParent="true"
+                                android:gravity="center_vertical|center_horizontal"/>
+
+                    </RelativeLayout>
+
+                    <!-- submitted text -->
+                    <TextView
+                            style="@style/AppTheme.SubmittedText"
+                            android:id="@+id/speakSubmittedTitleTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:background="#DDffffff"
+                            android:text="@string/speak_submitted_recording_text"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_gravity="center_horizontal|top"
+                            android:layout_below="@+id/relativeLayout3"
+                            android:layout_alignParentLeft="true"/>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp"
+                            android:background="#DDffffff"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:layout_alignParentBottom="true"
+                            android:gravity="center_horizontal"
+                            android:layout_marginBottom="42dp">
+
+                        <Button
+                                style="@style/AppTheme.Shadow.SpeakSmallButton"
+                                android:id="@+id/speakHeadphonesButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Listen More"
+                                android:singleLine="true"
+                                android:background="#00ffffff"
+                                android:drawableTop="@drawable/headphones_button"
+                                android:drawablePadding="2dp"
+                                android:layout_gravity="left"
+                                android:layout_marginRight="40dp"/>
+
+                        <Button
+                                style="@style/AppTheme.Shadow.SpeakSmallButton"
+                                android:id="@+id/speakMicButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Record Again"
+                                android:singleLine="true"
+                                android:background="#00ffffff"
+                                android:drawableTop="@drawable/mic_button"
+                                android:drawablePadding="2dp"
+                                android:layout_gravity="right"
+                                android:layout_marginLeft="40dp"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </FrameLayout>
+        </ViewFlipper>
+    </LinearLayout>
+</FrameLayout>

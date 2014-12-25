@@ -8,6 +8,7 @@
 package org.famsf.roundware.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -27,7 +28,6 @@ import android.media.SoundPool;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,6 +37,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -56,15 +57,15 @@ import com.halseyburgund.rwframework.core.RWTags;
 import com.halseyburgund.rwframework.util.RWList;
 import com.halseyburgund.rwframework.util.RWListItem;
 
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
 import org.famsf.roundware.utils.LevelMeterView;
-import org.famsf.roundware.utils.Utils;
 import org.famsf.roundware.utils.LocationBg;
+import org.famsf.roundware.utils.Utils;
+
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SpeakActivity extends Activity {
     public static final String LOGTAG = SpeakActivity.class.getSimpleName();
@@ -105,6 +106,7 @@ public class SpeakActivity extends Activity {
 
     // fields
     private ViewFlipper mViewFlipper;
+    private ImageView mBackgroundImageView;
     private WebView mWebView;
     private Button mAgreeButton;
     private Button mDeclineButton;
@@ -149,9 +151,9 @@ public class SpeakActivity extends Activity {
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
+                mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
             } else {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_speak_lh);
+                mBackgroundImageView.setImageResource(R.drawable.bg_speak_lh);
             }
         }
 
@@ -448,6 +450,7 @@ public class SpeakActivity extends Activity {
     @SuppressLint("SetJavaScriptEnabled")
     private void initUIWidgets() {
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        mBackgroundImageView = (ImageView) findViewById(R.id.background);
 
         mTitleView = (TextView) findViewById(R.id.title);
         mLeftTitleButton = (Button) findViewById(R.id.left_title_button);
@@ -722,9 +725,9 @@ public class SpeakActivity extends Activity {
                 String imageName = "bg_" + exhibitId;
                 int resId = getResources().getIdentifier(imageName, "drawable", "com.earprint.rw");
                 if (resId != 0) {
-                    mViewFlipper.setBackgroundResource(resId);
+                    mBackgroundImageView.setImageResource(resId);
                 } else {
-                    mViewFlipper.setBackgroundResource(R.drawable.bg_speak_dy);
+                    mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
                 }
             }
         }

@@ -1,155 +1,163 @@
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/viewFlipper"
-             android:contentDescription="@string/speak_screen_description"
-             android:inAnimation="@anim/in_from_right"
-             android:orientation="vertical"
-             android:outAnimation="@anim/out_to_left"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/bg_listen_dy"
-             tools:context=".ListenActivity">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ImageView
+        android:id="@+id/background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_listen_dy"/>
 
+    <ViewFlipper
+         android:id="@+id/viewFlipper"
+         android:contentDescription="@string/speak_screen_description"
+         android:inAnimation="@anim/in_from_right"
+         android:orientation="vertical"
+         android:outAnimation="@anim/out_to_left"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+        tools:context=".ListenActivity">
 
-    <!-- listen view -->
-
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#55ffffff"
-            >
-
-        <include layout="@layout/title_bar"
-            android:id="@+id/title_bar" />
-
-        <!--unused-->
-        <TextView
-                style="@style/AppTheme.Shadow.ListenTitleText"
-                android:id="@+id/listenTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/title_bar"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:singleLine="false"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"/>
-
-
-
-
-        <LinearLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-            >
-
-            <Button
-                style="@style/AppTheme.Shadow.ListenSmallButton"
-                android:id="@+id/refine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/refine_button"
-                android:textSize="16sp"
-                android:singleLine="true"
-                android:layout_alignParentRight="true"
-                android:background="#00FFFFFF"
-                android:drawableTop="@drawable/filter_button"
-                android:drawablePadding="2dp"
-                android:visibility="visible"
-                android:layout_weight="1"
-                />
-
-            <ToggleButton
-                style="@style/AppTheme.Shadow.ListenLargeButton"
-                android:id="@+id/play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00FFFFFF"
-                android:drawableTop="@drawable/listen_play_pause_button"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:textOff="@string/play"
-                android:textOn="@string/pause"
-                android:textSize="16sp"
-                />
-
-            <Button
-                style="@style/AppTheme.Shadow.ListenSmallButton"
-                android:id="@+id/record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/record_button"
-                android:singleLine="true"
-                android:layout_alignParentRight="true"
-                android:background="#00FFFFFF"
-                android:drawableTop="@drawable/mic_button"
-                android:textSize="16sp"
-                android:drawablePadding="2dp"
-                android:visibility="visible"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
-
+        <!-- listen view -->
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/listenTitleTextView"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_above="@id/buttonLayout">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#55ffffff"
+                >
 
-            <!-- To support multiple images: use ViewFlipper, inflate below as child in code-->
+            <include layout="@layout/title_bar"
+                android:id="@+id/title_bar" />
+
+            <!--unused-->
+            <TextView
+                    style="@style/AppTheme.Shadow.ListenTitleText"
+                    android:id="@+id/listenTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/title_bar"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_horizontal"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"/>
+
+
+
+
             <LinearLayout
-                android:id="@+id/asssetImageLayout"
+                android:id="@+id/buttonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="#a4ffffff"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:visibility="invisible">
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                >
 
-                <ImageView
-                    android:id="@+id/assetImage"
-                    android:layout_width="match_parent"
+                <Button
+                    style="@style/AppTheme.Shadow.ListenSmallButton"
+                    android:id="@+id/refine"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/refine_button"
+                    android:textSize="16sp"
+                    android:singleLine="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#00FFFFFF"
+                    android:drawableTop="@drawable/filter_button"
+                    android:drawablePadding="2dp"
+                    android:visibility="visible"
                     android:layout_weight="1"
-                    android:scaleType="fitCenter"
                     />
 
-              <TextView
-                    android:id="@+id/assetImageDescription"
+                <ToggleButton
+                    style="@style/AppTheme.Shadow.ListenLargeButton"
+                    android:id="@+id/play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:drawableTop="@drawable/listen_play_pause_button"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:textOff="@string/play"
+                    android:textOn="@string/pause"
+                    android:textSize="16sp"
+                    />
+
+                <Button
+                    style="@style/AppTheme.Shadow.ListenSmallButton"
+                    android:id="@+id/record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/record_button"
+                    android:singleLine="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#00FFFFFF"
+                    android:drawableTop="@drawable/mic_button"
+                    android:textSize="16sp"
+                    android:drawablePadding="2dp"
+                    android:visibility="visible"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/listenTitleTextView"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:layout_above="@id/buttonLayout">
+
+                <!-- To support multiple images: use ViewFlipper, inflate below as child in code-->
+                <LinearLayout
+                    android:id="@+id/asssetImageLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:textSize="10sp" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:background="#a4ffffff"
+                    android:orientation="vertical"
+                    android:padding="15dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/assetImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        />
+
+                     <TextView
+                        android:id="@+id/assetImageDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
 
-    <!-- web view (filters, explore) -->
-    <RelativeLayout
-        android:id="@+id/web_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#55ffffff">
-
-        <WebView
-            android:id="@+id/listenFilterWebView"
+        <!-- web view (filters, explore) -->
+        <RelativeLayout
+            android:id="@+id/web_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#55ffffff">
 
-    </RelativeLayout>
+            <WebView
+                android:id="@+id/listenFilterWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-</ViewFlipper>
+        </RelativeLayout>
+
+    </ViewFlipper>
+</FrameLayout>

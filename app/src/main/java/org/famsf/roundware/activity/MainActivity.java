@@ -36,6 +36,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -65,6 +66,7 @@ public class MainActivity extends Activity {
     private Animation mFadeInAnimation;
     private Animation mFadeOutAnimation;
     private ViewFlipper mViewFlipper;
+    private ImageView mBackgroundImageView;
     private Button mListenButton;
     private Button mSpeakButton;
     private ImageButton mInfoButton;
@@ -83,9 +85,9 @@ public class MainActivity extends Activity {
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_home_dy);
+                mBackgroundImageView.setImageResource(R.drawable.bg_home_dy);
             } else {
-                mViewFlipper.setBackgroundResource(R.drawable.bg_home_lh);
+                mBackgroundImageView.setImageResource(R.drawable.bg_home_lh);
             }
         }
 
@@ -169,6 +171,7 @@ public class MainActivity extends Activity {
             }
         }
     };
+
 
 
     @Override
@@ -363,7 +366,7 @@ public class MainActivity extends Activity {
         mFadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
-
+        mBackgroundImageView = (ImageView)findViewById(R.id.background);
         mHiddenWebView = (WebView) findViewById(R.id.hiddenWebView);
 
         // set-up the webview

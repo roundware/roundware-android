@@ -1,178 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/viewFlipper"
-             android:contentDescription="@string/home_screen_description"
-             android:inAnimation="@anim/in_from_right"
-             android:orientation="vertical"
-             android:outAnimation="@anim/out_to_left"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/bg_home_dy"
-             tools:context=".MainActivity">
-            >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ImageView
+        android:id="@+id/background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_home_dy"/>
 
-    <!-- Main Listen and Speak selection -->
+    <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewFlipper"
+        android:contentDescription="@string/home_screen_description"
+        android:inAnimation="@anim/in_from_right"
+        android:orientation="vertical"
+        android:outAnimation="@anim/out_to_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
 
-    <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/mainRelativeLayout"
-            android:focusableInTouchMode="true">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fam_logo_dy"
-            android:layout_alignParentTop="true"
-            android:background="#ffffff"
-            android:layout_alignParentEnd="false"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter" />
-
-        <LinearLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_below="@id/logo"
-            android:layout_above="@+id/infoButton"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            >
-
-            <Button
-                    android:id="@+id/listenButton"
-                    style="@style/AppTheme.Shadow.BlueButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Listen"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="32dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:drawableLeft="@drawable/headphones_normal"
-                    android:drawablePadding="16dp"
-                    android:background="@drawable/action_button"
-                    android:layout_marginBottom="40dp"
-                   />
-
-            <Button
-                    android:id="@+id/speakButton"
-                    android:enabled="false"
-                    style="@style/AppTheme.Shadow.BlueButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:drawableLeft="@drawable/mic_normal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="32dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="Speak"
-                    android:background="@drawable/action_button"
-                    />
-        </LinearLayout>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/infoButton"
-            android:src="@drawable/info_button"
-            android:background="#00000000"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/buttonLayout"
-            android:layout_marginBottom="16dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="16dp" />
-
-    </RelativeLayout>
-
-    <!-- Info overlay -->
-
-    <FrameLayout
-            android:id="@+id/infoView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@drawable/overlay_background"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:layout_marginTop="120dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="30dp"
-                >
-
-            <WebView
-                    android:id="@+id/infoWebView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="1"
-                    android:background="#FFF"
-                    android:layout_marginBottom="10dp"
-                    />
-
-            <Button
-                    style="@style/AppTheme.FeedbackButton"
-                    android:id="@+id/infoFeedbackButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/feedback_button"
-                    android:contentDescription="@string/home_feedback_button_description"
-                    android:text="@string/button_feedback"
-                    />
-
-        </LinearLayout>
+        <!-- Main Listen and Speak selection -->
 
         <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/mainRelativeLayout"
+                android:focusableInTouchMode="true">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fam_logo_dy"
+                android:layout_alignParentTop="true"
+                android:background="#ffffff"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="0dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="0dp"
-                android:layout_marginTop="105dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"
+                android:layout_below="@id/logo"
+                android:layout_above="@+id/infoButton"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 >
 
+                <Button
+                        android:id="@+id/listenButton"
+                        style="@style/AppTheme.Shadow.BlueButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Listen"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="32dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:drawableLeft="@drawable/headphones_normal"
+                        android:drawablePadding="16dp"
+                        android:background="@drawable/action_button"
+                        android:layout_marginBottom="40dp"
+                       />
+
+                <Button
+                        android:id="@+id/speakButton"
+                        android:enabled="false"
+                        style="@style/AppTheme.Shadow.BlueButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:drawableLeft="@drawable/mic_normal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="32dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:text="Speak"
+                        android:background="@drawable/action_button"
+                        />
+            </LinearLayout>
+
             <ImageButton
-                    android:id="@+id/infoCloseButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/x_button"
-                    android:contentDescription="@string/home_info_close_button_description"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoButton"
+                android:src="@drawable/info_button"
+                android:background="#00000000"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/buttonLayout"
+                android:layout_marginBottom="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="16dp" />
 
         </RelativeLayout>
 
-    </FrameLayout>
+        <!-- Info overlay -->
 
-    <!--  Hidden webview for loading home.html -->
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-
-        <WebView
-                android:id="@+id/hiddenWebView"
+        <FrameLayout
+                android:id="@+id/infoView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                >
 
-    </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/overlay_background"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:layout_marginTop="120dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="30dp"
+                    >
 
-</ViewFlipper>
+                <WebView
+                        android:id="@+id/infoWebView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dip"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:layout_marginBottom="10dp"
+                        />
+
+                <Button
+                        style="@style/AppTheme.FeedbackButton"
+                        android:id="@+id/infoFeedbackButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/feedback_button"
+                        android:contentDescription="@string/home_feedback_button_description"
+                        android:text="@string/button_feedback"
+                        />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="0dp"
+                    android:layout_marginTop="105dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="20dp"
+                    >
+
+                <ImageButton
+                        android:id="@+id/infoCloseButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/x_button"
+                        android:contentDescription="@string/home_info_close_button_description"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <!--  Hidden webview for loading home.html -->
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+            <WebView
+                    android:id="@+id/hiddenWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </ViewFlipper>
+</FrameLayout>
