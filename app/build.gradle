@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:6.5.87'
     compile project(':roundware-android-framework')
+    compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.squareup.picasso:picasso:2.4.0'
 }

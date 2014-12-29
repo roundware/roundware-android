@@ -86,7 +86,7 @@ public class ListenActivity extends Activity {
     private TextView mAssetTextView;
     private String mAssetImageUrl;
     private String mAssetImageDescription;
-    private Object mAssetImageLock = new Object();
+    private final Object mAssetImageLock = new Object();
 
 //    private ToggleButton mLikeButton;
 //    private ToggleButton mFlagButton;

@@ -52,7 +52,7 @@ public class AssetImageManager {
                 editor.putString(makeImagePrefsKey(item.tagId), item.data);
                 editor.putString(makeDescriptionPrefsKey(item.tagId), item.description);
             }
-            editor.commit();
+            editor.apply();
             return true;
         }
         return false;
