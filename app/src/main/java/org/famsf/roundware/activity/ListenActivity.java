@@ -50,13 +50,22 @@ import com.squareup.picasso.Picasso;
 
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;
+import org.famsf.roundware.utils.AssetData;
 import org.famsf.roundware.utils.AssetImageManager;
 import org.famsf.roundware.utils.LocationBg;
 import org.famsf.roundware.utils.Utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ListenActivity extends Activity {
     private final static String LOGTAG = "Listen";
@@ -68,6 +77,8 @@ public class ListenActivity extends Activity {
     // Roundware voting types used in this activity
     private final static String AS_VOTE_TYPE_FLAG = "flag";
     private final static String AS_VOTE_TYPE_LIKE = "like";
+
+    private final static int ASSET_IMAGE_LINGER_MS = 5200;
 
     // fields
     private ProgressDialog mProgressDialog;
@@ -84,8 +95,12 @@ public class ListenActivity extends Activity {
     private View mAssetImageLayout;
     private ImageView mAssetImageView;
     private TextView mAssetTextView;
-    private String mAssetImageUrl;
-    private String mAssetImageDescription;
+    private AssetData mPendingAsset = new AssetData(null,null);
+    private AssetData mCurrentAsset = mPendingAsset;
+
+
+    private PausableScheduledThreadPoolExecutor mEventPool;
+
     private final Object mAssetImageLock = new Object();
 
 //    private ToggleButton mLikeButton;
@@ -97,6 +112,8 @@ public class ListenActivity extends Activity {
     private String mContentFileDir;
     private int mCurrentAssetId;
     private int mPreviousAssetId;
+    private long mStartTime = 0;
+    private long mMetaPlayLatency = 0;
     private AssetImageManager mAssetImageManager = null;
 
     LocationListener mLocationListener = new LocationListener() {
@@ -167,6 +184,7 @@ public class ListenActivity extends Activity {
     };
 
 
+
     /**
      * Handles events received from the RWService Android Service that we
      * connect to. Since most operations of the service involve making calls
@@ -186,15 +204,12 @@ public class ListenActivity extends Activity {
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
                 }
+                if(mMetaPlayLatency == 0){
+                    mMetaPlayLatency = System.currentTimeMillis() - mStartTime;
+                    Log.v(LOGTAG, "Metadata latency estimated as " + mMetaPlayLatency);
+                }
             } else if (RW.STREAM_METADATA_UPDATED.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_STREAM_METADATA_UPDATED"); }
-                // new asset started playing - update image display
-                // remove progress dialog when needed
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog = null;
-                }
-
                 handleAssetChange( (Uri)intent.getParcelableExtra(RW.EXTRA_STREAM_METADATA_URI) );
 
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
@@ -222,6 +237,14 @@ public class ListenActivity extends Activity {
 
         setContentView(R.layout.activity_listen);
         initUIWidgets();
+        mEventPool = new PausableScheduledThreadPoolExecutor(2);
+        mEventPool.setRejectedExecutionHandler( new RejectedExecutionHandler() {
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                Log.w(LOGTAG, "Event was rejected!");
+            }
+        });
+        mEventPool.setKeepAliveTime(ASSET_IMAGE_LINGER_MS, TimeUnit.MILLISECONDS);
 
         // connect to service started by other activity
         try {
@@ -288,6 +311,10 @@ public class ListenActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if(mEventPool != null){
+            mEventPool.purge();
+            mEventPool.shutdownNow();
+        }
         if (rwConnection != null) {
             unbindService(rwConnection);
         }
@@ -462,7 +489,9 @@ public class ListenActivity extends Activity {
                     showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
                     mCurrentAssetId = -1;
                     mPreviousAssetId = -1;
-                    setAssetImage(null, null);
+                    AssetData assetData = new AssetData(null, null);
+                    setPendingAsset(assetData);
+                    setCurrentAsset(assetData);
                     mRwBinder.playbackStart(mTagsList);
                 }
                 mRwBinder.playbackFadeIn(mVolumeLevel);
@@ -478,7 +507,9 @@ public class ListenActivity extends Activity {
         mRwBinder.playbackFadeOut();
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
-        setAssetImage(null, null);
+        AssetData assetData = new AssetData(null, null);
+        setPendingAsset(assetData);
+        setCurrentAsset(assetData);
         updateUIState();
     }
 
@@ -489,6 +520,9 @@ public class ListenActivity extends Activity {
             //panic
             Log.d(LOGTAG, "handleAssetChange param null!");
             return;
+        }
+        if(mStartTime == 0){
+            mStartTime = System.currentTimeMillis();
         }
         String assetValue = uri.getQueryParameter(RW.METADATA_URI_NAME_ASSET_ID);
         int assetId = -1;
@@ -505,6 +539,13 @@ public class ListenActivity extends Activity {
         sendVotingState(mPreviousAssetId);
 
         List<String> tags = RWUriHelper.getQueryParameterValues(uri, RW.METADATA_URI_NAME_TAGS);
+        if(tags.isEmpty()){
+            String remaining = RWUriHelper.getQueryParameter(uri, RW.METADATA_URI_NAME_REMAINING);
+            if(remaining != null && !remaining.equals("0") ){
+                // this metadata message is verbose, remaining asset probably still has same image
+                return;
+            }
+        }
 
         // update display
         String url = null;
@@ -529,8 +570,9 @@ public class ListenActivity extends Activity {
             }
         }
 
-        setAssetImage(url, description);
-        updateAssetImageUi();
+        AssetData assetData = new AssetData(url, description);
+        setPendingAsset(assetData);
+        mEventPool.schedule(new AssetEvent(assetData), mMetaPlayLatency, TimeUnit.MILLISECONDS);
     }
 
 
@@ -547,22 +589,37 @@ public class ListenActivity extends Activity {
         */
     }
 
-    private void setAssetImage(String url, String description){
-        synchronized (mAssetImageLock){
-            mAssetImageUrl = url;
-            mAssetImageDescription = description;
+
+    private void setPendingAsset(AssetData asset) {
+        synchronized (mAssetImageLock) {
+            mPendingAsset = asset;
         }
     }
+    private void setCurrentAsset(AssetData asset){
+        synchronized (mAssetImageLock){
+            mCurrentAsset = asset;
+        }
+    }
+
     private void updateAssetImageUi(){
+        if(mAssetImageView == null || mAssetTextView == null){
+            //panic
+            Log.w(LOGTAG, "An Asset Image View is null!");
+            return;
+        }
+        if(!mCurrentAsset.equals(mPendingAsset) && mCurrentAsset.url == null){
+            //pending appears valid, do not hide yet
+            return;
+        }
         synchronized (mAssetImageLock) {
-            boolean hasUrl = !TextUtils.isEmpty(mAssetImageUrl);
+            boolean hasUrl = !TextUtils.isEmpty(mCurrentAsset.url);
             if(hasUrl){
                 //load
                 Picasso picasso = Picasso.with(this);
                 // set below true, to view image source debugging
                 picasso.setIndicatorsEnabled(false);
 
-                picasso.load(mAssetImageUrl)
+                picasso.load(mCurrentAsset.url)
                         .into(mAssetImageView, new Callback() {
                             @Override
                             public void onSuccess() { }
@@ -575,7 +632,7 @@ public class ListenActivity extends Activity {
                         });
             }
             //TODO fade?
-            mAssetTextView.setText(mAssetImageDescription);
+            mAssetTextView.setText(mCurrentAsset.description);
             mAssetImageLayout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
         }
     }
@@ -736,6 +793,107 @@ public class ListenActivity extends Activity {
             super.onPostExecute(result);
             if (result != null) {
                 showMessage(result, true, false);
+            }
+        }
+    }
+
+    private class AssetEvent implements Runnable{
+
+        private final AssetData assetData;
+        public AssetEvent(AssetData assetData){
+            this.assetData = assetData;
+        }
+
+        @Override
+        public void run() {
+            synchronized (mAssetImageLock){
+                if(mPendingAsset.equals(assetData)){
+                    AssetData previousAsset = mCurrentAsset;
+                    setCurrentAsset(assetData);
+                    if(TextUtils.isEmpty(assetData.url) && !TextUtils.isEmpty(previousAsset.url)){
+                        mEventPool.schedule(new AssetEvent(assetData), ASSET_IMAGE_LINGER_MS,
+                                TimeUnit.MILLISECONDS);
+                    }else{
+                        Log.v(LOGTAG, "AssetEvent now, now drawing");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateAssetImageUi();
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+    /**
+     * Adds pausing, adapted from Android Developers Documentation
+     * http://developer.android.com/reference/java/util/concurrent/ThreadPoolExecutor.html
+     */
+    private class PausableScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor{
+
+        public PausableScheduledThreadPoolExecutor(int corePoolSize) {
+            super(corePoolSize);
+            pauseQueue = new ArrayList<PausedRunnable>();
+        }
+        private boolean isPaused;
+        private ReentrantLock pauseLock = new ReentrantLock();
+
+        private class PausedRunnable{
+            public final Runnable runnable;
+            public final long delay;
+            public PausedRunnable(Runnable runnable, long delay){
+                this.runnable = runnable;
+                this.delay = delay;
+            }
+        }
+
+        private ArrayList<PausedRunnable> pauseQueue;
+
+        private void add(Runnable r){
+            ScheduledFuture sf = (ScheduledFuture)r;
+            pauseQueue.add( new PausedRunnable(r, sf.getDelay(TimeUnit.MILLISECONDS)) );
+            sf.cancel(false);
+        }
+
+        protected void beforeExecute(Thread t, Runnable r) {
+            super.beforeExecute(t, r);
+            pauseLock.lock();
+
+            if (isPaused) {
+                add(r);
+            }
+
+            pauseLock.unlock();
+
+        }
+
+        public void pause() {
+            pauseLock.lock();
+            try {
+                isPaused = true;
+                BlockingQueue<Runnable> queue = getQueue();
+                for(Runnable r : queue){
+                    add(r);
+                }
+            } finally {
+                pauseLock.unlock();
+            }
+        }
+
+        public void resume() {
+            pauseLock.lock();
+            try {
+                isPaused = false;
+                for(PausedRunnable pausedRunnable : pauseQueue){
+                    this.schedule(pausedRunnable.runnable, pausedRunnable.delay, TimeUnit.MILLISECONDS);
+                }
+            } finally {
+                pauseLock.unlock();
             }
         }
     }

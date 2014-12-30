@@ -25,16 +25,6 @@ public class AssetImageManager {
     public final static String PREFS_IMAGE_PREFIX = "asset_img_";
     public final static String PREFS_DESCRIPTION_PREFIX = "asset_txt_";
 
-    private static class AssetData {
-        public final String urlSuffix;
-        public final String description;
-
-        public AssetData(String urlSuffix, String description){
-            this.urlSuffix = urlSuffix;
-            this.description = description;
-        }
-    }
-
     private SparseArray<AssetData> map = new SparseArray<AssetData>(INITIAL_SIZE);
     private final String hostUrl;
 
@@ -88,7 +78,7 @@ public class AssetImageManager {
         String out = null;
         AssetData data = map.get(tagId);
         if(data != null){
-            out = data.urlSuffix;
+            out = data.url;
         }
         if(TextUtils.isEmpty(out)){
             // fall back on SharedPreferences cache
