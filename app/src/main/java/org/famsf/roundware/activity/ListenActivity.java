@@ -78,7 +78,7 @@ public class ListenActivity extends Activity {
     private final static String AS_VOTE_TYPE_FLAG = "flag";
     private final static String AS_VOTE_TYPE_LIKE = "like";
 
-    private final static int ASSET_IMAGE_LINGER_MS = 5200;
+    private final static int ASSET_IMAGE_LINGER_MS = 2500;
 
     // fields
     private ProgressDialog mProgressDialog;
@@ -489,9 +489,11 @@ public class ListenActivity extends Activity {
                     showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
                     mCurrentAssetId = -1;
                     mPreviousAssetId = -1;
-                    AssetData assetData = new AssetData(null, null);
-                    setPendingAsset(assetData);
-                    setCurrentAsset(assetData);
+                    if(mCurrentAsset == null) {
+                        AssetData assetData = new AssetData(null, null);
+                        setPendingAsset(assetData);
+                        setCurrentAsset(assetData);
+                    }
                     mRwBinder.playbackStart(mTagsList);
                 }
                 mRwBinder.playbackFadeIn(mVolumeLevel);
@@ -507,9 +509,6 @@ public class ListenActivity extends Activity {
         mRwBinder.playbackFadeOut();
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
-        AssetData assetData = new AssetData(null, null);
-        setPendingAsset(assetData);
-        setCurrentAsset(assetData);
         updateUIState();
     }
 
@@ -542,10 +541,11 @@ public class ListenActivity extends Activity {
         if(tags.isEmpty()){
             String remaining = RWUriHelper.getQueryParameter(uri, RW.METADATA_URI_NAME_REMAINING);
             if(remaining != null && !remaining.equals("0") ){
-                // this metadata message is verbose, remaining asset probably still has same image
+                // this metadata message is verbose, remaining assets probably still use same image
                 return;
             }
         }
+
 
         // update display
         String url = null;
@@ -572,7 +572,13 @@ public class ListenActivity extends Activity {
 
         AssetData assetData = new AssetData(url, description);
         setPendingAsset(assetData);
+        Log.v(LOGTAG, "Scheduling " + url + " in " + mMetaPlayLatency);
         mEventPool.schedule(new AssetEvent(assetData), mMetaPlayLatency, TimeUnit.MILLISECONDS);
+
+        if (!TextUtils.isEmpty(url)) {
+            //pre-load into cache
+            Picasso.with(this).load(url);
+        }
     }
 
 
@@ -613,16 +619,22 @@ public class ListenActivity extends Activity {
         }
         synchronized (mAssetImageLock) {
             boolean hasUrl = !TextUtils.isEmpty(mCurrentAsset.url);
-            if(hasUrl){
+            // Only show images if volume level is audible
+            boolean showUrl = hasUrl && (mRwBinder.getVolumeLevel() > 0);
+            if(showUrl){
                 //load
                 Picasso picasso = Picasso.with(this);
                 // set below true, to view image source debugging
                 picasso.setIndicatorsEnabled(false);
-
+                final String description = mCurrentAsset.description;
                 picasso.load(mCurrentAsset.url)
+                        .noFade()
                         .into(mAssetImageView, new Callback() {
                             @Override
-                            public void onSuccess() { }
+                            public void onSuccess() {
+                                mAssetTextView.setText(description);
+                                mAssetImageLayout.setVisibility(View.VISIBLE);
+                            }
 
                             @Override
                             public void onError() {
@@ -631,9 +643,9 @@ public class ListenActivity extends Activity {
                             }
                         });
             }
-            //TODO fade?
-            mAssetTextView.setText(mCurrentAsset.description);
-            mAssetImageLayout.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
+            else {
+                mAssetImageLayout.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -814,7 +826,7 @@ public class ListenActivity extends Activity {
                         mEventPool.schedule(new AssetEvent(assetData), ASSET_IMAGE_LINGER_MS,
                                 TimeUnit.MILLISECONDS);
                     }else{
-                        Log.v(LOGTAG, "AssetEvent now, now drawing");
+                        Log.v(LOGTAG, "Delayed AssetEvent ("+this.assetData.url+") starting now");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
