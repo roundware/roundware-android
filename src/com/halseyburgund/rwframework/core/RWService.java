@@ -1996,11 +1996,22 @@ import java.util.TimerTask;
             mPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
                 @Override
                 public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                    if (D) { 
-                        Log.i(TAG, "MediaPlayer info event");
-                        if (MediaPlayer.MEDIA_INFO_METADATA_UPDATE == what) {
-                            Log.i(TAG, "MediaPlayer metadata updated, extra = " + extra);
-                        }
+                    if (D) {
+                        Log.i(TAG, "MediaPlayer info event: " + what);
+                    }
+                    switch(what) {
+                        case MediaPlayer.MEDIA_INFO_METADATA_UPDATE:
+                            if (D) {
+                                Log.i(TAG, "MediaPlayer metadata updated, extra = " + extra);
+                            }
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                            broadcast(RW.STREAM_BUFFERING_END);
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                            // prepare time may be unreliable now
+                            broadcast(RW.STREAM_BUFFERING_START);
+                            break;
                     }
                     return true;
                 }

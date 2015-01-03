@@ -348,6 +348,15 @@ public class RW {
     public final static String STREAM_METADATA_UPDATED = BROADCAST_PREFIX + "stream_metadata_updated";
 
     /**
+     * Media player's stream has dissipated, pausing to buffer now
+     */
+    public final static String STREAM_BUFFERING_START =  BROADCAST_PREFIX + "buffer_start";
+
+    /**
+     * Media player now has sufficient buffer, resuming
+     */
+    public final static String STREAM_BUFFERING_END =  BROADCAST_PREFIX + "buffer_end";
+    /**
      * Heartbeat was triggered and has been sent to the server.
      */
     public final static String HEARTBEAT_SENT = BROADCAST_PREFIX + "heartbeat_sent";
