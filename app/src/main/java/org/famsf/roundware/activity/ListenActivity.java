@@ -112,8 +112,6 @@ public class ListenActivity extends Activity {
     private String mContentFileDir;
     private int mCurrentAssetId;
     private int mPreviousAssetId;
-    private long mStartTime = 0;
-    private long mMetaPlayLatency = 0;
     private AssetImageManager mAssetImageManager = null;
 
     LocationListener mLocationListener = new LocationListener() {
@@ -203,10 +201,6 @@ public class ListenActivity extends Activity {
                 // remove progress dialog when needed
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
-                }
-                if(mMetaPlayLatency == 0){
-                    mMetaPlayLatency = System.currentTimeMillis() - mStartTime;
-                    Log.v(LOGTAG, "Metadata latency estimated as " + mMetaPlayLatency);
                 }
             } else if (RW.STREAM_METADATA_UPDATED.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_STREAM_METADATA_UPDATED"); }
@@ -520,9 +514,7 @@ public class ListenActivity extends Activity {
             Log.d(LOGTAG, "handleAssetChange param null!");
             return;
         }
-        if(mStartTime == 0){
-            mStartTime = System.currentTimeMillis();
-        }
+
         String assetValue = uri.getQueryParameter(RW.METADATA_URI_NAME_ASSET_ID);
         int assetId = -1;
         if(!TextUtils.isEmpty(assetValue)){
@@ -572,8 +564,9 @@ public class ListenActivity extends Activity {
 
         AssetData assetData = new AssetData(url, description);
         setPendingAsset(assetData);
-        Log.v(LOGTAG, "Scheduling " + url + " in " + mMetaPlayLatency);
-        mEventPool.schedule(new AssetEvent(assetData), mMetaPlayLatency, TimeUnit.MILLISECONDS);
+        long latency = mRwBinder.getPrepareTime();
+        Log.v(LOGTAG, "Scheduling " + url + " in " + latency);
+        mEventPool.schedule(new AssetEvent(assetData), latency, TimeUnit.MILLISECONDS);
 
         if (!TextUtils.isEmpty(url)) {
             //pre-load into cache
@@ -632,6 +625,8 @@ public class ListenActivity extends Activity {
                         .into(mAssetImageView, new Callback() {
                             @Override
                             public void onSuccess() {
+
+                                // FIXME if too late then do not show!
                                 mAssetTextView.setText(description);
                                 mAssetImageLayout.setVisibility(View.VISIBLE);
                             }

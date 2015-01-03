@@ -85,6 +85,7 @@ public class Utils {
      * @param cancelable setting for the new progress dialog
      * @return the ProgressDialog displayed
      */
+    //FIXME this leaks windows!
     public static ProgressDialog showProgressDialog(Context c, String title, String message, boolean indeterminate, boolean cancelable) {
         return ProgressDialog.show(c, title, message, indeterminate, cancelable);
     }
