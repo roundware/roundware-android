@@ -238,6 +238,15 @@ public class RW {
      * always be available.
      */
     public final static String EXTRA_FAILURE_EXCEPTION = INTENT_EXTRA_PREFIX + "failure_exception";
+    /**
+     * Throwable class name.
+     */
+    public final static String EXTRA_FAILURE_EXCEPTION_CLASS = INTENT_EXTRA_PREFIX + "failure_exception_class";
+    /**
+     * Result of Throwable.GetMessage() is put in with this extra
+     */
+    public final static String EXTRA_FAILURE_EXCEPTION_MESSAGE = INTENT_EXTRA_PREFIX + "failure_exception_message";
+
 
     // --- Broadcast messages ---------------------------------------------------------------------
 

@@ -486,16 +486,18 @@ import java.util.TimerTask;
             // operation failed, if due to timeout (UknownHostException) switch to
             // from on-line to off-line
             if (intent.getAction().endsWith(RW.BROADCAST_FAILURE_POSTFIX)) {
+                String eClass = intent.getStringExtra(RW.EXTRA_FAILURE_EXCEPTION_CLASS);
                 Throwable e = (Throwable) intent.getExtras().get(RW.EXTRA_FAILURE_EXCEPTION);
-                if (e instanceof UnknownHostException) {
+                if (eClass.equals(UnknownHostException.class.getName())) {
                     if (mSessionState == SessionState.ON_LINE) {
                         manageSessionState(SessionState.OFF_LINE);
                     }
                 } else {
                     // send error log back to server for later analysis
-                    final Writer result = new StringWriter();
-                    final PrintWriter printWriter = new PrintWriter(result);
-                    e.printStackTrace(printWriter);
+//                    final Writer result = new StringWriter();
+//                    final PrintWriter printWriter = new PrintWriter(result);
+//                    e.printStackTrace(printWriter);
+                    Log.e(TAG, "Broadcast Failure Received: " + intent.getStringExtra(RW.EXTRA_FAILURE_EXCEPTION_MESSAGE));
                     // DO NOT DO THIS ON MAIN THREAD!!
                     //rwSendLogEvent(R.string.rw_et_client_error, null, result.toString(), true);
                 }
@@ -1892,7 +1894,8 @@ import java.util.TimerTask;
         intent.putExtra(RW.EXTRA_ACTION_PROPERTIES, action.getProperties());
         intent.putExtra(RW.EXTRA_FAILURE_REASON, reason);
         if (e != null) {
-            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION, e);
+            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION_CLASS, e.getClass().getName());
+            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION_MESSAGE, e.getMessage());
         }
         debugLog("Going to send broadcast event, action = " + actionName);
         sendBroadcast(intent);
@@ -1907,7 +1910,8 @@ import java.util.TimerTask;
         intent.putExtra(RW.EXTRA_ACTION_PROPERTIES, action.getProperties());
         intent.putExtra(RW.EXTRA_FAILURE_REASON, reason);
         if (e != null) {
-            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION, e);
+            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION_CLASS, e.getClass().getName());
+            intent.putExtra(RW.EXTRA_FAILURE_EXCEPTION_MESSAGE, e.getMessage());
         }
         debugLog("Going to send broadcast event, action = " + actionName);
         sendBroadcast(intent);
