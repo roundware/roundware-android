@@ -215,6 +215,10 @@ public class ListenActivity extends Activity {
             } else if (RW.SESSION_OFF_LINE.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_SESSION_OFF_LINE"); }
                 showMessage(getString(R.string.connection_to_server_lost_play), true, false);
+            } else if (RW.STREAM_BUFFERING_START.equals(intent.getAction())) {
+                mEventPool.pause();
+            } else if (RW.STREAM_BUFFERING_END.equals(intent.getAction())) {
+                mEventPool.resume();
             }
         }
     };
@@ -294,6 +298,8 @@ public class ListenActivity extends Activity {
         filter.addAction(RW.ERROR_MESSAGE);
         filter.addAction(RW.USER_MESSAGE);
         filter.addAction(RW.STREAM_METADATA_UPDATED);
+        filter.addAction(RW.STREAM_BUFFERING_START);
+        filter.addAction(RW.STREAM_BUFFERING_END);
         registerReceiver(rwReceiver, filter);
 
         startPlayback();
