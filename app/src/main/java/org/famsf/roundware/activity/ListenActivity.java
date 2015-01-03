@@ -600,8 +600,8 @@ public class ListenActivity extends Activity {
         }
     }
 
-    private void updateAssetImageUi(){
-        if(mAssetImageView == null || mAssetTextView == null){
+    private void updateAssetImageUi(final AssetData assetData){
+        if(mAssetImageView == null || mAssetTextView == null || assetData == null){
             //panic
             Log.w(LOGTAG, "An Asset Image View is null!");
             return;
@@ -611,24 +611,24 @@ public class ListenActivity extends Activity {
             return;
         }
         synchronized (mAssetImageLock) {
-            boolean hasUrl = !TextUtils.isEmpty(mCurrentAsset.url);
+            boolean hasUrl = !TextUtils.isEmpty(assetData.url);
             // Only show images if volume level is audible
             boolean showUrl = hasUrl && (mRwBinder.getVolumeLevel() > 0);
-            if(showUrl){
+            if (showUrl) {
                 //load
                 Picasso picasso = Picasso.with(this);
                 // set below true, to view image source debugging
                 picasso.setIndicatorsEnabled(false);
-                final String description = mCurrentAsset.description;
                 picasso.load(mCurrentAsset.url)
                         .noFade()
                         .into(mAssetImageView, new Callback() {
                             @Override
                             public void onSuccess() {
-
-                                // FIXME if too late then do not show!
-                                mAssetTextView.setText(description);
-                                mAssetImageLayout.setVisibility(View.VISIBLE);
+                                if(mCurrentAsset.equals(assetData)) {
+                                    // Stale assetdata ignored
+                                    mAssetTextView.setText(assetData.description);
+                                    mAssetImageLayout.setVisibility(View.VISIBLE);
+                                }
                             }
 
                             @Override
@@ -637,11 +637,11 @@ public class ListenActivity extends Activity {
                                 mAssetImageLayout.setVisibility(View.INVISIBLE);
                             }
                         });
-            }
-            else {
+            } else {
                 mAssetImageLayout.setVisibility(View.INVISIBLE);
             }
         }
+
     }
 
     /**
@@ -671,7 +671,7 @@ public class ListenActivity extends Activity {
 //            }
         }
         updateScreenForSelectedTags();
-        updateAssetImageUi();
+        updateAssetImageUi(mCurrentAsset);
     }
 
 
@@ -825,7 +825,7 @@ public class ListenActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                updateAssetImageUi();
+                                updateAssetImageUi(assetData);
                             }
                         });
                     }
