@@ -272,7 +272,7 @@ public class RWStreamProxy implements Runnable {
             }
             bos.close();
         } catch (Exception e) {
-            Log.e("", e.getMessage(), e);
+            Log.d(LOG_TAG, e.getMessage(), e);
         } finally {
             if (data != null) {
                 data.close();

@@ -64,11 +64,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Map;
@@ -174,9 +169,12 @@ import java.util.TimerTask;
     private float mVolumeStepMultiplier = 0.95f; // 1 dB = 0.89
 
     private SessionState mSessionState = SessionState.UNINITIALIZED;
-    
+    private long mStartTime = 0;
+    private long mPrepareTime = 0;
     private RWConfiguration configuration;
     private RWTags tags;
+
+
     //TODO support telephony interruption support?
     /**
      * Service binder used to communicate with the Roundware service.
@@ -367,6 +365,8 @@ import java.util.TimerTask;
                     mPlayer.setDataSource(playUrl);
                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     debugLog("Preparing: " + playUrl);
+                    mPrepareTime = 0;
+                    mStartTime = System.currentTimeMillis();
                     mPlayer.prepareAsync();
                 }
                 debugLog("Waiting for prepare");
@@ -1622,7 +1622,7 @@ import java.util.TimerTask;
                     action.setEnvelopeId(String.valueOf(envelopeId));
                 }
             }
-            
+
             // actually perform the action
             String result = action.perform(configuration.getHttpTimeOutSec());
             
@@ -1662,6 +1662,7 @@ import java.util.TimerTask;
             if (action.getFilename() != null) {
                 rwSendLogEvent(R.string.rw_et_stop_upload, null, "false", true);
             }
+
             // broadcast operation FAILED intent
             broadcastActionFailure(action, TAG + ": " + msg, e);
             return null;
@@ -1982,6 +1983,7 @@ import java.util.TimerTask;
                     debugLog("MediaPlayer prepared event");
                     synchronized (this) {
                         isPrepared = true;
+                        mPrepareTime = System.currentTimeMillis() - mStartTime;
                     }
 
                     broadcast(RW.READY_TO_PLAY);
@@ -2134,6 +2136,13 @@ import java.util.TimerTask;
         return mVolumeLevel;
     }
 
+    /**
+     * Returns the time required to prepare the mediaplayer
+     * @return
+     */
+    public long getPrepareTime(){
+        return mPrepareTime;
+    }
     
     /**
      * Sets a new volume level for the music player. The change in volume
