@@ -1,1 +1,1 @@
-include ':app', ':roundware-android-framework'
+include ':app', ':rwservice'
