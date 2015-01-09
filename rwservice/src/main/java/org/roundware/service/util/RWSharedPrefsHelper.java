@@ -19,13 +19,13 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.util;
+package org.roundware.service.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.halseyburgund.rwframework.core.RWConfiguration;
+import org.roundware.service.RWConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;

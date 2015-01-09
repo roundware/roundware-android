@@ -39,12 +39,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
-import com.halseyburgund.rwframework.core.RW;
-import com.halseyburgund.rwframework.core.RWService;
-import com.halseyburgund.rwframework.core.RWTags;
-import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWListItem;
-import com.halseyburgund.rwframework.util.RWUriHelper;
+import org.roundware.service.RW;
+import org.roundware.service.RWService;
+import org.roundware.service.RWTags;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWListItem;
+import org.roundware.service.util.RWUriHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

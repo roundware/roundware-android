@@ -19,7 +19,7 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 /**
  * Constants used in the Roundware RWFramework.
@@ -33,7 +33,7 @@ public class RW {
     /**
      * Base prefix to use for all defines in this package.
      */
-    protected final static String FRAMEWORK_PREFIX = "com.halseyburgund.rwframework.";
+    protected final static String FRAMEWORK_PREFIX = "org.roundware.service.";
 
     /**
      * Base prefix for intent extras used by this package.

@@ -19,7 +19,7 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.util;
+package org.roundware.service.util;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,7 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.halseyburgund.rwframework.core.RWTags.RWTag;
+import org.roundware.service.RWTags.RWTag;
 
 /**
  * Customized adapter for displaying items from a RWList, filtered by a

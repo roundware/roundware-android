@@ -19,9 +19,9 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.util;
+package org.roundware.service.util;
 
-import com.halseyburgund.rwframework.core.RWTags.RWTag;
+import org.roundware.service.RWTags.RWTag;
 
 /**
  * A selectable item to be used in a RWList.

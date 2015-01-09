@@ -19,7 +19,7 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -48,10 +48,10 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.halseyburgund.rwframework.R;
-import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWSharedPrefsHelper;
-import com.halseyburgund.rwframework.util.RWUriHelper;
+import org.roundware.service.R;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWSharedPrefsHelper;
+import org.roundware.service.util.RWUriHelper;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;

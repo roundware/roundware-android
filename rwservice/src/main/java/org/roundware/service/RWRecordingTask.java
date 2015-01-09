@@ -19,14 +19,14 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.halseyburgund.rwframework.R;
+import org.roundware.service.R;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;

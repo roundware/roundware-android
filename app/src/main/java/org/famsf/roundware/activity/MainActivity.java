@@ -41,9 +41,9 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.halseyburgund.rwframework.core.RW;
-import com.halseyburgund.rwframework.core.RWService;
-import com.halseyburgund.rwframework.util.RWList;
+import org.roundware.service.RW;
+import org.roundware.service.RWService;
+import org.roundware.service.util.RWList;
 
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;

@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.halseyburgund.rwframework.core.RWTags;
-import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWUriHelper;
+import org.roundware.service.RWTags;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWUriHelper;
 
 import org.famsf.roundware.Settings;
 

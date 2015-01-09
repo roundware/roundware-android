@@ -19,13 +19,13 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
 
-import com.halseyburgund.rwframework.R;
+import org.roundware.service.R;
 
 import org.json.JSONObject;
 

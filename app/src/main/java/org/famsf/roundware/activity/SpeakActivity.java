@@ -50,12 +50,12 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.halseyburgund.rwframework.core.RW;
-import com.halseyburgund.rwframework.core.RWRecordingTask;
-import com.halseyburgund.rwframework.core.RWService;
-import com.halseyburgund.rwframework.core.RWTags;
-import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWListItem;
+import org.roundware.service.RW;
+import org.roundware.service.RWRecordingTask;
+import org.roundware.service.RWService;
+import org.roundware.service.RWTags;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWListItem;
 
 import org.famsf.roundware.R;
 import org.famsf.roundware.Settings;

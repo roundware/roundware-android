@@ -70,7 +70,7 @@
             android:theme="@style/AppTheme" >
         </activity>
 
-        <service android:label="RoundwareService" android:name="com.halseyburgund.rwframework.core.RWService">
+        <service android:label="RoundwareService" android:name="org.roundware.service.RWService">
             <meta-data android:name="com.google.android.gms.version" android:value="3265130" />
         </service>
     </application>

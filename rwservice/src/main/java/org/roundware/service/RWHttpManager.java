@@ -19,11 +19,11 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 import android.util.Log;
 
-import com.halseyburgund.rwframework.util.RWMultipartEntity;
+import org.roundware.service.util.RWMultipartEntity;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;

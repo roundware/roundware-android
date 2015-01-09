@@ -1,7 +1,6 @@
 package org.famsf.roundware.activity;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;

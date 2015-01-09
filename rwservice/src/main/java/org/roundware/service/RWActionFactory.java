@@ -19,13 +19,13 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.halseyburgund.rwframework.core;
+package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
-import com.halseyburgund.rwframework.R;
-import com.halseyburgund.rwframework.util.RWList;
-import com.halseyburgund.rwframework.util.RWListItem;
+import org.roundware.service.R;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWListItem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

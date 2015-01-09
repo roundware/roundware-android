@@ -1,4 +1,4 @@
-package com.halseyburgund.rwframework.util;
+package org.roundware.service.util;
 
 import android.net.Uri;
 import android.text.TextUtils;
