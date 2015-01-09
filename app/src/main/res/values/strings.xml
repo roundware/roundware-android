@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_info_url">***REMOVED***</string>
-<string name="explore_url">***REMOVED***</string>
+<string name="app_info_url">http://roundware.example.com/info</string>
+<string name="explore_url">http://roundware.example.com/explore</string>
 <string name="refine_url">"file:///android_asset/listen-a.html"</string>
 <string name="filter_url">"file:///android_asset/speak-a.html"</string>
 

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Test server
-	<string name="rw_spec_server_url">***REMOVED***</string>
-	-->
-    <string name="rw_spec_host_url">***REMOVED***</string>
-    <string name="rw_spec_server_url">***REMOVED***</string>
-	<string name="rw_spec_project_id">14</string>
+    <string name="rw_spec_host_url">http://roundware.example.com/</string>
+    <string name="rw_spec_server_url">http://roundware.example.com/api/1/</string>
+	<string name="rw_spec_project_id">1</string>
 
     <string name="rw_spec_listen_enabled_yn">Y</string>
     <string name="rw_spec_speak_enabled_yn">Y</string>
