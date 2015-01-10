@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.famsf.roundware.activity;
+package org.roundware.rwapp.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 
-import org.famsf.roundware.R;
+import org.roundware.rwapp.R;
 
 /**
  * Activity to display application preferences and allow the user to edit

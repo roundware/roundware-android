@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.famsf.roundware.activity;
+package org.roundware.rwapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -48,12 +48,12 @@ import org.roundware.service.util.RWUriHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.famsf.roundware.R;
-import org.famsf.roundware.Settings;
-import org.famsf.roundware.utils.AssetData;
-import org.famsf.roundware.utils.AssetImageManager;
-import org.famsf.roundware.utils.LocationBg;
-import org.famsf.roundware.utils.Utils;
+import org.roundware.rwapp.R;
+import org.roundware.rwapp.Settings;
+import org.roundware.rwapp.utils.AssetData;
+import org.roundware.rwapp.utils.AssetImageManager;
+import org.roundware.rwapp.utils.LocationBg;
+import org.roundware.rwapp.utils.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -697,7 +697,7 @@ public class ListenActivity extends Activity {
             int exhibitId = selectedExhibit.getTagId();
             if (mViewFlipper != null) {
                 String imageName = "bg_" + exhibitId;
-                int resId = getResources().getIdentifier(imageName, "drawable", "com.earprint.rw");
+                int resId = getResources().getIdentifier(imageName, "drawable", "org.roundware.rwapp");
                 if (resId != 0) {
                     mBackgroundImageView.setImageResource(resId);
                 } else {

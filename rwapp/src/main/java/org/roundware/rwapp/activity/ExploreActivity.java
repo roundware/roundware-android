@@ -1,4 +1,4 @@
-package org.famsf.roundware.activity;
+package org.roundware.rwapp.activity;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -9,10 +9,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.famsf.roundware.R;
+import org.roundware.rwapp.R;
 
 /**
- * Created by berickson on 12/4/2014.
+ *
  */
 public class ExploreActivity extends Activity {
     public static final String LOGTAG = ExploreActivity.class.getSimpleName();

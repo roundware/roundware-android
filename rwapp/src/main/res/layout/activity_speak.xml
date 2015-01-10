@@ -94,7 +94,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp">
-                        <org.famsf.roundware.utils.LevelMeterView
+                        <org.roundware.rwapp.utils.LevelMeterView
                                 android:id="@+id/recordingLevelMeterView"
                                 android:layout_width="fill_parent"
                                 android:layout_height="40dp"

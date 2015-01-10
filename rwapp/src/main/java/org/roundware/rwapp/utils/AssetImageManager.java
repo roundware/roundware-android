@@ -1,4 +1,4 @@
-package org.famsf.roundware.utils;
+package org.roundware.rwapp.utils;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,7 +10,7 @@ import org.roundware.service.RWTags;
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWUriHelper;
 
-import org.famsf.roundware.Settings;
+import org.roundware.rwapp.Settings;
 
 import java.util.Iterator;
 

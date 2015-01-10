@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.famsf.roundware.activity;
+package org.roundware.rwapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -45,11 +45,11 @@ import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.util.RWList;
 
-import org.famsf.roundware.R;
-import org.famsf.roundware.Settings;
-import org.famsf.roundware.utils.AssetImageManager;
-import org.famsf.roundware.utils.LocationBg;
-import org.famsf.roundware.utils.Utils;
+import org.roundware.rwapp.R;
+import org.roundware.rwapp.Settings;
+import org.roundware.rwapp.utils.AssetImageManager;
+import org.roundware.rwapp.utils.LocationBg;
+import org.roundware.rwapp.utils.Utils;
 
 import java.util.UUID;
 

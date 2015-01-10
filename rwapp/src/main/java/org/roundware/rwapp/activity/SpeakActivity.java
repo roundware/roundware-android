@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.famsf.roundware.activity;
+package org.roundware.rwapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -57,11 +57,11 @@ import org.roundware.service.RWTags;
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
 
-import org.famsf.roundware.R;
-import org.famsf.roundware.Settings;
-import org.famsf.roundware.utils.LevelMeterView;
-import org.famsf.roundware.utils.LocationBg;
-import org.famsf.roundware.utils.Utils;
+import org.roundware.rwapp.R;
+import org.roundware.rwapp.Settings;
+import org.roundware.rwapp.utils.LevelMeterView;
+import org.roundware.rwapp.utils.LocationBg;
+import org.roundware.rwapp.utils.Utils;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -71,11 +71,11 @@ public class SpeakActivity extends Activity {
     public static final String LOGTAG = SpeakActivity.class.getSimpleName();
 
     // intent actions to select recording type when starting the activity
-    public final static String ACTION_RECORD_FEEDBACK = "com.earprint.rw.record_feedback";
-    public final static String ACTION_RECORD_CONTRIBUTION = "com.earprint.rw.record_contribution";
+    public final static String ACTION_RECORD_FEEDBACK = "org.roundware.rwapp.record_feedback";
+    public final static String ACTION_RECORD_CONTRIBUTION = "org.roundware.rwapp.record_contribution";
 
     // settings for storing recording as file
-    private final static String STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.earprint.rw/";
+    private final static String STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/org.roundware.rwapp/";
 
     // preferences keys for state storage
     public final static String PREFS_KEY_LEGAL_NOTICE_ACCEPTED = "SavedLegalNoticeAccepted";
@@ -723,7 +723,7 @@ public class SpeakActivity extends Activity {
             int exhibitId = selected.getTagId();
             if (mViewFlipper != null) {
                 String imageName = "bg_" + exhibitId;
-                int resId = getResources().getIdentifier(imageName, "drawable", "com.earprint.rw");
+                int resId = getResources().getIdentifier(imageName, "drawable", "org.roundware.rwapp");
                 if (resId != 0) {
                     mBackgroundImageView.setImageResource(resId);
                 } else {

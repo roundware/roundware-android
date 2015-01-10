@@ -1,4 +1,4 @@
-package org.famsf.roundware;
+package org.roundware.rwapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 public class Settings {
     // name of shared preferences used by all activities in the app
-    public final static String APP_SHARED_PREFS = "com.earprint.rw.preferences";
+    public final static String APP_SHARED_PREFS = "org.roundware.rwapp.preferences";
 
     // preferences keys for parameter storage
     public final static String PREFS_KEY_RW_DEVICE_ID = "SavedRoundwareDeviceId";

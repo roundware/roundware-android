@@ -1,10 +1,7 @@
-package org.famsf.roundware;
+package org.roundware.rwapp;
 
 import android.app.Application;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
-import android.util.Log;
 
 public class MyApplication extends Application {
     private static MyApplication mInstance = null;

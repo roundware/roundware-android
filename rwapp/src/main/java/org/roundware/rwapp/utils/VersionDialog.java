@@ -19,7 +19,7 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.famsf.roundware.utils;
+package org.roundware.rwapp.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;

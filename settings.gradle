@@ -1,1 +1,1 @@
-include ':app', ':rwservice'
+include ':rwapp', ':rwservice', ':app'

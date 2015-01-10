@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.famsf.roundware">
+    package="org.roundware.rwapp">
 
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,7 +18,7 @@
 
 
     <application
-        android:name="org.famsf.roundware.MyApplication"
+        android:name="org.roundware.rwapp.MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"

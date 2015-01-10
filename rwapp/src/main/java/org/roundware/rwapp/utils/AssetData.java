@@ -1,4 +1,4 @@
-package org.famsf.roundware.utils;
+package org.roundware.rwapp.utils;
 
 /**
  * A simple class with two strings
