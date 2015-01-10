@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rw_spec_host_url">http://YOUR_ROUNDWARE_SERVER_DOMAIN</string>
+    <string name="rw_spec_server_url">http://YOUR_ROUNDWARE_SERVER_DOMAIN/api/1/</string>
+	<string name="rw_spec_project_id">YOUR_ROUNDWARE_PROJECT_ID</string>
+
+</resources>
