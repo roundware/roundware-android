@@ -117,9 +117,9 @@ public class ListenActivity extends Activity {
     LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                mBackgroundImageView.setImageResource(R.drawable.bg_listen_dy);
+                //mBackgroundImageView.setImageResource(R.drawable.bg_listen_dy);
             } else {
-                mBackgroundImageView.setImageResource(R.drawable.bg_listen_lh);
+                //mBackgroundImageView.setImageResource(R.drawable.bg_listen_lh);
             }
         }
 
@@ -701,7 +701,7 @@ public class ListenActivity extends Activity {
                 if (resId != 0) {
                     mBackgroundImageView.setImageResource(resId);
                 } else {
-                    mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
+                    //mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
                 }
             }
         }
