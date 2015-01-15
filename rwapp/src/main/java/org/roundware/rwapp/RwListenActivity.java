@@ -17,9 +17,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,6 +36,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
+import org.roundware.rwapp.utils.ClassRegistry;
 import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.RWTags;
@@ -50,7 +48,6 @@ import com.squareup.picasso.Picasso;
 
 import org.roundware.rwapp.utils.AssetData;
 import org.roundware.rwapp.utils.AssetImageManager;
-import org.roundware.rwapp.utils.LocationBg;
 import org.roundware.rwapp.utils.Utils;
 
 import java.io.IOException;
@@ -81,7 +78,7 @@ public class RwListenActivity extends Activity {
     // fields
     private ProgressDialog mProgressDialog;
     private ViewFlipper mViewFlipper;
-    private ImageView mBackgroundImageView;
+    protected ImageView mBackgroundImageView;
     private WebView mWebView;
     private Button mHomeButton;
     private Button mExploreButton;
@@ -111,22 +108,6 @@ public class RwListenActivity extends Activity {
     private int mCurrentAssetId;
     private int mPreviousAssetId;
     private AssetImageManager mAssetImageManager = null;
-
-    LocationListener mLocationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_listen_dy);
-            } else {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_listen_lh);
-            }
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        public void onProviderEnabled(String provider) {}
-
-        public void onProviderDisabled(String provider) {}
-    };
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -276,9 +257,6 @@ public class RwListenActivity extends Activity {
         if (mTagsList != null) {
             mTagsList.saveSelectionState(Settings.getSharedPreferences());
         }
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(mLocationListener);
     }
 
 
@@ -301,9 +279,6 @@ public class RwListenActivity extends Activity {
         registerReceiver(rwReceiver, filter);
 
         startPlayback();
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, mLocationListener);
     }
 
 
@@ -410,8 +385,7 @@ public class RwListenActivity extends Activity {
         mHomeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mRwBinder.playbackStop();
-                Intent homeIntent = new Intent(RwListenActivity.this, RwMainActivity.class);
-                RwListenActivity.this.startActivity(homeIntent);
+                //FIXME: Homebutton should be removed.
             }
         });
 
@@ -419,7 +393,7 @@ public class RwListenActivity extends Activity {
         mExploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RwExploreActivity.class));
+                startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwExploreActivity")));
             }
         });
 

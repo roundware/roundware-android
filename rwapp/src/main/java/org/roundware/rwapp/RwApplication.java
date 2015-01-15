@@ -20,10 +20,10 @@ public class RwApplication extends Application {
         mInstance = this;
 
         //Activity classes can be overwritten in RwApplication sub-classes.
-        //ClassRegistry registry = ClassRegistry.getInstance();
         ClassRegistry.register("RwMainActivity", RwMainActivity.class);
         ClassRegistry.register("RwSpeakActivity", RwSpeakActivity.class);
         ClassRegistry.register("RwListenActivity", RwListenActivity.class);
+        ClassRegistry.register("RwExploreActivity", RwExploreActivity.class);
     }
 
     // Src: http://stackoverflow.com/questions/2002288/static-way-to-get-context-on-android

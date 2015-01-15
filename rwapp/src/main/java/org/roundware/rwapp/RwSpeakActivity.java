@@ -20,8 +20,6 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -51,6 +49,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.roundware.rwapp.utils.ClassRegistry;
 import org.roundware.service.RW;
 import org.roundware.service.RWRecordingTask;
 import org.roundware.service.RWService;
@@ -59,7 +58,6 @@ import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
 
 import org.roundware.rwapp.utils.LevelMeterView;
-import org.roundware.rwapp.utils.LocationBg;
 import org.roundware.rwapp.utils.Utils;
 
 import java.io.IOException;
@@ -105,7 +103,7 @@ public class RwSpeakActivity extends Activity {
 
     // fields
     private ViewFlipper mViewFlipper;
-    private ImageView mBackgroundImageView;
+    protected ImageView mBackgroundImageView;
     private WebView mWebView;
     private Button mAgreeButton;
     private Button mDeclineButton;
@@ -146,22 +144,6 @@ public class RwSpeakActivity extends Activity {
     private View.OnClickListener mRerecordListener;
     private View.OnClickListener mSubmitListener;
     private View.OnClickListener mCancelListener;
-
-    LocationListener mLocationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
-            } else {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_speak_lh);
-            }
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        public void onProviderEnabled(String provider) {}
-
-        public void onProviderDisabled(String provider) {}
-    };
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -288,9 +270,6 @@ public class RwSpeakActivity extends Activity {
             mTagsList.saveSelectionState(Settings.getSharedPreferences());
         }
         super.onPause();
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(mLocationListener);
     }
 
 
@@ -311,9 +290,6 @@ public class RwSpeakActivity extends Activity {
         registerReceiver(rwReceiver, filter);
 
         updateUIState();
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, mLocationListener);
     }
 
 
@@ -539,7 +515,7 @@ public class RwSpeakActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // TODO: quick hack - not the best way to do it
-                startActivity(new Intent(getApplicationContext(), RwListenActivity.class));
+                startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwListenActivity")));
             }
         });
 
@@ -548,7 +524,7 @@ public class RwSpeakActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // TODO: quick hack - not the best way to do it
-                startActivity(new Intent(getApplicationContext(), RwSpeakActivity.class));
+                startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwSpeakActivity")));
             }
         });
     }
@@ -1216,7 +1192,7 @@ public class RwSpeakActivity extends Activity {
         boolean accepted = Settings.getSharedPreferences().getBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
 
         if (accepted) {
-            context.startActivity(new Intent(context, RwSpeakActivity.class));
+            context.startActivity(new Intent(context, ClassRegistry.get("RwSpeakActivity")));
         } else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
@@ -1226,7 +1202,7 @@ public class RwSpeakActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Settings.getSharedPreferences().edit().putBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, true).commit();
-                    context.startActivity(new Intent(context, RwSpeakActivity.class));
+                    context.startActivity(new Intent(context, ClassRegistry.get("RwSpeakActivity")));
                     dialog.dismiss();
                 }
             });

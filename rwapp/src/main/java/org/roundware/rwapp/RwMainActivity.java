@@ -389,7 +389,6 @@ public class RwMainActivity extends Activity {
             }
         });
 
-
         mInfoCloseButton = (ImageButton) findViewById(R.id.infoCloseButton);
         mInfoCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -405,7 +404,7 @@ public class RwMainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mViewFlipper.showPrevious();
-                Intent intent = new Intent(getApplicationContext(), RwSpeakActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ClassRegistry.get("RwSpeakActivity"));
                 intent.setAction(RwSpeakActivity.ACTION_RECORD_FEEDBACK);
                 startActivity(intent);
             }
