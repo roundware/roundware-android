@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.roundware.rwapp.activity;
+package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,9 +19,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -41,20 +38,19 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.roundware.rwapp.utils.ClassRegistry;
 import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.util.RWList;
 
-import org.roundware.rwapp.R;
-import org.roundware.rwapp.Settings;
 import org.roundware.rwapp.utils.AssetImageManager;
-import org.roundware.rwapp.utils.LocationBg;
 import org.roundware.rwapp.utils.Utils;
 
 import java.util.UUID;
 
-public class MainActivity extends Activity {
-    public static final String LOGTAG = MainActivity.class.getSimpleName();
+public class RwMainActivity extends Activity {
+    public static final String LOGTAG = RwMainActivity.class.getSimpleName();
     private final static boolean D = true;
 
     // menu items
@@ -66,7 +62,7 @@ public class MainActivity extends Activity {
     private Animation mFadeInAnimation;
     private Animation mFadeOutAnimation;
     private ViewFlipper mViewFlipper;
-    private ImageView mBackgroundImageView;
+    protected ImageView mBackgroundImageView;
     private Button mListenButton;
     private Button mSpeakButton;
     private ImageButton mInfoButton;
@@ -81,22 +77,6 @@ public class MainActivity extends Activity {
     private String mDeviceId;
     private String mProjectId;
     private boolean mIsConnected;
-
-    LocationListener mLocationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            if (LocationBg.getSite(location) == LocationBg.DE_YOUNG) {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_home_dy);
-            } else {
-                //mBackgroundImageView.setImageResource(R.drawable.bg_home_lh);
-            }
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        public void onProviderEnabled(String provider) {}
-
-        public void onProviderDisabled(String provider) {}
-    };
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -173,7 +153,6 @@ public class MainActivity extends Activity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,9 +174,6 @@ public class MainActivity extends Activity {
     protected void onPause() {
         unregisterReceiver(rwReceiver);
         super.onPause();
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(mLocationListener);
     }
 
 
@@ -224,9 +200,6 @@ public class MainActivity extends Activity {
         updateServerForPreferences();
         updateUIState(mIsConnected);
         super.onResume();
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, mLocationListener);
     }
 
 
@@ -248,7 +221,7 @@ public class MainActivity extends Activity {
         // update settings to show current Roundware Device ID
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(PrefsActivity.ROUNDWARE_DEVICE_ID, mDeviceId);
+        prefsEditor.putString(RwPrefsActivity.ROUNDWARE_DEVICE_ID, mDeviceId);
         prefsEditor.apply();
 
         // add the option menu items
@@ -278,7 +251,7 @@ public class MainActivity extends Activity {
             }
             case MENU_ITEM_PREFERENCES: {
                 // start the standard preferences activity
-                Intent settingsActivity = new Intent(getBaseContext(), PrefsActivity.class);
+                Intent settingsActivity = new Intent(getBaseContext(), RwPrefsActivity.class);
                 startActivity(settingsActivity);
                 return true;
             }
@@ -314,7 +287,7 @@ public class MainActivity extends Activity {
         showProgress(getString(R.string.initializing), getString(R.string.connecting_to_server_message), true, false);
         try {
             // create connection to the RW service
-            Intent bindIntent = new Intent(MainActivity.this, RWService.class);
+            Intent bindIntent = new Intent(RwMainActivity.this, RWService.class);
             bindService(bindIntent, rwConnection, Context.BIND_AUTO_CREATE);
 
             // create the intent to start the RW service
@@ -393,7 +366,7 @@ public class MainActivity extends Activity {
         mListenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ListenActivity.class));
+                startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwListenActivity")));
             }
         });
 
@@ -401,7 +374,7 @@ public class MainActivity extends Activity {
         mSpeakButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpeakActivity.showLegalDialogIfNeeded(MainActivity.this, mRwBinder);
+                RwSpeakActivity.showLegalDialogIfNeeded(RwMainActivity.this, mRwBinder);
             }
         });
         mInfoButton = (ImageButton) findViewById(R.id.infoButton);
@@ -432,8 +405,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mViewFlipper.showPrevious();
-                Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
-                intent.setAction(SpeakActivity.ACTION_RECORD_FEEDBACK);
+                Intent intent = new Intent(getApplicationContext(), RwSpeakActivity.class);
+                intent.setAction(RwSpeakActivity.ACTION_RECORD_FEEDBACK);
                 startActivity(intent);
             }
         });
@@ -448,7 +421,7 @@ public class MainActivity extends Activity {
     private void resetLegalNoticeSetting() {
         SharedPreferences prefs = Settings.getSharedPreferences();
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putBoolean(SpeakActivity.PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
+        prefsEditor.putBoolean(RwSpeakActivity.PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
         prefsEditor.apply();
     }
 
@@ -587,14 +560,14 @@ public class MainActivity extends Activity {
     private void updateServerForPreferences() {
         if (mRwBinder != null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            boolean showDetailedMessages = prefs.getBoolean(PrefsActivity.SHOW_DETAILED_MESSAGES, false);
+            boolean showDetailedMessages = prefs.getBoolean(RwPrefsActivity.SHOW_DETAILED_MESSAGES, false);
             mRwBinder.setShowDetailedMessages(showDetailedMessages);
 
-            String mockLat = prefs.getString(PrefsActivity.MOCK_LATITUDE, "");
-            String mockLon = prefs.getString(PrefsActivity.MOCK_LONGITUDE, "");
+            String mockLat = prefs.getString(RwPrefsActivity.MOCK_LATITUDE, "");
+            String mockLon = prefs.getString(RwPrefsActivity.MOCK_LONGITUDE, "");
             mRwBinder.setMockLocation(mockLat, mockLon);
 
-            boolean useOnlyWiFi = prefs.getBoolean(PrefsActivity.USE_ONLY_WIFI, false);
+            boolean useOnlyWiFi = prefs.getBoolean(RwPrefsActivity.USE_ONLY_WIFI, false);
             mRwBinder.setOnlyConnectOverWifi(useOnlyWiFi);
             updateUIState(mRwBinder.isConnected());
         }

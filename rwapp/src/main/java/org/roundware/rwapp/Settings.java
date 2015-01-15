@@ -17,6 +17,6 @@ public class Settings {
     }
 
     public static SharedPreferences getSharedPreferences() {
-        return MyApplication.getAppContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        return RwApplication.getAppContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
     }
 }

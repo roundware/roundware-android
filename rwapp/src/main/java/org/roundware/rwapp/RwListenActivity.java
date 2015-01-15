@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.roundware.rwapp.activity;
+package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -48,8 +48,6 @@ import org.roundware.service.util.RWUriHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.roundware.rwapp.R;
-import org.roundware.rwapp.Settings;
 import org.roundware.rwapp.utils.AssetData;
 import org.roundware.rwapp.utils.AssetImageManager;
 import org.roundware.rwapp.utils.LocationBg;
@@ -67,7 +65,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ListenActivity extends Activity {
+public class RwListenActivity extends Activity {
     private final static String LOGTAG = "Listen";
 
     // Roundware tag type used in this activity
@@ -412,8 +410,8 @@ public class ListenActivity extends Activity {
         mHomeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mRwBinder.playbackStop();
-                Intent homeIntent = new Intent(ListenActivity.this, MainActivity.class);
-                ListenActivity.this.startActivity(homeIntent);
+                Intent homeIntent = new Intent(RwListenActivity.this, RwMainActivity.class);
+                RwListenActivity.this.startActivity(homeIntent);
             }
         });
 
@@ -421,7 +419,7 @@ public class ListenActivity extends Activity {
         mExploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ExploreActivity.class));
+                startActivity(new Intent(getApplicationContext(), RwExploreActivity.class));
             }
         });
 
@@ -471,7 +469,7 @@ public class ListenActivity extends Activity {
             @Override
             public void onClick(View v) {
                 stopPlayback();
-                SpeakActivity.showLegalDialogIfNeeded(ListenActivity.this, mRwBinder);
+                RwSpeakActivity.showLegalDialogIfNeeded(RwListenActivity.this, mRwBinder);
             }
         });
 

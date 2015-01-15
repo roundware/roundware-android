@@ -5,7 +5,7 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.roundware.rwapp.activity;
+package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -50,6 +50,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.roundware.service.RW;
 import org.roundware.service.RWRecordingTask;
 import org.roundware.service.RWService;
@@ -57,8 +58,6 @@ import org.roundware.service.RWTags;
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
 
-import org.roundware.rwapp.R;
-import org.roundware.rwapp.Settings;
 import org.roundware.rwapp.utils.LevelMeterView;
 import org.roundware.rwapp.utils.LocationBg;
 import org.roundware.rwapp.utils.Utils;
@@ -67,8 +66,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SpeakActivity extends Activity {
-    public static final String LOGTAG = SpeakActivity.class.getSimpleName();
+public class RwSpeakActivity extends Activity {
+    public static final String LOGTAG = RwSpeakActivity.class.getSimpleName();
 
     // intent actions to select recording type when starting the activity
     public final static String ACTION_RECORD_FEEDBACK = "org.roundware.rwapp.record_feedback";
@@ -540,7 +539,7 @@ public class SpeakActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // TODO: quick hack - not the best way to do it
-                startActivity(new Intent(getApplicationContext(), ListenActivity.class));
+                startActivity(new Intent(getApplicationContext(), RwListenActivity.class));
             }
         });
 
@@ -549,7 +548,7 @@ public class SpeakActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // TODO: quick hack - not the best way to do it
-                startActivity(new Intent(getApplicationContext(), SpeakActivity.class));
+                startActivity(new Intent(getApplicationContext(), RwSpeakActivity.class));
             }
         });
     }
@@ -1133,7 +1132,7 @@ public class SpeakActivity extends Activity {
         public void onClick(View v) {
             AlertDialog.Builder alertBox;
 
-            alertBox = new AlertDialog.Builder(SpeakActivity.this);
+            alertBox = new AlertDialog.Builder(RwSpeakActivity.this);
             alertBox.setTitle(R.string.confirm_title);
             alertBox.setMessage(R.string.confirm_message);
             alertBox.setPositiveButton(android.R.string.yes, continueListener);
@@ -1217,7 +1216,7 @@ public class SpeakActivity extends Activity {
         boolean accepted = Settings.getSharedPreferences().getBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
 
         if (accepted) {
-            context.startActivity(new Intent(context, SpeakActivity.class));
+            context.startActivity(new Intent(context, RwSpeakActivity.class));
         } else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
@@ -1227,7 +1226,7 @@ public class SpeakActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Settings.getSharedPreferences().edit().putBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, true).commit();
-                    context.startActivity(new Intent(context, SpeakActivity.class));
+                    context.startActivity(new Intent(context, RwSpeakActivity.class));
                     dialog.dismiss();
                 }
             });

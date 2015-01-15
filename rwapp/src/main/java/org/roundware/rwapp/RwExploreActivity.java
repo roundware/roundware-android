@@ -1,4 +1,4 @@
-package org.roundware.rwapp.activity;
+package org.roundware.rwapp;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -9,13 +9,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.roundware.rwapp.R;
-
 /**
  *
  */
-public class ExploreActivity extends Activity {
-    public static final String LOGTAG = ExploreActivity.class.getSimpleName();
+public class RwExploreActivity extends Activity {
+    public static final String LOGTAG = RwExploreActivity.class.getSimpleName();
     private final static boolean D = true;
 
     @Override

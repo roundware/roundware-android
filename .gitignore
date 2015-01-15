@@ -28,9 +28,9 @@ Thumbs.db
 
 # Android Studio
 .idea
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
+*.iml
 
 # The roundware-android project expects on a module named 'app', but it is not in repo.
 # Copy 'app-starter' to 'app' to get started.

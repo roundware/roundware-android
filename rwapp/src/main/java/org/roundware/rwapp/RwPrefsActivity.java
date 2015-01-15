@@ -5,17 +5,13 @@
     with contributions by Rob Knapen
     ALL RIGHTS RESERVED
 */
-package org.roundware.rwapp.activity;
+package org.roundware.rwapp;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Activity;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-
-import org.roundware.rwapp.R;
 
 /**
  * Activity to display application preferences and allow the user to edit
@@ -23,8 +19,8 @@ import org.roundware.rwapp.R;
  *
  * @author Rob Knapen
  */
-public class PrefsActivity extends PreferenceActivity {
-    public static final String LOGTAG = PrefsActivity.class.getSimpleName();
+public class RwPrefsActivity extends PreferenceActivity {
+    public static final String LOGTAG = RwPrefsActivity.class.getSimpleName();
 
     public final static String CONNECT_TO_SERVER = "connectToServerPref";
     public final static String SHOW_DETAILED_MESSAGES = "showDetailedMessagesPref";
