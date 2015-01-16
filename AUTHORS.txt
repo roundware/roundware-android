@@ -1,0 +1,9 @@
+Roundware Android authors ordered by first contribution.
+
+Rob Knapen <http://www.wageningenur.nl>
+Dan Latham
+Halsey Burgund <http://halseyburgund.com>
+Brad Erickson <http://eosrei.net>
+Joel Schnall
+Matt Adler <http://hillsandfog.com>
+
