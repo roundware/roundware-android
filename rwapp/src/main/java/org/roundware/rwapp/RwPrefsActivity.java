@@ -1,10 +1,7 @@
-/*
-    STORIES FROM MAIN STREET
-    Android client application
-       Copyright (C) 2008-2013 Halsey Solutions, LLC
-    with contributions by Rob Knapen
-    ALL RIGHTS RESERVED
-*/
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
 package org.roundware.rwapp;
 
 import android.content.SharedPreferences;

@@ -1,10 +1,14 @@
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
 package org.roundware.rwapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by jschnall on 8/13/14.
+ *
  */
 public class Settings {
     // name of shared preferences used by all activities in the app

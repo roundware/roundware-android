@@ -1,3 +1,7 @@
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
 package org.roundware.service;
 
 import android.content.Context;
@@ -6,12 +10,9 @@ import android.util.Log;
 
 /**
  * Simple Audio Management
- * <p/>
  * Adapted from npr-android-app
  * https://code.google.com/p/npr-android-app/
  */
-
-
 public class RWAudioManager {
     private static final String LOG_TAG = RWAudioManager.class.getName();
     private AudioManager audioManager;

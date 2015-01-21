@@ -1,24 +1,7 @@
-/*
-    ROUNDWARE
-    a participatory, location-aware media platform
-    Android client library
-       Copyright (C) 2008-2013 Halsey Solutions, LLC
-    with contributions by Rob Knapen (shuffledbits.com) and Dan Latham
-    http://roundware.org | contact@roundware.org
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-     This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     GNU General Public License for more details.
-
-     You should have received a copy of the GNU General Public License
-     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
 package org.roundware.service;
 
 import android.content.Context;
@@ -26,7 +9,6 @@ import android.location.*;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import org.roundware.service.R;
 
 import java.util.Observable;
 

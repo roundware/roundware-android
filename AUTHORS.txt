@@ -1,9 +1,9 @@
 Roundware Android authors ordered by first contribution.
 
-Rob Knapen <http://www.wageningenur.nl>
 Dan Latham
+Rob Knapen <http://www.shuffledbits.com>
 Halsey Burgund <http://halseyburgund.com>
+Rob Dietrick
 Brad Erickson <http://eosrei.net>
 Joel Schnall
 Matt Adler <http://hillsandfog.com>
-
