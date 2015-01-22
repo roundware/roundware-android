@@ -12,6 +12,7 @@
 <string name="title_activity_speak">Speak</string>
 <string name="title_activity_prefs">Preferences</string>
 <string name="title_activity_explore">Explore More</string>
+<string name="title_activity_refine">Refine</string>
 
 <!-- general text items -->
 <string name="save">Save</string>

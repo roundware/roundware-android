@@ -296,8 +296,10 @@ public class RwMainActivity extends Activity {
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_TITLE, getString(R.string.notification_title));
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_DEFAULT_TEXT, getString(R.string.notification_default_text));
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_ICON_ID, R.drawable.status_icon);
+            //FIXME use the listen activity instead
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME, this.getClass().getName());
 
+            //FIXME bind service instead
             startService(mRwService);
 
             // successfully started service, make a note of the device ID
@@ -314,11 +316,13 @@ public class RwMainActivity extends Activity {
      *
      * @return true when successful
      */
+    //FIXME this shouldn't be needed
     private boolean stopRWService() {
         if (mRwBinder != null) {
             mRwBinder.stopService();
             unbindService(rwConnection);
         }
+
         if (mRwService != null) {
             return stopService(mRwService);
         }

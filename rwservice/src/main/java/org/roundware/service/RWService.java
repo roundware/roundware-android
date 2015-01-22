@@ -756,6 +756,7 @@ import java.util.TimerTask;
         //FIXME new_task?
         mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        //FIXME remove notification onStop
         // create a notification and move service to foreground
         mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
         mRwNotification.number = 1;

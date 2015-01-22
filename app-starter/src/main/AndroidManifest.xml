@@ -5,7 +5,6 @@
         android:allowBackup="true">
         <activity android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>

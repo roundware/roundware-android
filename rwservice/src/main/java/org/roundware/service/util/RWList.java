@@ -7,6 +7,7 @@ package org.roundware.service.util;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.roundware.service.RWTags;
@@ -145,6 +146,51 @@ public class RWList extends ArrayList<RWListItem> {
         }
 
         return "Roundware.tags = {}";
+    }
+
+
+    /**
+     * Removes tags that would not be valid for the WebView
+     */
+    public void cullNonWebTags(){
+
+        List<RWTag> allTags = mTags.getTags();
+        for(int i = allTags.size() - 1; i >= 0; i--) {
+            RWTag tag = allTags.get(i);
+            if( isNonWebTag(tag) ) {
+                allTags.remove(i);
+            }
+        }
+        RWTag refTags[] = getAllTags();
+        for(int i = refTags.length - 1; i >= 0; i--) {
+            RWTag tag = refTags[i];
+            if( isNonWebTag(tag) ) {
+                //remove all items that refer to this tag
+                for (int j = this.size() - 1; j >= 0; j--) {
+                    RWListItem item = get(j);
+                    if (item.getTag() == tag) {
+                        remove(j);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Determines if this a non web tag
+     * @param tag
+     * @return whether to remove this tag
+     */
+    private boolean isNonWebTag(RWTag tag){
+        boolean out = true;
+        for(int j = tag.options.size() - 1; j >= 0; j--){
+            RWOption option = tag.options.get(j);
+            if(!TextUtils.isEmpty(option.data)) {
+                String param = RWUriHelper.getQueryParameter(RWUriHelper.parse(option.data), "class");
+                out &= TextUtils.isEmpty(param) || !param.contains("tag-");
+            }
+        }
+        return out;
     }
 
 

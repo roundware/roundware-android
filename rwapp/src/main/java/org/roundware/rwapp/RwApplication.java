@@ -29,6 +29,7 @@ public class RwApplication extends Application {
         ClassRegistry.register("RwSpeakActivity", RwSpeakActivity.class);
         ClassRegistry.register("RwListenActivity", RwListenActivity.class);
         ClassRegistry.register("RwExploreActivity", RwExploreActivity.class);
+        ClassRegistry.register("RwRefineActivity", RwRefineActivity.class);
     }
 
     // Src: http://stackoverflow.com/questions/2002288/static-way-to-get-context-on-android

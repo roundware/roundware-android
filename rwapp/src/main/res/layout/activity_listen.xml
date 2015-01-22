@@ -9,16 +9,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_listen"/>
 
-    <ViewFlipper
-         android:id="@+id/viewFlipper"
-         android:contentDescription="@string/speak_screen_description"
-         android:inAnimation="@anim/in_from_right"
-         android:orientation="vertical"
-         android:outAnimation="@anim/out_to_left"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-        tools:context=".ListenActivity">
-
         <!-- listen view -->
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -145,19 +135,4 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <!-- web view (filters, explore) -->
-        <RelativeLayout
-            android:id="@+id/web_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#55ffffff">
-
-            <WebView
-                android:id="@+id/listenFilterWebView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </RelativeLayout>
-
-    </ViewFlipper>
 </FrameLayout>

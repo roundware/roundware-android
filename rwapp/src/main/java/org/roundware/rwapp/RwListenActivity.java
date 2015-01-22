@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,30 +23,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.ViewFlipper;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import org.roundware.rwapp.utils.AssetData;
+import org.roundware.rwapp.utils.AssetImageManager;
 import org.roundware.rwapp.utils.ClassRegistry;
+import org.roundware.rwapp.utils.Utils;
 import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.RWTags;
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
 import org.roundware.service.util.RWUriHelper;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
-import org.roundware.rwapp.utils.AssetData;
-import org.roundware.rwapp.utils.AssetImageManager;
-import org.roundware.rwapp.utils.Utils;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -61,9 +55,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class RwListenActivity extends Activity {
     private final static String LOGTAG = "Listen";
+    private final static String ROUNDWARE_TAGS_TYPE = "listen";
 
     // Roundware tag type used in this activity
-    private final static String ROUNDWARE_TAGS_TYPE = "listen";
+
     private final static boolean D = true;
 
     // Roundware voting types used in this activity
@@ -74,9 +69,7 @@ public class RwListenActivity extends Activity {
 
     // fields
     private ProgressDialog mProgressDialog;
-    private ViewFlipper mViewFlipper;
     protected ImageView mBackgroundImageView;
-    private WebView mWebView;
     private Button mHomeButton;
     private Button mExploreButton;
 
@@ -231,22 +224,6 @@ public class RwListenActivity extends Activity {
 
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        if (D) { Log.d(LOGTAG, "+++ onNewIntent +++"); }
-        super.onNewIntent(intent);
-        // TODO: activity is reused for a new task
-        // TODO: check if this can be used?
-        // TODO: or select other launchMode in manifest
-        // TODO: reset the filter webview?
-        // TODO: test (back) navigation, define tasks and activity stacks
-
-        if (mViewFlipper != null) {
-            mViewFlipper.setDisplayedChild(0);
-        }
-    }
-
-
-    @Override
     protected void onPause() {
         if (D) { Log.d(LOGTAG, "+++ onPause +++"); }
         super.onPause();
@@ -288,6 +265,8 @@ public class RwListenActivity extends Activity {
         if (rwConnection != null) {
             unbindService(rwConnection);
         }
+
+        //FIXME: call stopService?
         super.onDestroy();
     }
 
@@ -304,78 +283,7 @@ public class RwListenActivity extends Activity {
      * Sets up the primary UI widgets (spinner and buttons), and how to
      * handle interactions.
      */
-    @SuppressLint("SetJavaScriptEnabled")
     private void initUIWidgets() {
-        mWebView = (WebView) findViewById(R.id.listenFilterWebView);
-
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-
-        webSettings.setAppCachePath(this.getFilesDir().getAbsolutePath());
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
-        webSettings.setSupportMultipleWindows(false);
-        webSettings.setSupportZoom(false);
-        webSettings.setSavePassword(false);
-        webSettings.setGeolocationDatabasePath(this.getFilesDir().getAbsolutePath());
-        webSettings.setGeolocationEnabled(false);
-        webSettings.setDatabaseEnabled(false);
-        webSettings.setDomStorageEnabled(false);
-
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d(LOGTAG, "shouldOverrideUrlLoading");
-                Uri uri = Uri.parse(url);
-                if (uri.getScheme().equals("roundware")) {
-                    Log.d(LOGTAG, "Processing roundware uri: " + url);
-                    String schemeSpecificPart = uri.getSchemeSpecificPart(); // everything from : to #
-                    if ("//listen_done".equalsIgnoreCase(schemeSpecificPart)) {
-                        // request update of audio stream directly when needed
-                        if ((mRwBinder != null) && (mTagsList.hasValidSelectionsForTags())) {
-                            if (mRwBinder.isPlaying()) {
-                                new ModifyStreamTask(mTagsList, getString(R.string.modify_stream_problem)).execute();
-                            }
-                        }
-                        mViewFlipper.showPrevious();
-                        updateUIState();
-                    } else if ("//webview_done".equalsIgnoreCase((schemeSpecificPart))) {
-                        mViewFlipper.showPrevious();
-                    } else {
-                        if (mTagsList != null) {
-                            mTagsList.setSelectionFromWebViewMessageUri(uri);
-                        }
-                    }
-                    return true;
-                }
-                // open link in external browser
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                if (mViewFlipper.getCurrentView().getId() != R.id.web_layout) {
-                    mViewFlipper.showNext();
-                }
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-              Log.d(LOGTAG, "Error: " + description);
-                super.onReceivedError(view, errorCode, description, failingUrl);
-            }
-        });
-
-        mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
         mBackgroundImageView = (ImageView) findViewById(R.id.background);
 
         mHomeButton = (Button) findViewById(R.id.left_title_button);
@@ -398,20 +306,8 @@ public class RwListenActivity extends Activity {
         mRefineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get the folder where the web content files are stored
-                mContentFileDir = mRwBinder.getContentFilesDir();
-                if ((mWebView != null) && (mContentFileDir != null)) {
-                    String contentFileName = mContentFileDir + "listen.html";
-                    try {
-                        String data = mRwBinder.readContentFile(contentFileName);
-                        data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
-                        mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.e(LOGTAG, "Problem loading content file: listen.html");
-                        // TODO: dialog?? error?? Don't let it get this far?
-                    }
-                }
+                Class refine = ClassRegistry.get("RwRefineActivity");
+                startActivityForResult(new Intent(getApplicationContext(), refine), refine.hashCode() );
             }
         });
 
@@ -664,14 +560,10 @@ public class RwListenActivity extends Activity {
             tv.setText(selectedExhibit.getText());
             // update background
             int exhibitId = selectedExhibit.getTagId();
-            if (mViewFlipper != null) {
-                String imageName = "bg_" + exhibitId;
-                int resId = getResources().getIdentifier(imageName, "drawable", "org.roundware.rwapp");
-                if (resId != 0) {
-                    mBackgroundImageView.setImageResource(resId);
-                } else {
-                    //mBackgroundImageView.setImageResource(R.drawable.bg_speak_dy);
-                }
+            String imageName = "bg_" + exhibitId;
+            int resId = getResources().getIdentifier(imageName, "drawable", "org.roundware.rwapp");
+            if (resId != 0) {
+                mBackgroundImageView.setImageResource(resId);
             }
         }
     }
@@ -700,42 +592,6 @@ public class RwListenActivity extends Activity {
     private void showProgress(String title, String message, boolean isIndeterminate, boolean isCancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = Utils.showProgressDialog(this, title, message, isIndeterminate, isCancelable);
-        }
-    }
-
-
-    /**
-     * Async task that calls rwModifyStream for direct processing, but in
-     * the background for Android to keep the UI responsive.
-     *
-     * @author Rob Knapen
-     */
-    private class ModifyStreamTask extends AsyncTask<Void, Void, String> {
-
-        private RWList selections;
-        private String errorMessage;
-
-        public ModifyStreamTask(RWList selections, String errorMessage) {
-            this.selections = selections;
-            this.errorMessage = errorMessage;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                mRwBinder.rwModifyStream(selections, true);
-                return null;
-            } catch (Exception e) {
-                return errorMessage;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                showMessage(result, true, false);
-            }
         }
     }
 
@@ -880,5 +736,20 @@ public class RwListenActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if(requestCode == ClassRegistry.get("RwRefineActivity").hashCode() ){
+            if(data != null){
+                String uri = data.getStringExtra(RwRefineActivity.RWREFINE_TAG_URI);
+                if(!TextUtils.isEmpty(uri)){
+                    mTagsList.setSelectionFromWebViewMessageUri(Uri.parse(uri));
+                }
+            }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
 
