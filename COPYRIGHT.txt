@@ -1,4 +1,4 @@
-Roundware Android
+Roundware® Android
 A participatory, location-aware media platform.
 
     Copyright (C) 2008-2015 Halsey Solutions, LLC
@@ -19,7 +19,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Roundware is a registered trademark of Halsey Burgund.
 
-Roundware includes works under other copyright notices and distributed
+Roundware® includes works under other copyright notices and distributed
 according to the terms of the GNU General Public License or a compatible
 license, including:
 
