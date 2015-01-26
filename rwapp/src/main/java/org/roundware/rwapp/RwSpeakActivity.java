@@ -272,10 +272,9 @@ public class RwSpeakActivity extends Activity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+        mMapView.onResume();
 
         initMapIfNeeded();
-        //mMapView.onResume();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(RW.SESSION_ON_LINE);
@@ -287,6 +286,7 @@ public class RwSpeakActivity extends Activity {
         registerReceiver(rwReceiver, filter);
 
         updateUIState();
+        super.onResume();
     }
 
 
@@ -314,14 +314,14 @@ public class RwSpeakActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 
 
     private void initMapIfNeeded() {
         if (mGoogleMap == null) {
-            mGoogleMap = ((MapView) findViewById(R.id.map)).getMap();
+            mGoogleMap = mMapView.getMap();
             if (mGoogleMap != null) {
                 setUpMap();
             }
@@ -332,7 +332,7 @@ public class RwSpeakActivity extends Activity {
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
         mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mGoogleMap.setMyLocationEnabled(false);
     }
 
@@ -348,7 +348,8 @@ public class RwSpeakActivity extends Activity {
         mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title("Your Recording"));
 
         // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 10);
+        // TODO: Make the zoom level configurable.
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 17);
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
