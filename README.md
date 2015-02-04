@@ -1,26 +1,26 @@
-# Roundware for Android
+# Roundware® for Android
 
-## Roundware Overview
+## Roundware® Overview
 
-Roundware is a flexible distributed framework which collects, stores, organizes
+Roundware® is a flexible distributed framework which collects, stores, organizes
 and re-presents audio content. Basically, it lets you collect audio from anyone
 with a smartphone or web access, upload it to a central repository along with
 its metadata and then filter it and play it back collectively in continuous
 audio streams.
 
-For more information about Roundware functionality and projects that use the
-platform, please check out: [roundware.org](http://roundware.org "Roundware")
+For more information about Roundware® functionality and projects that use the
+platform, please check out: [roundware.org](http://www.roundware.org "Roundware®")
 
-## Creating your own Roundware Android App
+## Creating your own Roundware® Android App
 
 ### Summary
-Your App and namespace wraps the available Roundware App functionality allowing
+Your App and namespace wraps the available Roundware® App functionality allowing
 customization of existing Java Classes and Resources such as drawables and XML.
 
 ### Getting Started
 
 Prerequisites:
-* A working Roundware Server installation.
+* A working Roundware® Server installation.
 * Knowledge of Android Mobile Application development with Android Studio
 
 Setup the codebase:
@@ -54,3 +54,4 @@ project will override the original versions during project build. Add the new
 values if the XML file already exists.
 
 TODO: More details...
+
