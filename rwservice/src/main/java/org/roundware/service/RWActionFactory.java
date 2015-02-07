@@ -6,9 +6,10 @@ package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
-import org.roundware.service.R;
+
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -151,9 +152,7 @@ public class RWActionFactory {
                 R.string.roundware_notification_heartbeat)
                 .add(R.string.rw_key_operation, R.string.rw_op_heartbeat);
         
-        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-            addCoordinates(action);
-        }
+        addCoordinates(action);
 
         return action;
     }
@@ -301,9 +300,7 @@ public class RWActionFactory {
         // can skip adding coordinates for debugging purposes
         String str = mService.getString(R.string.rw_debug_open_audio_stream_without_location_yn);
         if ((str != null) && ("N".equals(str.toUpperCase(Locale.US)))) {
-            if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-                addCoordinates(action);
-            }
+            addCoordinates(action);
         }
 
         return action;
@@ -323,9 +320,7 @@ public class RWActionFactory {
                 R.string.roundware_notification_modifying_stream)
                 .add(R.string.rw_key_operation, R.string.rw_op_modify_stream);
         
-        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedListen())) {
-            addCoordinates(action);
-        }
+        addCoordinates(action);
 
         return action;
     }
@@ -362,10 +357,8 @@ public class RWActionFactory {
                 .add(R.string.rw_key_operation, R.string.rw_op_create_envelope);
         addTags(action, tags);
         
-        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-            addCoordinates(action);
-        }
-        
+        addCoordinates(action);
+
         return action;
     }
 
@@ -386,9 +379,7 @@ public class RWActionFactory {
                 .add(R.string.rw_key_operation, R.string.rw_op_create_envelope)
                 .add(R.string.rw_key_tags, selectedTagsOptions);
         
-        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-            addCoordinates(action);
-        }
+        addCoordinates(action);
         
         return action;
     }
@@ -419,10 +410,7 @@ public class RWActionFactory {
         }
         
         addTags(action, tags);
-        
-        if ((mService != null) && (mService.getConfiguration().isUsingLocationBasedSpeak())) {
-            addCoordinates(action);
-        }
+        addCoordinates(action);
 
         return action;
     }
