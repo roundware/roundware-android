@@ -31,17 +31,15 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.roundware.service.R;
-import org.roundware.service.util.RWList;
-import org.roundware.service.util.RWSharedPrefsHelper;
-import org.roundware.service.util.RWUriHelper;
-
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWSharedPrefsHelper;
+import org.roundware.service.util.RWUriHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -944,7 +942,7 @@ import java.util.TimerTask;
                         configuration.getSessionId(), lat, lon, location.getProvider(),
                         location.getAccuracy()), null);
             }
-            rwSendMoveListener(true);
+                rwSendMoveListener(true);
             broadcastLocationUpdate(lat, lon, location.getProvider(), location.getAccuracy());
         }
     }
@@ -1323,7 +1321,7 @@ import java.util.TimerTask;
      * @return server response, empty string when queued
      */
     public String rwSendMoveListener(boolean now) {
-        if ((configuration.getSessionId() != null) && (isPlaying()) && (!isPlayingMuted())) {
+        if (configuration.getSessionId() != null ) {
             return perform(mActionFactory.createModifyStreamAction(), now);
         }
         return null;
@@ -1970,7 +1968,7 @@ import java.util.TimerTask;
                         isPrepared = true;
                         mPrepareTime = System.currentTimeMillis() - mStartTime;
                     }
-
+                    rwSendMoveListener(false);
                     broadcast(RW.READY_TO_PLAY);
                     if (mStartPlayingWhenReady) {
                         playbackFadeIn(mVolumeLevel);

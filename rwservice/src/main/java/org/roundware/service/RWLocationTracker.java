@@ -5,7 +5,12 @@
 package org.roundware.service;
 
 import android.content.Context;
-import android.location.*;
+import android.location.Criteria;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -259,7 +264,9 @@ public class RWLocationTracker extends Observable {
             return false;
         }
 
-        return getLocationProviders();
+        boolean rc = getLocationProviders();
+        gotoLastKnownLocation();
+        return rc;
     }
 
 
@@ -273,12 +280,13 @@ public class RWLocationTracker extends Observable {
         // get the GPS location provider info
         LocationProvider provider = mLocationManager.getProvider(LocationManager.GPS_PROVIDER);
         if (provider != null) {
-            if (D) { Log.d(TAG, "GPS location provider name : " + mGpsLocationProvider); }
             mGpsLocationProvider = provider.getName();
+            if (D) { Log.d(TAG, "GPS location provider name : " + mGpsLocationProvider); }
         } else {
             if (D) { Log.d(TAG, "GPS location provider not found on this device"); }
             mGpsLocationProvider = null;
         }
+
         mGpsLocationAvailable = false;
 
         // get a coarse (usually the network) location provider as backup
@@ -387,7 +395,7 @@ public class RWLocationTracker extends Observable {
         mUsingCoarseLocation = false;
         mUseGpsIfPossible = useGps;
         switchToCoarseLocationUpdates();
-        if ((mLocationManager != null) && (mGpsLocationAvailable) && (mUseGpsIfPossible)) {
+        if ((mLocationManager != null) && (mUseGpsIfPossible)) {
             mLocationManager.addGpsStatusListener(mGpsStatusListener);
         }
     }
