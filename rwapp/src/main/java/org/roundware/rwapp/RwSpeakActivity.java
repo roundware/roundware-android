@@ -74,6 +74,12 @@ public class RwSpeakActivity extends Activity {
     // preferences keys for state storage
     public final static String PREFS_KEY_LEGAL_NOTICE_ACCEPTED = "SavedLegalNoticeAccepted";
 
+    // key for done button
+    public final static String EXTRA_KEY_DONE_ICON = "doneIcon";
+
+    // key for done label
+    public final static String EXTRA_KEY_DONE_TEXT = "doneText";
+
     // tag values for user feedback recording
     private final static int FEEDBACK_QUESTION_TAG_ID = 21;
     private final static String FEEDBACK_SUBMITTED_VALUE = "N";
@@ -111,7 +117,7 @@ public class RwSpeakActivity extends Activity {
     private ToggleButton mRecordButton;
     private Button mRerecordButton;
     private Button mUploadButton;
-    private Button mListenMoreButton;
+    private Button mDoneButton;
     private Button mSpeakMoreButton;
     private RWService mRwBinder;
     private RWTags mProjectTags;
@@ -508,14 +514,25 @@ public class RwSpeakActivity extends Activity {
         mRerecordButton = (Button) findViewById(R.id.speakReRecordButton);
         mRerecordButton.setOnClickListener(mRerecordListener);
 
-        mListenMoreButton = (Button) findViewById(R.id.speakHeadphonesButton);
-        mListenMoreButton.setOnClickListener(new View.OnClickListener() {
+        mDoneButton = (Button) findViewById(R.id.speakDoneButton);
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: quick hack - not the best way to do it
-                startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwListenActivity")));
+                finish();
             }
         });
+        int doneIcon = getIntent().getIntExtra(EXTRA_KEY_DONE_ICON, -1);
+        if( -1 != doneIcon ){
+            Drawable drawable = getResources().getDrawable(doneIcon);
+            if(drawable != null) {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                mDoneButton.setCompoundDrawables(null, drawable, null, null);
+            }
+        }
+        int doneText = getIntent().getIntExtra(EXTRA_KEY_DONE_TEXT, -1);
+        if( -1 != doneText ){
+            mDoneButton.setText(doneText);
+        }
 
         mSpeakMoreButton = (Button) findViewById(R.id.speakMicButton);
         mSpeakMoreButton.setOnClickListener(new View.OnClickListener() {
@@ -1185,12 +1202,32 @@ public class RwSpeakActivity extends Activity {
         }
     }
 
+    /**
+     * Shows a legal dialog if needed or directly shows the Speak Activity
+     * @param context
+     * @param rwService
+    **/
     public static void showLegalDialogIfNeeded(final Context context, RWService rwService) {
+        showLegalDialogIfNeeded(context, rwService, -1, -1);
+    }
+
+    /**
+     * Shows a legal dialog if needed or directly shows the Speak Activity
+     * @param context
+     * @param rwService
+     * @param doneIcon resId of done button's icon (optional)
+     * @param doneText resId of done button's text label (optional)
+     */
+    public static void showLegalDialogIfNeeded(final Context context, RWService rwService, final int doneIcon, final int doneText) {
         String legalText = rwService.getConfiguration().getLegalAgreement();
         boolean accepted = Settings.getSharedPreferences().getBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
 
+        final Intent intent = new Intent(context, ClassRegistry.get("RwSpeakActivity"));
+        intent.putExtra(RwSpeakActivity.EXTRA_KEY_DONE_ICON, doneIcon);
+        intent.putExtra(RwSpeakActivity.EXTRA_KEY_DONE_TEXT, doneText);
+
         if (accepted) {
-            context.startActivity(new Intent(context, ClassRegistry.get("RwSpeakActivity")));
+            context.startActivity(intent);
         } else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
@@ -1200,7 +1237,7 @@ public class RwSpeakActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Settings.getSharedPreferences().edit().putBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, true).commit();
-                    context.startActivity(new Intent(context, ClassRegistry.get("RwSpeakActivity")));
+                    context.startActivity(intent);
                     dialog.dismiss();
                 }
             });

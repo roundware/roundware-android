@@ -177,6 +177,10 @@
 <string name="default_speak_question">What do you want to talk about?</string>
 
 <string name="please_wait">Please wait…</string>
+<string name="done_btn_label">Done</string>
+<string name="listen_more">Listen More</string>
+<string name="speak_more_btn_label">Record Another</string>
+
 
 <!-- Refine screen -->
 <string name="refine_title">Refine</string>

@@ -336,7 +336,10 @@ public class RwListenActivity extends Activity {
             @Override
             public void onClick(View v) {
                 stopPlayback();
-                RwSpeakActivity.showLegalDialogIfNeeded(RwListenActivity.this, mRwBinder);
+                RwSpeakActivity.showLegalDialogIfNeeded(RwListenActivity.this,
+                        mRwBinder,
+                        R.drawable.headphones_button,
+                        R.string.listen_more);
             }
         });
 
