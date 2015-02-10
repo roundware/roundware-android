@@ -304,6 +304,7 @@ public class RwSpeakActivity extends Activity {
             unbindService(rwConnection);
         }
 
+        stopRecordingLeadIn();
         mSoundPool.release();
         mSoundPool = null;
 

@@ -90,10 +90,10 @@
                             android:orientation="horizontal"
                             android:gravity="center"
                             android:background="#88ffffff"
-
                             android:layout_alignParentBottom="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp">
+
                         <org.roundware.rwapp.utils.LevelMeterView
                                 android:id="@+id/recordingLevelMeterView"
                                 android:layout_width="fill_parent"
