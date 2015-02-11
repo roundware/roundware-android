@@ -116,6 +116,8 @@ public class RwSpeakActivity extends Activity {
     private ViewFlipper mViewFlipper;
     protected ImageView mBackgroundImageView;
     private WebView mWebView;
+    private String mWebViewBaseUrl;
+    private String mWebViewData;
     private Button mAgreeButton;
     private Button mDeclineButton;
     private View mSpeakInstructionsView;
@@ -141,7 +143,6 @@ public class RwSpeakActivity extends Activity {
     private Handler mPlaybackHandler = null;
     private int mPlaybackTimerCount = 0;
     private boolean mIsRecordingGeneralFeedback = false;
-    private String mContentFileDir;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
 
@@ -176,13 +177,14 @@ public class RwSpeakActivity extends Activity {
             mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
             // get the folder where the web content files are stored
-            mContentFileDir = mRwBinder.getContentFilesDir();
-            if ((mWebView != null) && (mContentFileDir != null)) {
-                String contentFileName = mRwBinder.getContentFilesDir() + "speak.html";
+            String contentFileDir = mRwBinder.getContentFilesDir();
+            if ((mWebView != null) && (contentFileDir != null)) {
+                String contentFileName = contentFileDir + "speak.html";
                 try {
-                    String data = mRwBinder.readContentFile(contentFileName);
-                    data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
-                    mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
+                    mWebViewData = mRwBinder.readContentFile(contentFileName);
+                    mWebViewData = mWebViewData.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                    mWebViewBaseUrl = "file://" + contentFileName;
+                    mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e(TAG, "Problem loading content file: " + contentFileName);
