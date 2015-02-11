@@ -489,6 +489,7 @@ public class RwSpeakActivity extends Activity {
                 }
                 // open link in external browser
                 return super.shouldOverrideUrlLoading(view, url);
+
             }
 
             @Override
@@ -1061,6 +1062,7 @@ public class RwSpeakActivity extends Activity {
                 } else {
                     // no map available, hide view to show background
                     ll.setVisibility(View.INVISIBLE);
+                    mBackgroundImageView.setVisibility(View.VISIBLE);
                     mViewFlipper.showNext();
                     // showRecordingSubmittedDialog();
                 }
@@ -1276,6 +1278,7 @@ public class RwSpeakActivity extends Activity {
     }
 
     private void showRecord() {
+        mBackgroundImageView.setVisibility(View.VISIBLE);
         mViewFlipper.setDisplayedChild(RECORD_LAYOUT);
 
         mTitleView.setText(R.string.record_button);
@@ -1287,14 +1290,17 @@ public class RwSpeakActivity extends Activity {
     }
 
     private void showFilters() {
+        mBackgroundImageView.setVisibility(View.INVISIBLE);
         mViewFlipper.setDisplayedChild(FILTER_LAYOUT);
     }
 
     private void showThanks() {
+        mBackgroundImageView.setVisibility(View.INVISIBLE);
         mViewFlipper.setDisplayedChild(THANKS_LAYOUT);
     }
 
     private void showGeneralFeedback() {
+        mBackgroundImageView.setVisibility(View.VISIBLE);
         mViewFlipper.setDisplayedChild(RECORD_LAYOUT);
 
         mTitleView.setText(R.string.speak_feedback_header_text);
