@@ -143,6 +143,7 @@ public class RwSpeakActivity extends Activity {
     private Handler mPlaybackHandler = null;
     private int mPlaybackTimerCount = 0;
     private boolean mIsRecordingGeneralFeedback = false;
+    private boolean mIsPendingFilterLoad = false;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
 
@@ -496,6 +497,10 @@ public class RwSpeakActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 if (mAgreeButton != null) {
                     mAgreeButton.setEnabled(true);
+                }
+                if(mIsPendingFilterLoad){
+                    mIsPendingFilterLoad = false;
+                    showFilters();
                 }
                 super.onPageFinished(view, url);
             }
@@ -1323,8 +1328,8 @@ public class RwSpeakActivity extends Activity {
                 return;
             case RECORD_LAYOUT:
                 if (!mIsRecordingGeneralFeedback) {
+                    mIsPendingFilterLoad = true;
                     mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
-                    showFilters();
                     return;
                 }
         }
