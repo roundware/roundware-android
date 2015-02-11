@@ -156,6 +156,7 @@ public class RwSpeakActivity extends Activity {
     private View.OnClickListener mSubmitListener;
     private View.OnClickListener mCancelListener;
 
+
     /**
      * Handles connection state to an RWService Android Service. In this
      * activity it is assumed that the service has already been started
@@ -228,6 +229,7 @@ public class RwSpeakActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_speak);
 
         mMapView = (MapView) findViewById(R.id.map);
@@ -300,6 +302,7 @@ public class RwSpeakActivity extends Activity {
         registerReceiver(rwReceiver, filter);
 
         updateUIState();
+
         super.onResume();
     }
 
@@ -753,7 +756,9 @@ public class RwSpeakActivity extends Activity {
             @Override
             public void run() {
                 if (mLeadInCounter < mLeadInSoundIds.length) {
-                    if (D) { Log.d(TAG, "playing lead in sound " + mLeadInCounter); }
+                    if (D) {
+                        Log.d(TAG, "playing lead in sound " + mLeadInCounter);
+                    }
                     mSoundPool.play(mLeadInSoundIds[mLeadInCounter], 1, 1, 0, 0, 1);
                 }
                 mLeadInCounter++;
@@ -762,8 +767,10 @@ public class RwSpeakActivity extends Activity {
                     @Override
                     public void run() {
                         if (mLeadInCounter < mLeadInText.length) {
-                            if (D) { Log.d(TAG, "displaying lead in text '" + mLeadInText[mLeadInCounter-1] + "'"); }
-                            mRecordingTimeText.setText(mLeadInText[mLeadInCounter-1]);
+                            if (D) {
+                                Log.d(TAG, "displaying lead in text '" + mLeadInText[mLeadInCounter - 1] + "'");
+                            }
+                            mRecordingTimeText.setText(mLeadInText[mLeadInCounter - 1]);
                         }
                     }
                 });
@@ -772,7 +779,9 @@ public class RwSpeakActivity extends Activity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (D) { Log.d(TAG, "stopping lead in"); }
+                            if (D) {
+                                Log.d(TAG, "stopping lead in");
+                            }
                             stopRecordingLeadIn();
                             startRecording();
                         }
