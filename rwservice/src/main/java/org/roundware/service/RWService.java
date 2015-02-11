@@ -342,7 +342,11 @@ import java.util.TimerTask;
             try {
                 debugLog("reset: " + playUrl);
                 synchronized (this) {
-                    mPlayer.reset();
+                    if(mPlayer == null){
+                        createPlayer();
+                    }else {
+                        mPlayer.reset();
+                    }
                     mPlayer.setDataSource(playUrl);
                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     debugLog("Preparing: " + playUrl);
@@ -942,7 +946,7 @@ import java.util.TimerTask;
                         configuration.getSessionId(), lat, lon, location.getProvider(),
                         location.getAccuracy()), null);
             }
-                rwSendMoveListener(true);
+            rwSendMoveListener(true);
             broadcastLocationUpdate(lat, lon, location.getProvider(), location.getAccuracy());
         }
     }
@@ -1321,7 +1325,7 @@ import java.util.TimerTask;
      * @return server response, empty string when queued
      */
     public String rwSendMoveListener(boolean now) {
-        if (configuration.getSessionId() != null ) {
+        if (configuration.getSessionId() != null && isPrepared) {
             return perform(mActionFactory.createModifyStreamAction(), now);
         }
         return null;
