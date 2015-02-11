@@ -22,8 +22,21 @@
             android:outAnimation="@anim/out_to_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".SpeakActivity"
-            android:visibility="gone">
+            tools:context=".SpeakActivity">
+
+            <!-- web view (filters) -->
+            <RelativeLayout
+                android:id="@+id/speakFilterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#55ffffff">
+
+                <WebView
+                    android:id="@+id/speakFilterWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </RelativeLayout>
 
             <!-- recording view -->
             <RelativeLayout
@@ -196,21 +209,6 @@
 
                 </LinearLayout>
             </RelativeLayout>
-
-            <!-- web view (filters) -->
-            <RelativeLayout
-                android:id="@+id/speakFilterLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#55ffffff">
-
-                <WebView
-                    android:id="@+id/speakFilterWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </RelativeLayout>
-
 
             <!-- thank you view -->
             <FrameLayout

@@ -47,15 +47,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.roundware.rwapp.utils.ClassRegistry;
+import org.roundware.rwapp.utils.LevelMeterView;
+import org.roundware.rwapp.utils.Utils;
 import org.roundware.service.RW;
 import org.roundware.service.RWRecordingTask;
 import org.roundware.service.RWService;
 import org.roundware.service.RWTags;
 import org.roundware.service.util.RWList;
 import org.roundware.service.util.RWListItem;
-
-import org.roundware.rwapp.utils.LevelMeterView;
-import org.roundware.rwapp.utils.Utils;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -100,9 +99,18 @@ public class RwSpeakActivity extends Activity {
 
 
     // NOTE: Order must match R.layout.activity_speak
-    private static final int RECORD_LAYOUT = 0;
-    private static final int FILTER_LAYOUT = 1;
+    private static final int FILTER_LAYOUT = 0;
+    private static final int RECORD_LAYOUT = 1;
     private static final int THANKS_LAYOUT = 2;
+
+    private enum RecordingState{
+        RECORDING_PROMPT,
+        LEADIN_COUNTDOWN,
+        RECORDING,
+        PLAYBACK_PROMPT,
+        PLAYBACK
+    };
+    private RecordingState mCurrentRecordingState = RecordingState.RECORDING_PROMPT;
 
     // fields
     private ViewFlipper mViewFlipper;
@@ -566,8 +574,11 @@ public class RwSpeakActivity extends Activity {
         } else {
             // connected to RWService
 
+
+            //FIXME remove below!
             // Show LegalDialog if needed
-            mViewFlipper.setVisibility(View.VISIBLE);
+            //FIXME flicker!
+            //mViewFlipper.setVisibility(View.VISIBLE);
             if (mIsRecordingGeneralFeedback) {
                 showGeneralFeedback();
             } else {
@@ -1035,7 +1046,7 @@ public class RwSpeakActivity extends Activity {
                     ll.setVisibility(View.VISIBLE);
                     Location loc = mRwBinder.getLastKnownLocation();
                     showMarkerOnMap(loc.getLatitude(), loc.getLongitude());
-                    mViewFlipper.setDisplayedChild(THANKS_LAYOUT);
+                    showThanks();
                 } else {
                     // no map available, hide view to show background
                     ll.setVisibility(View.INVISIBLE);
@@ -1280,5 +1291,33 @@ public class RwSpeakActivity extends Activity {
         mRightTitleButton.setVisibility(View.VISIBLE);
         mRightTitleButton.setText(R.string.cancel);
         mRightTitleButton.setOnClickListener(mCancelListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        switch (mViewFlipper.getDisplayedChild()){
+            case THANKS_LAYOUT:
+                if (!mIsRecordingGeneralFeedback) {
+                    showRecord();
+                }else{
+                    showGeneralFeedback();
+                }
+                setRecordingState(RecordingState.RECORDING_PROMPT);
+                return;
+            case RECORD_LAYOUT:
+                if (!mIsRecordingGeneralFeedback) {
+                    mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
+                    showFilters();
+                    return;
+                }
+        }
+        super.onBackPressed();
+    }
+
+    private void setRecordingState( RecordingState state ){
+        this.mCurrentRecordingState = state;
+        switch(state){
+            //TODO
+        }
     }
 }
