@@ -1548,6 +1548,7 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing 
      * @return server response, empty string when queued
      */
+    //FIXME do on another thread?
     protected String perform(RWAction action, boolean now) {
         if (now) {
             return perform(action);
