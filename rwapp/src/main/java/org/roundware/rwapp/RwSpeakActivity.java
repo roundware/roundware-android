@@ -1013,9 +1013,9 @@ public class RwSpeakActivity extends Activity {
 
                 // open Thank You screen
                 LinearLayout ll = (LinearLayout) findViewById(R.id.speakMapViewLinearLayout);
-                if (mGoogleMap != null) {
+                Location loc = mRwBinder.getLastKnownLocation();
+                if (mGoogleMap != null && loc != null) {
                     ll.setVisibility(View.VISIBLE);
-                    Location loc = mRwBinder.getLastKnownLocation();
                     showMarkerOnMap(loc.getLatitude(), loc.getLongitude());
                 } else {
                     // no map available, hide view to show background
