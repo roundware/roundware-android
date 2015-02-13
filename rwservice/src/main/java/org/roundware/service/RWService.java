@@ -133,7 +133,7 @@ import java.util.TimerTask;
     private String mNotificationTitle;
     private String mNotificationDefaultText;
     private int mNotificationIconId;
-    private Class<?> mNotificationActivity;
+    private Class<?> mNotificationActivity = null;
 
     private String mContentFilesLocalDir = null;
     private boolean mAlwaysDownloadContent = false;
@@ -752,23 +752,25 @@ import java.util.TimerTask;
         if (intent != null) {
             getSettingsFromIntent(intent);
         }
-        
-        // create a pending intent to start the specified activity from the notification
-        Intent ovIntent = new Intent(this, mNotificationActivity);
-        //FIXME new_task?
-        mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        //FIXME remove notification onStop
-        // create a notification and move service to foreground
-        mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
-        mRwNotification.number = 1;
-        mRwNotification.flags = mRwNotification.flags
-                | Notification.FLAG_FOREGROUND_SERVICE
-                | Notification.FLAG_ONGOING_EVENT
-                | Notification.FLAG_NO_CLEAR;
-        setNotificationText("");
+        if( mNotificationActivity != null) {
+            // create a pending intent to start the specified activity from the notification
+            Intent ovIntent = new Intent(this, mNotificationActivity);
+            //FIXME new_task?
+            mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        startForeground(NOTIFICATION_ID, mRwNotification);
+            //FIXME remove notification onStop
+            // create a notification and move service to foreground
+            mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
+            mRwNotification.number = 1;
+            mRwNotification.flags = mRwNotification.flags
+                    | Notification.FLAG_FOREGROUND_SERVICE
+                    | Notification.FLAG_ONGOING_EVENT
+                    | Notification.FLAG_NO_CLEAR;
+            setNotificationText("");
+
+            startForeground(NOTIFICATION_ID, mRwNotification);
+        }
 
         // start initializing the Roundware session, this will attempt to get the configuration, tags and content
         manageSessionState(SessionState.INITIALIZING);
@@ -897,8 +899,14 @@ import java.util.TimerTask;
                     mNotificationActivity = Class.forName(className);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Unknown class specified for handling " + "notification: " + className);
-                mNotificationActivity = null;
+                try{
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); //getClassLoader();
+                    mNotificationActivity = classLoader.loadClass(className);
+                } catch (ClassNotFoundException e1) {
+                    Log.e(TAG, "Unknown class specified for handling " + "notification: " + className);
+                    mNotificationActivity = null;
+
+                }
             }
         }
     }
