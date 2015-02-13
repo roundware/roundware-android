@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -1252,7 +1253,7 @@ public class RwSpeakActivity extends Activity {
     }
 
     private void showThanks() {
-        mBackgroundImageView.setVisibility(View.INVISIBLE);
+        mBackgroundImageView.setVisibility(mGoogleMap == null ? View.VISIBLE : View.INVISIBLE);
         mViewFlipper.setDisplayedChild(THANKS_LAYOUT);
     }
 
@@ -1302,7 +1303,9 @@ public class RwSpeakActivity extends Activity {
         {
             case FILTER_LAYOUT:
                 mIsPendingFilterLoad = true;
-                mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
+                if(!TextUtils.isEmpty(mWebViewBaseUrl)) {
+                    mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
+                }
                 break;
             case RECORD_LAYOUT:
                 //? setRecordingState(RecordingState.RECORD_PROMPT);
