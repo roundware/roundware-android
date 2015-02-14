@@ -22,10 +22,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.StrictMode;
 import android.text.TextUtils;
@@ -170,153 +170,115 @@ import java.util.TimerTask;
 
     
     /**
-     * Async Task to retrieve the configuration settings for a project from
+     * Retrieves the configuration settings for a project from
      * the server. When the request is successful it will also start the timer
      * that controls the queue processing and sending idle pings when playing
      * a stream and there is no other activity. 
      */
-    private class RetrieveConfigurationTask extends AsyncTask<Void, Void, String> {
+    void retrieveConfiguration(final Context context, final String deviceId, final String projectId) {
+        debugLog("Retrieving configuration for project");
+        perform(mActionFactory.createRetrieveProjectConfigurationAction(deviceId, projectId), true,
+                new ServicePerformListener() {
 
-        private Context context = null;
-        private String deviceId = null;
-        private String projectId = null;
+                    @Override
+                    public void onPerformComplete(String result) {
+                        debugLog("Retrieve project configuration result: " + result);
 
-        public RetrieveConfigurationTask(Context context, String deviceId, String projectId) {
-            this.context = context;
-            this.deviceId = deviceId;
-            this.projectId = projectId;
-        }
+                        // try to use cache when no server data received
+                        boolean usingCache = false;
+                        if (result == null) {
+                            result = RWSharedPrefsHelper.loadJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId);
+                            usingCache = true;
+                        } else {
+                            // cache current data
+                            RWSharedPrefsHelper.saveJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId, result);
+                        }
 
-        @Override
-        protected String doInBackground(Void... params) {
-            debugLog("Retrieving configuration for project");
-            return perform(mActionFactory.createRetrieveProjectConfigurationAction(deviceId, projectId), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Retrieve project configuration result: " + result);
-
-            // try to use cache when no server data received
-            boolean usingCache = false;
-            if (result == null) {
-                result = RWSharedPrefsHelper.loadJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId);
-                usingCache = true;
-            } else {
-                // cache current data
-                RWSharedPrefsHelper.saveJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId, result);
-            }
-
-            if (result == null) {
-                Log.i(TAG, "Could not retrieve configuration data from server and no cached data available!");
-                broadcast(RW.NO_CONFIGURATION);
-            } else {
-                configuration.assignFromJsonServerResponse(result, usingCache);
-                if (usingCache) {
-                    configuration.setSessionId("-1");
+                        if (result == null) {
+                            Log.i(TAG, "Could not retrieve configuration data from server and no cached data available!");
+                            broadcast(RW.NO_CONFIGURATION);
+                        } else {
+                            configuration.assignFromJsonServerResponse(result, usingCache);
+                            if (usingCache) {
+                                configuration.setSessionId("-1");
+                            }
+                            broadcast(RW.CONFIGURATION_LOADED);
+                        }
+                    }
                 }
-                broadcast(RW.CONFIGURATION_LOADED);
-            }
-        }
+        );
     }
 
-
     /**
-     * Async Task to retrieve the configuration settings for a project from
+     * Retrieves the configuration settings for a project from
      * the server. When the request is successful it will also start the timer
      * that controls the queue processing and sending idle pings when playing
      * a stream and there is no other activity. 
      */
-    private class RetrieveTagsTask extends AsyncTask<Void, Void, String> {
+    private void retrieveTags(final Context context, final String projectId) {
+        perform(mActionFactory.createRetrieveTagsForProjectAction(projectId), true, new ServicePerformListener() {
+            @Override
+            public void onPerformComplete(String result) {
+                debugLog("Retrieve project tags result: " + result);
 
-        private Context context = null;
-        private String projectId = null;
+                // try to use cache when no server data received
+                boolean usingCache = false;
+                if (result == null) {
+                    result = RWSharedPrefsHelper.loadJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId);
+                    usingCache = true;
+                } else {
+                    // cache current data
+                    RWSharedPrefsHelper.saveJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId, result);
+                }
 
-        public RetrieveTagsTask(Context context, String projectId) {
-            this.context = context;
-            this.projectId = projectId;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            debugLog("Retrieving tags for project");
-            return perform(mActionFactory.createRetrieveTagsForProjectAction(projectId), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Retrieve project tags result: " + result);
-
-            // try to use cache when no server data received
-            boolean usingCache = false;
-            if (result == null) {
-                result = RWSharedPrefsHelper.loadJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId);
-                usingCache = true;
-            } else {
-                // cache current data
-                RWSharedPrefsHelper.saveJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId, result);
+                if (result == null) {
+                    Log.w(TAG, "Could not retrieve tags data from server and no cached data available!");
+                    broadcast(RW.NO_TAGS);
+                } else {
+                    tags.fromJson(result, usingCache ? RWTags.FROM_CACHE : RWTags.FROM_SERVER);
+                    broadcast(RW.TAGS_LOADED);
+                }
             }
-            
-            if (result == null) {
-                Log.w(TAG, "Could not retrieve tags data from server and no cached data available!");
-                broadcast(RW.NO_TAGS);
-            } else {
-                tags.fromJson(result, usingCache ? RWTags.FROM_CACHE : RWTags.FROM_SERVER);
-                broadcast(RW.TAGS_LOADED);
-            }
-        }
+        });
     }
     
     
     /**
-     * Async Task to start play back of a sound stream from the server. When the
+     * Starts play back of a sound stream from the server. When the
      * request is successful it will also start the ping timer that sends heart
      * beats back to the server.
      */
-    private class StartPlaybackTask extends AsyncTask<Void, Void, String> {
-        
-        private RWList selections;
-        
-        public StartPlaybackTask(RWList tags) {
-            this.selections = tags;
-        }
-        
-        @Override
-        protected String doInBackground(Void... params) {
-            // start initial stream without selection
-            debugLog("Starting Playback from Service");
-            return perform(mActionFactory.createRequestStreamAction(selections), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Starting Playback from Service result: " + result);
-            // check for errors
-            mStreamUrl = null;
-            if (result == null) {
-                Log.e(TAG, "Operation failed, no response available to start audio stream from.", null);
-                broadcast(RW.UNABLE_TO_PLAY);
-            } else {
-                String streamUrlKey = getString(R.string.rw_key_stream_url);
-                try {
-                    JSONObject jsonObj = new JSONObject(result);
-                    mStreamUrl = jsonObj.optString(streamUrlKey, null);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Invalid response from server", e);
-                    broadcast(RW.UNABLE_TO_PLAY);
-                }
-                
-                if ((mStreamUrl == null) || (mStreamUrl.length() == 0)) {
+    private void startPlayback(RWList tags) {
+        RWList selections = tags;
+        perform(mActionFactory.createRequestStreamAction(selections), true, new ServicePerformListener() {
+            @Override
+            public void onPerformComplete(String result) {
+                debugLog("Starting Playback from Service result: " + result);
+                // check for errors
+                mStreamUrl = null;
+                if (result == null) {
+                    Log.e(TAG, "Operation failed, no response available to start audio stream from.", null);
                     broadcast(RW.UNABLE_TO_PLAY);
                 } else {
-                    preparePlayer(0);
+                    String streamUrlKey = getString(R.string.rw_key_stream_url);
+                    try {
+                        JSONObject jsonObj = new JSONObject(result);
+                        mStreamUrl = jsonObj.optString(streamUrlKey, null);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Invalid response from server", e);
+                        broadcast(RW.UNABLE_TO_PLAY);
+                    }
+
+                    if ((mStreamUrl == null) || (mStreamUrl.length() == 0)) {
+                        broadcast(RW.UNABLE_TO_PLAY);
+                    } else {
+                        preparePlayer(0);
+                    }
                 }
             }
-        }
+        });
     }
+
     private void preparePlayer(int startingErrorCount ){
         this.errorCount = startingErrorCount;
         preparePlayer();
@@ -458,7 +420,7 @@ import java.util.TimerTask;
                 manageSessionState(SessionState.UNINITIALIZED);
             } else if (RW.CONTENT_LOADED.equalsIgnoreCase(intent.getAction())) {
                 if (mSessionState != SessionState.ON_LINE) {
-                    new RetrieveTagsTask(context, configuration.getProjectId()).execute();
+                    retrieveTags(context, configuration.getProjectId());
                 }                
             } else if (RW.NO_CONTENT.equalsIgnoreCase(intent.getAction())) {
                 manageSessionState(SessionState.UNINITIALIZED);
@@ -844,7 +806,7 @@ import java.util.TimerTask;
         debugLog("+++ playbackStart +++");
         if (!isPlaying()) {
             createPlayer();
-            new StartPlaybackTask(tags).execute();
+            startPlayback(tags);
         }
     }
     
@@ -1330,45 +1292,16 @@ import java.util.TimerTask;
      * current location (latitude, longitude) of the device.
      * 
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
+    //ct
     public String rwSendMoveListener(boolean now) {
         if (configuration.getSessionId() != null && isPrepared) {
-            return perform(mActionFactory.createModifyStreamAction(), now);
+            return perform(mActionFactory.createModifyStreamAction(), now, null);
         }
         return null;
     }
     
-    
-    /**
-     * Retrieves information about the asset currently being streamed by the
-     * Roundware server, if the project supports metadata and audio is playing
-     * and not playing the static soundtrack.
-     * 
-     * Note that the Android buffers streaming audio so the asset streamed by
-     * the server is not directly audible on the device.
-     *  
-     * @return server response, see the Roundware protocol documentation
-     */
-    public String rwGetCurrentStreamingAsset() {
-        if (configuration.isStreamMetadataEnabled() && isPlaying() && !isPlayingStaticSoundtrack()) {
-            return perform(mActionFactory.createRetrieveLastStreamedAssetInfoAction(), true);
-        }
-        return null;
-    }
-    
-    
-    /**
-     * Retrieves information about the specified asset from the Roundware
-     * server, if it exists.
-     *  
-     * @param assetId of asset to retrieve information for
-     * @return server response, see the Roundware protocol documentation
-     */
-    public String rwGetAssetInfo(int assetId) {
-        return perform(mActionFactory.createRetrieveAssetInfoAction(assetId), true);
-    }
-
 
     /**
      * Sends a heartbeat call to the Roundware server, to let it know we
@@ -1378,9 +1311,10 @@ import java.util.TimerTask;
      * 
      * @return server response
      */
+    //ct
     public String rwSendHeartbeat() {
         if (configuration.getSessionId() != null) {
-            String response = perform(mActionFactory.createHeartbeatAction(), true);
+            String response = perform(mActionFactory.createHeartbeatAction(), true, null);
             broadcast(RW.HEARTBEAT_SENT);
             return response;
         }
@@ -1396,10 +1330,11 @@ import java.util.TimerTask;
      * @param tags to include in log event, may be null
      * @param data to include in log event, may be null
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
+    //ct
     public String rwSendLogEvent(int eventTypeResId, RWList tags, String data, boolean now) {
-        return perform(mActionFactory.createLogEventAction(eventTypeResId, tags, data), now);
+        return perform(mActionFactory.createLogEventAction(eventTypeResId, tags, data), now, null);
     }
     
 
@@ -1414,26 +1349,28 @@ import java.util.TimerTask;
      * @param voteType to apply
      * @param voteValue to apply, can be null
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
+    //safe
     public String rwSendVoteAsset(int assetId, String voteType, String voteValue, boolean now) {
-        return perform(mActionFactory.createVoteAssetAction(assetId, voteType, voteValue), now);
+        return perform(mActionFactory.createVoteAssetAction(assetId, voteType, voteValue), now, null);
     }
 
-    
+
     /**
      * Sends a call to the Roundware server to request an audio stream
      * based on the specified selections of tags options.
-     * 
+     *
      * @param tags of tags options for the audio
-     * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @param now True to sent immediately, false for queued processing
+     * @return server response, empty string when queued or on ui thread
      */
+    //na
     public String rwRequestStream(RWList tags, boolean now) {
-        return perform(mActionFactory.createRequestStreamAction(tags), now);
+        return perform(mActionFactory.createRequestStreamAction(tags), now, null);
     }
 
-    
+
     /**
      * Sends a call to the Roundware server to request modifying of the
      * already streaming audio stream based on the specified selections
@@ -1441,10 +1378,11 @@ import java.util.TimerTask;
      * 
      * @param tags of tags options for the audio
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
+    //safe
     public String rwModifyStream(RWList tags, boolean now) {
-        return perform(mActionFactory.createModifyStreamAction(tags), now);
+        return perform(mActionFactory.createModifyStreamAction(tags), now, null);
     }
     
     
@@ -1454,9 +1392,10 @@ import java.util.TimerTask;
      * 
      * @return server response, see the Roundware protocol documentation
      */
+    //na
     public String rwSkipAhead() {
         //TODO notify metadata listener that current metadata is null
-        return perform(mActionFactory.createSkipAheadAction(), true);
+        return perform(mActionFactory.createSkipAheadAction(), true, null);
     }
     
     
@@ -1465,10 +1404,12 @@ import java.util.TimerTask;
      * specified asset into the audio stream.
      * 
      * @param assetId of recording to be inserted into the stream
-     * @return server response, see the Roundware protocol documentation
+     * @return server response, see the Roundware protocol documentation,
+     * empty string when queued or on ui thread
      */
+    //na
     public String rwPlayAssetInStream(int assetId) {
-        return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true);
+        return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true, null);
     }
 
     
@@ -1485,19 +1426,25 @@ import java.util.TimerTask;
      * @param submitted for stream (Y) or not (N), null to ignore
      * @param now True to sent immediately, false for queued processing
      * @param sharingBroadcast True to broadcast an RW_SHARING_MESSAGE
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      * @throws Exception when temporary file could not be created
      */
+    //safe
     public String rwSubmit(RWList tags, String filename, String submitted, boolean now, boolean sharingBroadcast) throws Exception {
         // create an action to create an asset envelope and perform it directly
         int envelopeId = -1;
+        if(Looper.myLooper() == Looper.getMainLooper()){
+            throw new Exception("do not call on main thread!");
+        }
 
         // create a temporary copy of the recording file
         File queueFile = RWActionQueue.instance().createTemporaryQueueFile(filename);
 
         // try to open an envelope on the server
         RWAction createEnvelopeAction = mActionFactory.createCreateEnvelopeAction(tags);
-        String jsonResponse = perform(createEnvelopeAction, true);
+        String jsonResponse = perform(createEnvelopeAction, true, null);
+
+
         if (jsonResponse != null) {
             String envelopeKey = getString(R.string.rw_key_envelope_id);
             JSONObject jsonObj = new JSONObject(jsonResponse);
@@ -1509,7 +1456,7 @@ import java.util.TimerTask;
 
         if (envelopeId == -1) {
             // envelope could not be created, queue action for later processing
-            return perform(addAssetAction, false);
+            return perform(addAssetAction, false, null);
         } else {
             // when submitting directly, send out a sharing broadcast to apps
             if ((now) && (sharingBroadcast)) {
@@ -1526,24 +1473,24 @@ import java.util.TimerTask;
                 } else {
                     url = configuration.getSharingUrl();
                 }
-                
+
                 // replace placeholder with evelope id
                 url = url.replace("[id]", envId);
-                
+
                 // get location details
                 Double lat = addAssetAction.getLatitude();
                 Double lon = addAssetAction.getLongitude();
                 Double acc = addAssetAction.getAccuracy();
-                
+
                 // send the broadcast message
                 broadcastSharingMessage(msg, url, envId, lat, lon, acc);
             }
             // start the actual file upload, or place in queue
-            return perform(addAssetAction, now);
+            return perform(addAssetAction, now, null);
         }
     }
 
-    
+
     /**
      * Performs a server call for the specified RWAction instance. It can
      * either be handled directly (i.e. the request is created, sent to the
@@ -1555,13 +1502,31 @@ import java.util.TimerTask;
      * queue when it concerns file uploads.
      * 
      * @param action to perform as Roundware server call
-     * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @param now True is sent immediately on non-ui thread, false for queued processing
+     * @param listener to update on result
+     * @return server response, empty string when queued or on ui thread
      */
-    //FIXME do on another thread?
-    protected String perform(RWAction action, boolean now) {
+    protected String perform(final RWAction action, boolean now, final ServicePerformListener listener) {
         if (now) {
-            return perform(action);
+            if(Looper.myLooper() == Looper.getMainLooper()) {
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        String result = perform(action);
+                        if(listener != null){
+                            listener.onPerformComplete(result);
+                        }
+                    }
+                }).start();
+                return "";
+            }else{
+                String result = perform(action);
+                if(listener != null){
+                    listener.onPerformComplete(result);
+                }
+                return result;
+            }
         } else {
             RWActionQueue.instance().add(action.getProperties());
             setNotificationText(null);
@@ -1570,7 +1535,7 @@ import java.util.TimerTask;
             String msg = "Action placed in queued";
             Log.i(TAG, msg, null);
             broadcastActionQueued(action, TAG + ": " + msg, null);
-            
+
             return "";
         }
     }
@@ -1579,7 +1544,9 @@ import java.util.TimerTask;
     /**
      * Handles the setting of notification texts and broadcasting intents
      * surround the calling of the action.perform() method (that does the
-     * actual calling of the server).
+     * actual calling of the server). Performs on this thread!
+     * @see org.roundware.service.RWService#perform(RWAction, boolean,
+     * org.roundware.service.RWService.ServicePerformListener)
      * 
      * @param action to be executed
      * @return server response
@@ -1827,7 +1794,7 @@ import java.util.TimerTask;
                 playbackStop();
                 break;
             case INITIALIZING:
-                new RetrieveConfigurationTask(this, configuration.getDeviceId(), configuration.getProjectId()).execute();
+                retrieveConfiguration(this, configuration.getDeviceId(), configuration.getProjectId());
                 break;
             case ON_LINE:
                 // refresh configuration after threshold time so session ID can be refreshed
@@ -1835,11 +1802,11 @@ import java.util.TimerTask;
                 long millis = System.currentTimeMillis();
                 if ((millis - mLastStateChangeMsec) > (configuration.getHeartbeatTimerSec() * 5)) {
                     // project ID assumed to be already in configuration and not changing!
-                    new RetrieveConfigurationTask(this, configuration.getDeviceId(), configuration.getProjectId()).execute();
+                    retrieveConfiguration(this, configuration.getDeviceId(), configuration.getProjectId());
                 }
                 // refresh tags
                 if (tags.getDataSource() != RWTags.FROM_SERVER) {
-                    new RetrieveTagsTask(this, configuration.getProjectId()).execute();
+                    retrieveTags(this, configuration.getProjectId());
                 }
                 startQueueTimer();
                 startLocationUpdates();
@@ -2206,5 +2173,9 @@ import java.util.TimerTask;
         if(D){
             Log.d(TAG, msg);
         }
+    }
+
+    private interface ServicePerformListener{
+        public void onPerformComplete(String result);
     }
 }
