@@ -1294,7 +1294,6 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing 
      * @return server response, empty string when queued or on ui thread
      */
-    //ct
     public String rwSendMoveListener(boolean now) {
         if (configuration.getSessionId() != null && isPrepared) {
             return perform(mActionFactory.createModifyStreamAction(), now, null);
@@ -1311,7 +1310,6 @@ import java.util.TimerTask;
      * 
      * @return server response
      */
-    //ct
     public String rwSendHeartbeat() {
         if (configuration.getSessionId() != null) {
             String response = perform(mActionFactory.createHeartbeatAction(), true, null);
@@ -1332,7 +1330,6 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing 
      * @return server response, empty string when queued or on ui thread
      */
-    //ct
     public String rwSendLogEvent(int eventTypeResId, RWList tags, String data, boolean now) {
         return perform(mActionFactory.createLogEventAction(eventTypeResId, tags, data), now, null);
     }
@@ -1351,7 +1348,6 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing 
      * @return server response, empty string when queued or on ui thread
      */
-    //safe
     public String rwSendVoteAsset(int assetId, String voteType, String voteValue, boolean now) {
         return perform(mActionFactory.createVoteAssetAction(assetId, voteType, voteValue), now, null);
     }
@@ -1365,7 +1361,6 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing
      * @return server response, empty string when queued or on ui thread
      */
-    //na
     public String rwRequestStream(RWList tags, boolean now) {
         return perform(mActionFactory.createRequestStreamAction(tags), now, null);
     }
@@ -1380,7 +1375,6 @@ import java.util.TimerTask;
      * @param now True to sent immediately, false for queued processing 
      * @return server response, empty string when queued or on ui thread
      */
-    //safe
     public String rwModifyStream(RWList tags, boolean now) {
         return perform(mActionFactory.createModifyStreamAction(tags), now, null);
     }
@@ -1392,7 +1386,6 @@ import java.util.TimerTask;
      * 
      * @return server response, see the Roundware protocol documentation
      */
-    //na
     public String rwSkipAhead() {
         //TODO notify metadata listener that current metadata is null
         return perform(mActionFactory.createSkipAheadAction(), true, null);
@@ -1407,7 +1400,6 @@ import java.util.TimerTask;
      * @return server response, see the Roundware protocol documentation,
      * empty string when queued or on ui thread
      */
-    //na
     public String rwPlayAssetInStream(int assetId) {
         return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true, null);
     }
@@ -1429,7 +1421,6 @@ import java.util.TimerTask;
      * @return server response, empty string when queued or on ui thread
      * @throws Exception when temporary file could not be created
      */
-    //safe
     public String rwSubmit(RWList tags, String filename, String submitted, boolean now, boolean sharingBroadcast) throws Exception {
         // create an action to create an asset envelope and perform it directly
         int envelopeId = -1;
