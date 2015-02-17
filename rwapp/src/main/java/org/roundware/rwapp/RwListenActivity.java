@@ -290,6 +290,7 @@ public class RwListenActivity extends Activity {
         mHomeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mRwBinder.playbackStop();
+                finish();
                 //FIXME: Homebutton should be removed.
             }
         });
