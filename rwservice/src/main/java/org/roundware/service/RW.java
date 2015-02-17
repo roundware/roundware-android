@@ -379,6 +379,12 @@ public class RW {
     // --------------------------------------------------------------------------------------------
 
 
+    /**
+     * Some place way off-site
+     */
+    public final static float LOCATION_OFF_SHORE_LON = -125.0f;
+    public final static float LOCATION_OFF_SHORE_LAT = 35.0f;
+
     public final static boolean DEBUG_W_FAUX_TAGS = false;
     public static int DEBUG_FAUX_TAG = 0;
 }

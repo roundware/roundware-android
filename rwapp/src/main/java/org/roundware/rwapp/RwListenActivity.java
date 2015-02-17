@@ -90,7 +90,7 @@ public class RwListenActivity extends Activity {
 
 //    private ToggleButton mLikeButton;
 //    private ToggleButton mFlagButton;
-    private int mVolumeLevel = 80;
+    private final static int VOLUME_ON_LEVEL = 80;
     private RWService mRwBinder;
     private RWTags mProjectTags;
     private RWList mTagsList;
@@ -112,7 +112,7 @@ public class RwListenActivity extends Activity {
             mRwBinder = ((RWService.RWServiceBinder) service).getService();
             startPlayback();
             // mRwBinder.playbackFadeIn(mVolumeLevel);
-            mRwBinder.setVolumeLevel(mVolumeLevel, false);
+            mRwBinder.setVolumeLevel(VOLUME_ON_LEVEL, false);
 
             // create a tags list for display and selection
             mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
@@ -251,8 +251,6 @@ public class RwListenActivity extends Activity {
         filter.addAction(RW.STREAM_BUFFERING_START);
         filter.addAction(RW.STREAM_BUFFERING_END);
         registerReceiver(rwReceiver, filter);
-
-        startPlayback();
     }
 
 
@@ -365,7 +363,7 @@ public class RwListenActivity extends Activity {
                     }
                     mRwBinder.playbackStart(mTagsList);
                 }
-                mRwBinder.playbackFadeIn(mVolumeLevel);
+                mRwBinder.playbackFadeIn(VOLUME_ON_LEVEL);
             }
         }
         updateUIState();
@@ -374,7 +372,6 @@ public class RwListenActivity extends Activity {
 
     private void stopPlayback() {
         sendVotingState(mCurrentAssetId);
-        mVolumeLevel = mRwBinder.getVolumeLevel();
         mRwBinder.playbackFadeOut();
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
