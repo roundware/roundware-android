@@ -748,7 +748,6 @@ import java.util.TimerTask;
         mRwNotification = builder.build();
         // create a notification and move service to foreground
         ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
-        mRwNotification.number = 1;
         mRwNotification.flags = mRwNotification.flags
                 | Notification.FLAG_FOREGROUND_SERVICE
                 | Notification.FLAG_ONGOING_EVENT
