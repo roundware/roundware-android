@@ -84,7 +84,7 @@ public class RwMainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mRwBinder = ((RWService.RWServiceBinder) service).getService();
-            updateServerForPreferences();
+            updateServiceForPreferences();
         }
 
         @Override
@@ -108,7 +108,7 @@ public class RwMainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             if (RW.SESSION_ON_LINE.equals(intent.getAction())) {
                 updateUIState(true);
-                updateServerForPreferences();
+                updateServiceForPreferences();
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
                 }
@@ -194,7 +194,7 @@ public class RwMainActivity extends Activity {
 
         registerReceiver(rwReceiver, filter);
 
-        updateServerForPreferences();
+        updateServiceForPreferences();
         updateUIState(mIsConnected);
         super.onResume();
     }
@@ -561,7 +561,7 @@ public class RwMainActivity extends Activity {
     /**
      * Updates settings of the RWService Service from the preferences.
      */
-    private void updateServerForPreferences() {
+    private void updateServiceForPreferences() {
         if (mRwBinder != null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             boolean showDetailedMessages = prefs.getBoolean(RwPrefsActivity.SHOW_DETAILED_MESSAGES, false);

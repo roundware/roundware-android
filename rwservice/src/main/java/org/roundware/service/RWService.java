@@ -720,32 +720,7 @@ import java.util.TimerTask;
 
         //FIXME remove!
         if( mNotificationActivity != null) {
-            // create a pending intent to start the specified activity from the notification
-            Intent ovIntent = new Intent(this, mNotificationActivity);
-            ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            mNotificationPendingIntent = PendingIntent.getActivity(this, PendingIntent.FLAG_CANCEL_CURRENT , ovIntent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(mNotificationIconId)
-                    .setContentTitle("Roundware Service Started")
-                    .setContentText("content text")
-                    .setContentIntent(mNotificationPendingIntent)
-                    .setAutoCancel(false)
-                    .setOngoing(true);
-            ///NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            ///mNotificationManager.notify(0, builder.build());
-
-            mRwNotification = builder.build();
-            // create a notification and move service to foreground
-            ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
-            mRwNotification.number = 1;
-            mRwNotification.flags = mRwNotification.flags
-                    | Notification.FLAG_FOREGROUND_SERVICE
-                    | Notification.FLAG_ONGOING_EVENT
-                    | Notification.FLAG_NO_CLEAR;
-            setNotificationText("");
-
-            //startForeground(NOTIFICATION_ID, mRwNotification);
+            makeNotification(mNotificationActivity);
         }
 
         // start initializing the Roundware session, this will attempt to get the configuration, tags and content
@@ -762,8 +737,8 @@ import java.util.TimerTask;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(mNotificationIconId)
-                .setContentTitle("Roundware Service Started")
-                .setContentText("content text")
+                .setContentTitle(mNotificationTitle)
+                .setContentText(mNotificationDefaultText)
                 .setContentIntent(mNotificationPendingIntent)
                 .setAutoCancel(false)
                 .setOngoing(true);
@@ -778,7 +753,6 @@ import java.util.TimerTask;
                 | Notification.FLAG_FOREGROUND_SERVICE
                 | Notification.FLAG_ONGOING_EVENT
                 | Notification.FLAG_NO_CLEAR;
-        setNotificationText(mNotificationDefaultText);
     }
 
     /**
@@ -977,29 +951,23 @@ import java.util.TimerTask;
 
     
     /**
-     * Updates the text in the RWService notification placed in the Android
-     * notification bar on the screen of the device.
+     * Updates the ticker text in the RWService notification placed in the Android
+     * notification bar on the screen of the device _and_ posts notification.
+     * NOTE: Only functional if detailed messaging is set true!
+     * @see org.roundware.service.RWService#setShowDetailedMessages(boolean)
      * 
      * @param message to be displayed
      */
-    public void setNotificationText(String message) {
-        if ((mRwNotification != null) && (mNotificationPendingIntent != null)) {
+    public void setNotificationTickerText(String message) {
+        if( mShowDetailedMessages && mRwNotification != null && mNotificationPendingIntent != null ) {
             NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) {
                 if (message != null) {
                     boolean debugMsg = message.startsWith(".");
                     String msg = debugMsg ? message.subSequence(1, message.length()).toString() : message;
-
-                    boolean defaultMsg = message.equalsIgnoreCase(mNotificationDefaultText);
-
-                    if ((!debugMsg) || (mShowDetailedMessages)) {
-                        mRwNotification.setLatestEventInfo(this, mNotificationTitle, msg, mNotificationPendingIntent);
-                        if (!defaultMsg) {
-                            mRwNotification.tickerText = msg;
-                        } else {
-                            mRwNotification.tickerText = "";
-                        }
-                    }
+                    mRwNotification.tickerText = msg;
+                }else{
+                    mRwNotification.tickerText = "";
                 }
 
                 mRwNotification.when = System.currentTimeMillis();
@@ -1574,7 +1542,7 @@ import java.util.TimerTask;
             }
         } else {
             RWActionQueue.instance().add(action.getProperties());
-            setNotificationText(null);
+            setNotificationTickerText(null);
             
             // broadcast operation QUEUED intent
             String msg = "Action placed in queued";
@@ -1602,7 +1570,7 @@ import java.util.TimerTask;
             mLastRequestMsec = System.currentTimeMillis();
 
             try {
-                setNotificationText(action.getCaption());
+                setNotificationTickerText(action.getCaption());
             } catch (Exception e) {
                 Log.e(TAG, "Could not update notification text!", e);
             }
@@ -1637,8 +1605,6 @@ import java.util.TimerTask;
             if (action.getFilename() != null) {
                 rwSendLogEvent(R.string.rw_et_stop_upload, null, "true", true);
             }
-
-            setNotificationText(mNotificationDefaultText);
 
             // broadcast operation SUCCESS intent
             broadcastActionSuccess(action, result);
@@ -1955,7 +1921,7 @@ import java.util.TimerTask;
                 }
             }
 
-            setNotificationText(null);
+            setNotificationTickerText(null);
             return;
         }
 
@@ -1963,9 +1929,9 @@ import java.util.TimerTask;
         if (action != null) {
             if (perform(action) != null) {
                 RWActionQueue.instance().delete(action);
-                setNotificationText(null);
+                setNotificationTickerText(null);
             } else {
-                setNotificationText(getString(R.string.roundware_notification_request_failed));
+                setNotificationTickerText(getString(R.string.roundware_notification_request_failed));
                 // remove failing action from queue, unless it is a file upload
                 if (action.getFilename() == null) {
                     RWActionQueue.instance().delete(action);
@@ -2096,7 +2062,7 @@ import java.util.TimerTask;
 
         setVolumeLevel(0, true);
         mStartPlayingWhenReady = false;
-        setNotificationText(".Audio muted");
+        setNotificationTickerText(".Audio muted");
     }
 
     
@@ -2122,7 +2088,7 @@ import java.util.TimerTask;
             rwSendLogEvent(R.string.rw_et_start_listen, null, null, true);
 
             setVolumeLevel(endVolumeLevel, true);
-            setNotificationText(".Audio unmuted");
+            setNotificationTickerText(".Audio unmuted");
         } else {
             Log.i(TAG, "Fade in to volume level " + endVolumeLevel + " ignored, " + "MediaPlayer not initialized!", null);
             setVolumeLevel(endVolumeLevel, true);
