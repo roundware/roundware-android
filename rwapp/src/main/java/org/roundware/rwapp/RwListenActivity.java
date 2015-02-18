@@ -4,19 +4,14 @@
  */
 package org.roundware.rwapp;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -53,7 +48,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class RwListenActivity extends Activity {
+public class RwListenActivity extends RwBoundActivity {
     private final static String LOGTAG = "Listen";
     private final static String ROUNDWARE_TAGS_TYPE = "listen";
 
@@ -92,10 +87,8 @@ public class RwListenActivity extends Activity {
 //    private ToggleButton mLikeButton;
 //    private ToggleButton mFlagButton;
     private final static int VOLUME_ON_LEVEL = 80;
-    private RWService mRwBinder;
     private RWTags mProjectTags;
     private RWList mTagsList;
-    private String mContentFileDir;
     private int mCurrentAssetId;
     private int mPreviousAssetId;
     private AssetImageManager mAssetImageManager = null;
@@ -108,53 +101,42 @@ public class RwListenActivity extends Activity {
      * activity it is assumed that the service has already been started
      * by another activity and we only need to connect to it.
      */
-    private ServiceConnection rwConnection = new ServiceConnection() {
-        @SuppressLint("SetJavaScriptEnabled")
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            if (D) { Log.d(LOGTAG, "+++ onServiceConnected +++"); }
-            mRwBinder = ((RWService.RWServiceBinder) service).getService();
-            startPlayback();
-            // mRwBinder.playbackFadeIn(mVolumeLevel);
-            mRwBinder.setVolumeLevel(VOLUME_ON_LEVEL, false);
+    @Override
+    protected void handleOnServiceConnected(RWService service) {
 
-            // create a tags list for display and selection
-            mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
-            mTagsList = new RWList(mProjectTags);
-            mTagsList.restoreSelectionState(Settings.getSharedPreferences());
-            synchronized (this){
-                if(mAssetImageManager == null){
-                    mAssetImageManager = new AssetImageManager(getString(R.string.rw_spec_host_url));
-                }
+        if (D) { Log.d(LOGTAG, "+++ onServiceConnected +++"); }
+        startPlayback();
+        // mRwBinder.playbackFadeIn(mVolumeLevel);
+        mRwBinder.setVolumeLevel(VOLUME_ON_LEVEL, false);
+
+        // create a tags list for display and selection
+        mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
+        mTagsList = new RWList(mProjectTags);
+        mTagsList.restoreSelectionState(Settings.getSharedPreferences());
+        synchronized (this){
+            if(mAssetImageManager == null){
+                mAssetImageManager = new AssetImageManager(getString(R.string.rw_spec_host_url));
             }
-            mAssetImageManager.addTags(mTagsList);
-            if(RW.DEBUG_W_FAUX_TAGS){
-                Random random = new Random();
-                //huge, causes fault
-                mAssetImageManager.addTag(1, "http://upload.wikimedia.org/wikipedia/commons/9/92/Artwork_by_North_American_Rockwell.jpg");
-                //very small
-                mAssetImageManager.addTag(2, "http://upload.wikimedia.org/wikipedia/en/a/ac/MilesSmile.png");
-                //medium
-                mAssetImageManager.addTag(3, "http://upload.wikimedia.org/wikipedia/commons/7/7e/Tony_Robbin_artwork.JPG");
-                //narrow
-                mAssetImageManager.addTag(4, "http://upload.wikimedia.org/wikipedia/commons/a/ab/Nachi_Falls.jpg");
-                //wide
-                mAssetImageManager.addTag(0, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kano_Eitoku_003.jpg/1280px-Kano_Eitoku_003.jpg");
-            }
-            updateUIState();
-
-            // auto start playback when connected (and no already playing)
-            // startPlayback();
         }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            if (D) { Log.d(LOGTAG, "+++ onServiceDisconnected +++"); }
-            mRwBinder = null;
+        mAssetImageManager.addTags(mTagsList);
+        if(RW.DEBUG_W_FAUX_TAGS){
+            Random random = new Random();
+            //huge, causes fault
+            mAssetImageManager.addTag(1, "http://upload.wikimedia.org/wikipedia/commons/9/92/Artwork_by_North_American_Rockwell.jpg");
+            //very small
+            mAssetImageManager.addTag(2, "http://upload.wikimedia.org/wikipedia/en/a/ac/MilesSmile.png");
+            //medium
+            mAssetImageManager.addTag(3, "http://upload.wikimedia.org/wikipedia/commons/7/7e/Tony_Robbin_artwork.JPG");
+            //narrow
+            mAssetImageManager.addTag(4, "http://upload.wikimedia.org/wikipedia/commons/a/ab/Nachi_Falls.jpg");
+            //wide
+            mAssetImageManager.addTag(0, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kano_Eitoku_003.jpg/1280px-Kano_Eitoku_003.jpg");
         }
-    };
+        updateUIState();
 
-
+        // auto start playback when connected (and no already playing)
+        // startPlayback();
+    }
 
     /**
      * Handles events received from the RWService Android Service that we
@@ -214,14 +196,6 @@ public class RwListenActivity extends Activity {
             }
         });
         mEventPool.setKeepAliveTime(ASSET_IMAGE_LINGER_MS, TimeUnit.MILLISECONDS);
-
-        // connect to service started by other activity
-        try {
-            Intent bindIntent = new Intent(this, RWService.class);
-            bindService(bindIntent, rwConnection, Context.BIND_AUTO_CREATE);
-        } catch (Exception ex) {
-            showMessage(getString(R.string.connection_to_server_failed) + " " + ex.getMessage(), true, true);
-        }
     }
 
 
@@ -271,11 +245,6 @@ public class RwListenActivity extends Activity {
             mEventPool.purge();
             mEventPool.shutdownNow();
         }
-        if (rwConnection != null) {
-            unbindService(rwConnection);
-        }
-
-        //FIXME: call stopService?
         super.onDestroy();
     }
 

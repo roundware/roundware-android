@@ -4,6 +4,8 @@
  */
 package org.roundware.rwapp;
 
+import org.roundware.service.RWService;
+
 /**
  * Explore activity
  */
@@ -14,6 +16,11 @@ public class RwExploreActivity extends RwWebActivity {
     @Override
     protected String getUrl() {
         return getString(R.string.explore_url);
+    }
+
+    @Override
+    protected void handleOnServiceConnected(RWService service) {
+        // nada
     }
 }
 

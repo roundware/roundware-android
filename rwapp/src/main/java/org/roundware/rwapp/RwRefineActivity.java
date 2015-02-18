@@ -30,8 +30,6 @@ public class RwRefineActivity extends RwWebActivity {
 
     @Override
     protected void handleOnServiceConnected(RWService service) {
-        super.handleOnServiceConnected(service);
-
         mTagsList = new RWList(mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE));
         mTagsList.cullNonWebTags();
         mTagsList.restoreSelectionState(Settings.getSharedPreferences());

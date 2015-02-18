@@ -8,12 +8,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -25,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -61,7 +58,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RwSpeakActivity extends Activity {
+public class RwSpeakActivity extends RwBoundActivity {
     public static final String LOGTAG = RwSpeakActivity.class.getSimpleName();
 
     // intent actions to select recording type when starting the activity
@@ -130,7 +127,6 @@ public class RwSpeakActivity extends Activity {
     private Button mUploadButton;
     private Button mDoneButton;
     private Button mSpeakMoreButton;
-    private RWService mRwBinder;
     private RWTags mProjectTags;
     private RWList mTagsList;
     private RWRecordingTask mRecordingTask;
@@ -163,42 +159,34 @@ public class RwSpeakActivity extends Activity {
      * activity it is assumed that the service has already been started
      * by another activity and we only need to connect to it.
      */
-    private ServiceConnection rwConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mRwBinder = ((RWService.RWServiceBinder) service).getService();
+    @Override
+    protected void handleOnServiceConnected(RWService service) {
+        // make sure audio is not playing when recording
+        mRwBinder.playbackStop();
 
-            // make sure audio is not playing when recording
-            mRwBinder.playbackStop();
+        // create a tags list for display and selection
+        mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
+        mTagsList = new RWList(mProjectTags);
+        mTagsList.restoreSelectionState(Settings.getSharedPreferences());
 
-            // create a tags list for display and selection
-            mProjectTags = mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE);
-            mTagsList = new RWList(mProjectTags);
-            mTagsList.restoreSelectionState(Settings.getSharedPreferences());
-
-            // get the folder where the web content files are stored
-            String contentFileDir = mRwBinder.getContentFilesDir();
-            if ((mWebView != null) && (contentFileDir != null)) {
-                String contentFileName = contentFileDir + "speak.html";
-                try {
-                    mWebViewData = mRwBinder.readContentFile(contentFileName);
-                    mWebViewData = mWebViewData.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
-                    mWebViewBaseUrl = "file://" + contentFileName;
-                    mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Problem loading content file: " + contentFileName);
-                    // TODO: dialog?? error??
-                }
+        // get the folder where the web content files are stored
+        String contentFileDir = mRwBinder.getContentFilesDir();
+        if ((mWebView != null) && (contentFileDir != null)) {
+            String contentFileName = contentFileDir + "speak.html";
+            try {
+                mWebViewData = mRwBinder.readContentFile(contentFileName);
+                mWebViewData = mWebViewData.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                mWebViewBaseUrl = "file://" + contentFileName;
+                mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Problem loading content file: " + contentFileName);
+                // TODO: dialog?? error??
             }
-            updateUIState();
         }
+        updateUIState();
+    }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mRwBinder = null;
-        }
-    };
 
 
     /**
@@ -256,14 +244,6 @@ public class RwSpeakActivity extends Activity {
 
         mIsRecordingGeneralFeedback = ACTION_RECORD_FEEDBACK.equals(action);
         setFlipperChild( mIsRecordingGeneralFeedback ? RECORD_LAYOUT : FILTER_LAYOUT);
-
-        // connect to service started by other activity
-        try {
-            Intent bindIntent = new Intent(this, RWService.class);
-            bindService(bindIntent, rwConnection, Context.BIND_AUTO_CREATE);
-        } catch (Exception ex) {
-            showMessage(getString(R.string.connection_to_server_failed) + " " + ex.getMessage(), true, true);
-        }
         Log.d(TAG, "done onCreate");
     }
 
@@ -338,10 +318,6 @@ public class RwSpeakActivity extends Activity {
     @Override
     protected void onDestroy() {
         mMapView.onDestroy();
-
-        if (rwConnection != null) {
-            unbindService(rwConnection);
-        }
 
         mSoundPool.release();
         mSoundPool = null;

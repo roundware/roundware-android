@@ -20,13 +20,14 @@ public abstract class RwBoundActivity extends Activity {
      * Override to do additional handling of onServiceConnected
      * @param service
      */
-    protected void handleOnServiceConnected(RWService service) {}
+    protected abstract void handleOnServiceConnected(RWService service);
 
     private ServiceConnection rwConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mRwBinder = ((RWService.RWServiceBinder) service).getService();
+            mRwBinder.bindActivity(RwBoundActivity.this);
             handleOnServiceConnected(mRwBinder);
         }
 
@@ -50,6 +51,7 @@ public abstract class RwBoundActivity extends Activity {
 
     @Override
     protected void onStop() {
+        mRwBinder.unbindActivity();
         if (rwConnection != null) {
             unbindService(rwConnection);
         }

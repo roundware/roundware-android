@@ -6,6 +6,7 @@ package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -155,6 +156,7 @@ import java.util.TimerTask;
     private long mPrepareTime = 0;
     private RWConfiguration configuration;
     private RWTags tags;
+    private int boundActivities = 0;
 
 
     //TODO support telephony interruption support?
@@ -702,13 +704,13 @@ import java.util.TimerTask;
         return RWLocationTracker.instance().getLastLocation();
     }
 
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
-    
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // intent will be null on restart!
@@ -716,11 +718,12 @@ import java.util.TimerTask;
             getSettingsFromIntent(intent);
         }
 
+        //FIXME remove!
         if( mNotificationActivity != null) {
             // create a pending intent to start the specified activity from the notification
             Intent ovIntent = new Intent(this, mNotificationActivity);
             ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, 0);
+            mNotificationPendingIntent = PendingIntent.getActivity(this, PendingIntent.FLAG_CANCEL_CURRENT , ovIntent, 0);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(mNotificationIconId)
@@ -733,7 +736,6 @@ import java.util.TimerTask;
             ///mNotificationManager.notify(0, builder.build());
 
             mRwNotification = builder.build();
-            //FIXME remove notification onStop
             // create a notification and move service to foreground
             ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
             mRwNotification.number = 1;
@@ -743,7 +745,7 @@ import java.util.TimerTask;
                     | Notification.FLAG_NO_CLEAR;
             setNotificationText("");
 
-            startForeground(NOTIFICATION_ID, mRwNotification);
+            //startForeground(NOTIFICATION_ID, mRwNotification);
         }
 
         // start initializing the Roundware session, this will attempt to get the configuration, tags and content
@@ -752,7 +754,32 @@ import java.util.TimerTask;
         return Service.START_STICKY;
     }
 
+    private void makeNotification(Class<?> klass){
+        // create a pending intent to start the specified activity from the notification
+        Intent ovIntent = new Intent(this, klass);
+        ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mNotificationPendingIntent = PendingIntent.getActivity(this, PendingIntent.FLAG_CANCEL_CURRENT , ovIntent, 0);
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(mNotificationIconId)
+                .setContentTitle("Roundware Service Started")
+                .setContentText("content text")
+                .setContentIntent(mNotificationPendingIntent)
+                .setAutoCancel(false)
+                .setOngoing(true);
+        ///NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        ///mNotificationManager.notify(0, builder.build());
+
+        mRwNotification = builder.build();
+        // create a notification and move service to foreground
+        ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
+        mRwNotification.number = 1;
+        mRwNotification.flags = mRwNotification.flags
+                | Notification.FLAG_FOREGROUND_SERVICE
+                | Notification.FLAG_ONGOING_EVENT
+                | Notification.FLAG_NO_CLEAR;
+        setNotificationText(mNotificationDefaultText);
+    }
 
     /**
      * Parse the raw meta data and broadcast. This may likely be somewhat preliminary, so expect
@@ -885,7 +912,22 @@ import java.util.TimerTask;
         }
     }
 
-    
+    public void bindActivity(Activity activity){
+        makeNotification(activity.getClass());
+        if(boundActivities == 0){
+            stopForeground(true);
+        }
+        boundActivities++;
+    }
+
+
+    public void unbindActivity() {
+        boundActivities--;
+        if(boundActivities == 0){
+            startForeground(NOTIFICATION_ID, mRwNotification);
+        }
+    }
+
     @Override
     public void onDestroy() {
         stopService();
@@ -896,7 +938,7 @@ import java.util.TimerTask;
         super.onDestroy();
     }
 
-    
+
     /**
      * Shut down the RWService instance. Makes sure the location updates
      * are stopped, the background processing of the action queue is stopped,

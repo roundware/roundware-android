@@ -260,6 +260,11 @@ public class RwMainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     /**
      * Starts (or restarts) a RWService Android Service.
@@ -316,7 +321,6 @@ public class RwMainActivity extends Activity {
      *
      * @return true when successful
      */
-    //FIXME this shouldn't be needed
     private boolean stopRWService() {
         if (mRwBinder != null) {
             mRwBinder.stopService();
