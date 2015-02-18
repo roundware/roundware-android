@@ -1,7 +1,6 @@
 package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,9 +10,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- * Base class for the activities that hold a sole webview
+ * Base class for the activities that hold a sole webview,
+ * extends RwBoundActivity
  */
-public abstract class RwWebActivity extends Activity {
+public abstract class RwWebActivity extends RwBoundActivity {
     public static final String LOGTAG = RwWebActivity.class.getSimpleName();
     private final static boolean D = true;
     protected WebView mWebView = null;
@@ -85,11 +85,6 @@ public abstract class RwWebActivity extends Activity {
             }
 
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 }
 

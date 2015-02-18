@@ -1,19 +1,18 @@
 package org.roundware.rwapp;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 import org.roundware.service.RWService;
 
 /**
- * Extends RwWebActivity to bind RwService
+ * Extends Activity to bind RwService
  */
-public abstract class RwServiceWebActivity extends RwWebActivity{
+public abstract class RwBoundActivity extends Activity {
 
     protected RWService mRwBinder = null;
 
@@ -39,11 +38,10 @@ public abstract class RwServiceWebActivity extends RwWebActivity{
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
         try {
             Intent bindIntent = new Intent(this, RWService.class);
-            Log.d(LOGTAG, "binding");
             bindService(bindIntent, rwConnection, Context.BIND_AUTO_CREATE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,10 +49,11 @@ public abstract class RwServiceWebActivity extends RwWebActivity{
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         if (rwConnection != null) {
             unbindService(rwConnection);
         }
-        super.onDestroy();
+        super.onStop();
     }
+
 }
