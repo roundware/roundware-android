@@ -15,7 +15,7 @@ import android.webkit.WebViewClient;
  */
 public abstract class RwWebActivity extends RwBoundActivity {
     public static final String LOGTAG = RwWebActivity.class.getSimpleName();
-    private final static boolean D = true;
+    private final static boolean D = false;
     protected WebView mWebView = null;
 
     /**

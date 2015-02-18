@@ -11,7 +11,7 @@ import org.roundware.service.RWService;
  */
 public class RwExploreActivity extends RwWebActivity {
     public static final String LOGTAG = RwExploreActivity.class.getSimpleName();
-    private final static boolean D = true;
+    private final static boolean D = false;
 
     @Override
     protected String getUrl() {

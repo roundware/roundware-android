@@ -44,7 +44,7 @@ public class RWHttpManager {
 
     // debugging
     private final static String TAG = "RWHttpManager";
-    private final static boolean D = true;
+    private final static boolean D = false;
 
     private final static String POST_MIME_TYPE = "application/x-www-form-urlencoded";
 

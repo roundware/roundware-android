@@ -48,7 +48,7 @@ import java.util.UUID;
 
 public class RwMainActivity extends Activity {
     public static final String LOGTAG = RwMainActivity.class.getSimpleName();
-    private final static boolean D = true;
+    private final static boolean D = false;
 
     // menu items
     private final static int MENU_ITEM_INFO = Menu.FIRST;
