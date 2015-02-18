@@ -7,7 +7,7 @@ package org.roundware.rwapp;
 /**
  * Explore activity
  */
-public class RwExploreActivity extends RwServiceWebActivity {
+public class RwExploreActivity extends RwWebActivity {
     public static final String LOGTAG = RwExploreActivity.class.getSimpleName();
     private final static boolean D = true;
 
