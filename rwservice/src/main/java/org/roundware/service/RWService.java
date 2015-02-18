@@ -28,6 +28,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.StrictMode;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -718,12 +719,23 @@ import java.util.TimerTask;
         if( mNotificationActivity != null) {
             // create a pending intent to start the specified activity from the notification
             Intent ovIntent = new Intent(this, mNotificationActivity);
-            //FIXME new_task?
-            mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+            ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, 0);
 
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(mNotificationIconId)
+                    .setContentTitle("Roundware Service Started")
+                    .setContentText("content text")
+                    .setContentIntent(mNotificationPendingIntent)
+                    .setAutoCancel(false)
+                    .setOngoing(true);
+            ///NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            ///mNotificationManager.notify(0, builder.build());
+
+            mRwNotification = builder.build();
             //FIXME remove notification onStop
             // create a notification and move service to foreground
-            mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
+            ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
             mRwNotification.number = 1;
             mRwNotification.flags = mRwNotification.flags
                     | Notification.FLAG_FOREGROUND_SERVICE

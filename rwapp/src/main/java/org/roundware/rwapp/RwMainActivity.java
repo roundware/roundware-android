@@ -297,7 +297,7 @@ public class RwMainActivity extends Activity {
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_DEFAULT_TEXT, getString(R.string.notification_default_text));
             mRwService.putExtra(RW.EXTRA_NOTIFICATION_ICON_ID, R.drawable.status_icon);
             //FIXME use the listen activity instead
-            mRwService.putExtra(RW.EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME, this.getClass().getName());
+            mRwService.putExtra(RW.EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME, ClassRegistry.get("RwListenActivity").getName());
 
             //FIXME bind service instead
             startService(mRwService);
