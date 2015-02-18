@@ -37,9 +37,7 @@
                     android:visibility="gone"/>
 
 
-
-
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/buttonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,6 +47,43 @@
                 android:padding="10dp"
                 >
 
+
+                <FrameLayout
+                    android:id="@+id/center_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <ToggleButton
+                        android:id="@+id/play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/listen_play_pause_button"
+                        android:drawableTop="@android:color/transparent"
+                        android:textOff=""
+                        android:textOn=""
+                        android:checked="false"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="@dimen/play_button_width"
+                        android:layout_height="@dimen/play_button_height"
+                        android:indeterminate="true"
+                        android:layout_gravity="center"
+                        android:visibility="invisible"/>
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/play_label"
+                    style="@style/AppTheme.Shadow.ListenLargeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/center_button"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="2dp"
+                    android:textSize="16sp"
+                    android:text="@string/play"/>
                 <Button
                     style="@style/AppTheme.Shadow.ListenSmallButton"
                     android:id="@+id/refine"
@@ -57,33 +92,21 @@
                     android:text="@string/refine_button"
                     android:textSize="16sp"
                     android:singleLine="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_toLeftOf="@id/center_button"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:background="#00FFFFFF"
                     android:drawableTop="@drawable/filter_button"
                     android:drawablePadding="2dp"
                     android:visibility="visible"
-                    android:layout_weight="1"
                     />
-
-                <ToggleButton
-                    style="@style/AppTheme.Shadow.ListenLargeButton"
-                    android:id="@+id/play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#00FFFFFF"
-                    android:drawableTop="@drawable/listen_play_pause_button"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:textOff="@string/play"
-                    android:textOn="@string/pause"
-                    android:textSize="16sp"
-                    />
-
                 <Button
                     style="@style/AppTheme.Shadow.ListenSmallButton"
                     android:id="@+id/record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/center_button"
+                    android:layout_centerVertical="true"
                     android:text="@string/record_button"
                     android:singleLine="true"
                     android:layout_alignParentRight="true"
@@ -92,9 +115,8 @@
                     android:textSize="16sp"
                     android:drawablePadding="2dp"
                     android:visibility="visible"
-                    android:layout_weight="1"
                     />
-            </LinearLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

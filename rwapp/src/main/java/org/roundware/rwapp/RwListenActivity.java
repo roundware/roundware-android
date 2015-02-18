@@ -6,7 +6,6 @@ package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,6 +24,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -68,14 +68,15 @@ public class RwListenActivity extends Activity {
     private final static int ASSET_IMAGE_LINGER_MS = 2500;
 
     // fields
-    private ProgressDialog mProgressDialog;
     protected ImageView mBackgroundImageView;
     private Button mHomeButton;
     private Button mExploreButton;
 
     private Button mRefineButton;
     private ToggleButton mPlayButton;
+    private TextView mPlayLabel;
     private Button mRecordButton;
+    private ProgressBar mProgressBar;
 
     private View mAssetImageLayout;
     private ImageView mAssetImageView;
@@ -169,14 +170,10 @@ public class RwListenActivity extends Activity {
             updateUIState();
             if (RW.READY_TO_PLAY.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_READY_TO_PLAY"); }
-                // remove progress dialog when needed
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                }
+                mProgressBar.setVisibility(View.INVISIBLE);
             } else if (RW.STREAM_METADATA_UPDATED.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_STREAM_METADATA_UPDATED"); }
                 handleAssetChange( (Uri)intent.getParcelableExtra(RW.EXTRA_STREAM_METADATA_URI) );
-
             } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
                 if (D) { Log.d(LOGTAG, "RW_USER_MESSAGE"); }
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), false, false);
@@ -190,6 +187,8 @@ public class RwListenActivity extends Activity {
                 mEventPool.pause();
             } else if (RW.STREAM_BUFFERING_END.equals(intent.getAction())) {
                 mEventPool.resume();
+            } else if (RW.UNABLE_TO_PLAY.equals(intent.getAction())){
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         }
     };
@@ -317,6 +316,7 @@ public class RwListenActivity extends Activity {
         });
 
         mPlayButton = (ToggleButton) findViewById(R.id.play);
+        mPlayLabel = (TextView) findViewById(R.id.play_label);
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!mRwBinder.isPlaying()) {
@@ -328,13 +328,7 @@ public class RwListenActivity extends Activity {
             }
         });
 
-        /*
-        mFlagButton = (ToggleButton) findViewById(R.id.listenFlagToggleButton);
-        mFlagButton.setEnabled(false);
-
-        mLikeButton = (ToggleButton) findViewById(R.id.listenLikeToggleButton);
-        mLikeButton.setEnabled(false);
-        */
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
 
         mRecordButton = (Button) findViewById(R.id.record);
         mRecordButton.setOnClickListener(new View.OnClickListener() {
@@ -357,23 +351,27 @@ public class RwListenActivity extends Activity {
 
     private void startPlayback() {
         if (D) { Log.d(LOGTAG, "+++ startPlayback +++"); }
-        if (mRwBinder != null) {
-            if (!mRwBinder.isPlaying()) {
-                if (!mRwBinder.isPlayingMuted()) {
-                    showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
-                    mCurrentAssetId = -1;
-                    mPreviousAssetId = -1;
-                    if(mCurrentAsset == null) {
-                        AssetData assetData = new AssetData(null, null);
-                        setPendingAsset(assetData);
-                        setCurrentAsset(assetData);
+        if(mProgressBar.getVisibility() != View.VISIBLE) {
+            if (mRwBinder != null) {
+                if (!mRwBinder.isPlaying()) {
+                    if (!mRwBinder.isPlayingMuted()) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mPlayButton.setEnabled(false);
+                        //showProgress(getString(R.string.starting_playback_title), getString(R.string.starting_playback_message), true, true);
+                        mCurrentAssetId = -1;
+                        mPreviousAssetId = -1;
+                        if (mCurrentAsset == null) {
+                            AssetData assetData = new AssetData(null, null);
+                            setPendingAsset(assetData);
+                            setCurrentAsset(assetData);
+                        }
+                        mRwBinder.playbackStart(mTagsList);
                     }
-                    mRwBinder.playbackStart(mTagsList);
+                    mRwBinder.playbackFadeIn(VOLUME_ON_LEVEL);
                 }
-                mRwBinder.playbackFadeIn(VOLUME_ON_LEVEL);
             }
+            updateUIState();
         }
-        updateUIState();
     }
 
 
@@ -383,6 +381,7 @@ public class RwListenActivity extends Activity {
         mCurrentAssetId = -1;
         mPreviousAssetId = -1;
         updateUIState();
+
     }
 
 
@@ -529,26 +528,15 @@ public class RwListenActivity extends Activity {
      */
     private void updateUIState() {
         // TODO: Only allow this activity to be current when the RwService is running.
-        if (mRwBinder == null) {
-            // not connected to RWService
-            mPlayButton.setChecked(false);
-            mPlayButton.setEnabled(false);
-//            mLikeButton.setChecked(false);
-//            mLikeButton.setEnabled(false);
-//            mFlagButton.setChecked(false);
-//            mFlagButton.setEnabled(false);
-        } else {
-            // connected to RWService
-            boolean isPlaying = mRwBinder.isPlaying();
-            mPlayButton.setEnabled(true);
-            mPlayButton.setChecked(isPlaying);
-//          if (!isPlaying) {
-//                mLikeButton.setChecked(false);
-//                mLikeButton.setEnabled(false);
-//                mFlagButton.setChecked(false);
-//                mFlagButton.setEnabled(false);
-//            }
+        boolean hasService = mRwBinder != null;
+        boolean isPlaying = (hasService && mRwBinder.isPlaying());
+        mPlayButton.setChecked(isPlaying);
+        mPlayLabel.setText(isPlaying ? R.string.pause : R.string.play);
+        mPlayButton.setEnabled(hasService);
+        if(isPlaying){
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
+
         updateScreenForSelectedTags();
         updateAssetImageUi(mCurrentAsset);
     }
@@ -586,21 +574,6 @@ public class RwListenActivity extends Activity {
      */
     private void showMessage(String message, boolean isError, boolean isFatal) {
         Utils.showMessageDialog(this, message, isError, isFatal);
-    }
-
-
-    /**
-     * Shows a standardized progress dialog for the specified conditions.
-     *
-     * @param title           to be displayed
-     * @param message         to be displayed
-     * @param isIndeterminate setting for the progress dialog
-     * @param isCancelable    setting for the progress dialog
-     */
-    private void showProgress(String title, String message, boolean isIndeterminate, boolean isCancelable) {
-        if (mProgressDialog == null) {
-            mProgressDialog = Utils.showProgressDialog(this, title, message, isIndeterminate, isCancelable);
-        }
     }
 
 
