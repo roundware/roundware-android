@@ -98,6 +98,8 @@ public class RwListenActivity extends Activity {
     private int mCurrentAssetId;
     private int mPreviousAssetId;
     private AssetImageManager mAssetImageManager = null;
+    private boolean mStartPlaybackOnResume = false;
+
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -251,6 +253,10 @@ public class RwListenActivity extends Activity {
         filter.addAction(RW.STREAM_BUFFERING_START);
         filter.addAction(RW.STREAM_BUFFERING_END);
         registerReceiver(rwReceiver, filter);
+
+        if(mStartPlaybackOnResume){
+            startPlayback();
+        }
     }
 
 
@@ -335,6 +341,7 @@ public class RwListenActivity extends Activity {
             @Override
             public void onClick(View v) {
                 stopPlayback();
+                mStartPlaybackOnResume = true;
                 RwSpeakActivity.showLegalDialogIfNeeded(RwListenActivity.this,
                         mRwBinder,
                         R.drawable.headphones_button,
@@ -748,6 +755,8 @@ public class RwListenActivity extends Activity {
                     mTagsList.setSelectionFromWebViewMessageUri(Uri.parse(uri));
                 }
             }
+        }else if(requestCode == ClassRegistry.get("RwSpeakActivity").hashCode() ){
+            mStartPlaybackOnResume = true;
         }else{
             super.onActivityResult(requestCode, resultCode, data);
         }

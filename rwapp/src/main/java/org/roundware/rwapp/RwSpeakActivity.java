@@ -1189,7 +1189,7 @@ public class RwSpeakActivity extends Activity {
      * @param context
      * @param rwService
     **/
-    public static void showLegalDialogIfNeeded(final Context context, RWService rwService) {
+    public static void showLegalDialogIfNeeded(final Activity context, RWService rwService) {
         showLegalDialogIfNeeded(context, rwService, -1, -1);
     }
 
@@ -1200,16 +1200,18 @@ public class RwSpeakActivity extends Activity {
      * @param doneIcon resId of done button's icon (optional)
      * @param doneText resId of done button's text label (optional)
      */
-    public static void showLegalDialogIfNeeded(final Context context, RWService rwService, final int doneIcon, final int doneText) {
+    public static void showLegalDialogIfNeeded(final Activity context, RWService rwService, final int doneIcon, final int doneText) {
         String legalText = rwService.getConfiguration().getLegalAgreement();
         boolean accepted = Settings.getSharedPreferences().getBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
 
         final Intent intent = new Intent(context, ClassRegistry.get("RwSpeakActivity"));
         intent.putExtra(RwSpeakActivity.EXTRA_KEY_DONE_ICON, doneIcon);
         intent.putExtra(RwSpeakActivity.EXTRA_KEY_DONE_TEXT, doneText);
+        Class speak = ClassRegistry.get("RwSpeakActivity");
+        final int hashcode = speak.hashCode();
 
         if (accepted) {
-            context.startActivity(intent);
+            context.startActivityForResult(intent, hashcode);
         } else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
@@ -1219,7 +1221,7 @@ public class RwSpeakActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Settings.getSharedPreferences().edit().putBoolean(PREFS_KEY_LEGAL_NOTICE_ACCEPTED, true).commit();
-                    context.startActivity(intent);
+                    context.startActivityForResult(intent, hashcode);
                     dialog.dismiss();
                 }
             });
