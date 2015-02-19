@@ -54,6 +54,11 @@ public class RW {
     public final static String EXTRA_NOTIFICATION_TITLE = INTENT_EXTRA_PREFIX + "notification_title";
 
     /**
+     * Can be used to specify an app specific icon background color
+     */
+    public final static String EXTRA_NOTIFICATION_COLOR = INTENT_EXTRA_PREFIX + "notification_color";
+
+    /**
      * Can be used to specify an app specific default text to be used in
      * the notifications placed in the standard Android notification bar
      * by the RWService.

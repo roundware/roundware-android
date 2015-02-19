@@ -5,21 +5,18 @@
 package org.roundware.rwapp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,17 +33,14 @@ import android.widget.ViewFlipper;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import org.roundware.rwapp.utils.AssetImageManager;
 import org.roundware.rwapp.utils.ClassRegistry;
+import org.roundware.rwapp.utils.Utils;
 import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.util.RWList;
 
-import org.roundware.rwapp.utils.AssetImageManager;
-import org.roundware.rwapp.utils.Utils;
-
-import java.util.UUID;
-
-public class RwMainActivity extends Activity {
+public class RwMainActivity extends RwBoundActivity{
     public static final String LOGTAG = RwMainActivity.class.getSimpleName();
     private final static boolean D = false;
 
@@ -69,10 +63,7 @@ public class RwMainActivity extends Activity {
 
     // fields
     private ProgressDialog mProgressDialog;
-    private Intent mRwService;
-    private RWService mRwBinder;
-    private String mDeviceId;
-    private String mProjectId;
+    private Intent mRwServiceIntent;
     private boolean mIsConnected;
 
     /**
@@ -80,20 +71,15 @@ public class RwMainActivity extends Activity {
      * activity it is assumed that the service has already been started
      * by another activity and we only need to connect to it.
      */
-    private ServiceConnection rwConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mRwBinder = ((RWService.RWServiceBinder) service).getService();
-            updateServiceForPreferences();
-        }
+    @Override
+    protected void handleOnServiceConnected(RWService service) {
+        updateServiceForPreferences();
+    }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mRwBinder = null;
-            updateUIState(false);
-        }
-    };
-
+    @Override
+    protected void handleOnServiceDisconnected(){
+        updateUIState(false);
+    }
 
     /**
      * Handles events received from the RWService Android Service that we
@@ -203,7 +189,6 @@ public class RwMainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopRWService();
     }
 
 
@@ -218,7 +203,7 @@ public class RwMainActivity extends Activity {
         // update settings to show current Roundware Device ID
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(RwPrefsActivity.ROUNDWARE_DEVICE_ID, mDeviceId);
+        prefsEditor.putString(RwPrefsActivity.ROUNDWARE_DEVICE_ID, prefs.getString(Settings.PREFS_KEY_RW_DEVICE_ID, null));
         prefsEditor.apply();
 
         // add the option menu items
@@ -263,7 +248,7 @@ public class RwMainActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        stopRWServiceAndFinish();
     }
 
     /**
@@ -272,44 +257,19 @@ public class RwMainActivity extends Activity {
      * @param intent
      */
     private void startRWService(Intent intent) {
-        // try to restore a previously assigned device ID
-        restoreRoundwareDeviceIdSetting();
-
+        mRwServiceIntent = getRwServiceIntent();
         // see if an other source for the device ID must be used
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            mDeviceId = extras.getString(RW.EXTRA_DEVICE_ID);
+            String deviceId = extras.getString(RW.EXTRA_DEVICE_ID);
+            if(!TextUtils.isEmpty(deviceId)){
+                mRwServiceIntent.putExtra(RW.EXTRA_DEVICE_ID, deviceId);
+            }
         }
-        if (mDeviceId == null) {
-            mDeviceId = UUID.randomUUID().toString();
-        }
-
-        mProjectId = getString(R.string.rw_spec_project_id);
-
+//
         showProgress(getString(R.string.initializing), getString(R.string.connecting_to_server_message), true, false);
         try {
-            // create connection to the RW service
-            Intent bindIntent = new Intent(RwMainActivity.this, RWService.class);
-            bindService(bindIntent, rwConnection, Context.BIND_AUTO_CREATE);
-
-            // create the intent to start the RW service
-            mRwService = new Intent(this, RWService.class);
-            mRwService.putExtra(RW.EXTRA_DEVICE_ID, mDeviceId);
-            mRwService.putExtra(RW.EXTRA_PROJECT_ID, mProjectId);
-
-            // notification customizations
-            mRwService.putExtra(RW.EXTRA_NOTIFICATION_TITLE, getString(R.string.notification_title));
-            mRwService.putExtra(RW.EXTRA_NOTIFICATION_DEFAULT_TEXT, getString(R.string.notification_default_text));
-            mRwService.putExtra(RW.EXTRA_NOTIFICATION_ICON_ID, R.drawable.status_icon);
-            //FIXME use the listen activity instead
-            mRwService.putExtra(RW.EXTRA_NOTIFICATION_ACTIVITY_CLASS_NAME, ClassRegistry.get("RwListenActivity").getName());
-
-            //FIXME bind service instead
-            startService(mRwService);
-
-            // successfully started service, make a note of the device ID
-            saveRoundwareDeviceIdSetting();
-
+            startService(mRwServiceIntent);
         } catch (Exception ex) {
             showMessage(getString(R.string.connection_to_server_failed) + " " + ex.getMessage(), true, true);
         }
@@ -321,16 +281,14 @@ public class RwMainActivity extends Activity {
      *
      * @return true when successful
      */
-    private boolean stopRWService() {
+    private void stopRWServiceAndFinish() {
         if (mRwBinder != null) {
             mRwBinder.stopService();
-            unbindService(rwConnection);
         }
-
-        if (mRwService != null) {
-            return stopService(mRwService);
+        if(mRwServiceIntent != null){
+            stopService(mRwServiceIntent);
         }
-        return true;
+        finish();
     }
 
 
@@ -430,24 +388,9 @@ public class RwMainActivity extends Activity {
     }
 
 
-    /**
-     * Saves app settings as shared preferences.
-     */
-    private void saveRoundwareDeviceIdSetting() {
-        SharedPreferences prefs = Settings.getSharedPreferences();
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(Settings.PREFS_KEY_RW_DEVICE_ID, mDeviceId);
-        prefsEditor.apply();
-    }
 
 
-    /**
-     * Restores app settings from shared preferences.
-     */
-    private void restoreRoundwareDeviceIdSetting() {
-        SharedPreferences prefs = Settings.getSharedPreferences();
-        mDeviceId = prefs.getString(Settings.PREFS_KEY_RW_DEVICE_ID, mDeviceId);
-    }
+
 
 
     /**
@@ -495,14 +438,14 @@ public class RwMainActivity extends Activity {
                         if (!mRwBinder.deleteQueue()) {
                             Toast.makeText(getApplicationContext(), R.string.cannot_delete_queue, Toast.LENGTH_SHORT).show();
                         }
-                        finish();
+                        stopRWServiceAndFinish();
                     }
                 });
 
                 alertBox.show();
             } else {
                 Toast.makeText(getApplicationContext(), R.string.thank_you_for_participating, Toast.LENGTH_SHORT).show();
-                finish();
+                stopRWServiceAndFinish();
             }
         }
     }

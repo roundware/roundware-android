@@ -133,6 +133,7 @@ import java.util.TimerTask;
     private PendingIntent mNotificationPendingIntent;
     private Notification mRwNotification;
     private String mNotificationTitle;
+    private int mNotificationColor;
     private String mNotificationDefaultText;
     private int mNotificationIconId;
     private Class<?> mNotificationActivity = null;
@@ -707,6 +708,9 @@ import java.util.TimerTask;
 
     @Override
     public IBinder onBind(Intent intent) {
+        if (intent != null) {
+            getSettingsFromIntent(intent);
+        }
         return mBinder;
     }
 
@@ -718,11 +722,6 @@ import java.util.TimerTask;
             getSettingsFromIntent(intent);
         }
 
-        //FIXME remove!
-        if( mNotificationActivity != null) {
-            makeNotification(mNotificationActivity);
-        }
-
         // start initializing the Roundware session, this will attempt to get the configuration, tags and content
         manageSessionState(SessionState.INITIALIZING);
         
@@ -730,8 +729,8 @@ import java.util.TimerTask;
     }
 
     private void makeNotification(Class<?> klass){
-        // create a pending intent to start the specified activity from the notification
-        Intent ovIntent = new Intent(this, klass);
+        // create a pending intent to start the specified activity, default on the one from the notification
+        Intent ovIntent = new Intent(this, klass == null ? mNotificationActivity : klass);
         ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mNotificationPendingIntent = PendingIntent.getActivity(this, PendingIntent.FLAG_CANCEL_CURRENT , ovIntent, 0);
 
@@ -740,14 +739,12 @@ import java.util.TimerTask;
                 .setContentTitle(mNotificationTitle)
                 .setContentText(mNotificationDefaultText)
                 .setContentIntent(mNotificationPendingIntent)
+                .setColor(mNotificationColor)
                 .setAutoCancel(false)
                 .setOngoing(true);
-        ///NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        ///mNotificationManager.notify(0, builder.build());
 
         mRwNotification = builder.build();
         // create a notification and move service to foreground
-        ///mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
         mRwNotification.flags = mRwNotification.flags
                 | Notification.FLAG_FOREGROUND_SERVICE
                 | Notification.FLAG_ONGOING_EVENT
@@ -861,6 +858,10 @@ import java.util.TimerTask;
             mNotificationTitle = intent.getExtras().getString(RW.EXTRA_NOTIFICATION_TITLE);
             if (mNotificationTitle == null) {
                 mNotificationTitle = "Roundware";
+            }
+            mNotificationColor = intent.getExtras().getInt(RW.EXTRA_NOTIFICATION_COLOR);
+            if(mNotificationColor == 0){
+                mNotificationColor = 0x253360;
             }
             mNotificationDefaultText = intent.getExtras().getString(RW.EXTRA_NOTIFICATION_DEFAULT_TEXT);
             if (mNotificationDefaultText == null) {
