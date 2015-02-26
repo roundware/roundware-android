@@ -467,6 +467,8 @@ public class RwListenActivity extends RwBoundActivity {
             boolean hasUrl = !TextUtils.isEmpty(assetData.url);
             // Only show images if volume level is audible
             boolean showUrl = hasUrl && (mRwBinder.getVolumeLevel() > 0);
+            mAssetImageLayout.setVisibility( TextUtils.isEmpty(mCurrentAsset.description) ? View.INVISIBLE : View.VISIBLE);
+            mAssetTextView.setText(mCurrentAsset.description);
             if (showUrl) {
                 //load
                 Picasso picasso = Picasso.with(this);
