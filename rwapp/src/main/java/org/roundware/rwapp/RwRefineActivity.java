@@ -28,6 +28,15 @@ public class RwRefineActivity extends RwWebActivity {
         return null;
     }
 
+    /**
+     * Override to do additional data replacement, remember to call super!
+     * @param input
+     * @return the munged data
+     */
+    protected String mungeUrlData(String input){
+        return input.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+    }
+
     @Override
     protected void handleOnServiceConnected(RWService service) {
         mTagsList = new RWList(mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE));
@@ -40,7 +49,7 @@ public class RwRefineActivity extends RwWebActivity {
             String contentFileName = contentFileDir + "listen.html";
             try {
                 String data = mRwBinder.readContentFile(contentFileName);
-                data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                data = mungeUrlData(data);
                 mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
             } catch (IOException e) {
                 e.printStackTrace();

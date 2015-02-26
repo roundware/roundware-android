@@ -153,6 +153,14 @@ public class RwSpeakActivity extends RwBoundActivity {
     private View.OnClickListener mSubmitListener;
     private View.OnClickListener mCancelListener;
 
+    /**
+     * Override to do additional data replacement, remember to call super!
+     * @param input
+     * @return the munged data
+     */
+    protected String mungeUrlData(String input){
+        return input.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+    }
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -175,7 +183,7 @@ public class RwSpeakActivity extends RwBoundActivity {
             String contentFileName = contentFileDir + "speak.html";
             try {
                 mWebViewData = mRwBinder.readContentFile(contentFileName);
-                mWebViewData = mWebViewData.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                mWebViewData = mungeUrlData(mWebViewData);
                 mWebViewBaseUrl = "file://" + contentFileName;
                 mWebView.loadDataWithBaseURL(mWebViewBaseUrl, mWebViewData, null, null, null);
             } catch (IOException e) {
