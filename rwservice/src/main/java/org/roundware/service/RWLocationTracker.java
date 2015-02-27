@@ -349,7 +349,9 @@ public class RWLocationTracker extends Observable {
         if (mFixedLocation) {
             return;
         }
-
+        if(location == null){
+            return;
+        }
 
         if( location.getAccuracy() < LARGEST_INACCURACY_M ) {
             if (location.getSpeed() > VERY_FAST_WALK_MPS) {
