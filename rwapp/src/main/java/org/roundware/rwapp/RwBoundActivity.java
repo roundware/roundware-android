@@ -1,3 +1,8 @@
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
+
 package org.roundware.rwapp;
 
 import android.app.Activity;
@@ -81,7 +86,9 @@ public abstract class RwBoundActivity extends Activity {
 
     @Override
     protected void onStop() {
-        mRwBinder.unbindActivity();
+        if(mRwBinder != null) {
+            mRwBinder.unbindActivity();
+        }
         if (rwConnection != null) {
             unbindService(rwConnection);
         }
