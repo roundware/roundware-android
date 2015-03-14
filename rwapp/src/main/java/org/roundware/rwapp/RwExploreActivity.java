@@ -4,16 +4,23 @@
  */
 package org.roundware.rwapp;
 
+import org.roundware.service.RWService;
+
 /**
  * Explore activity
  */
-public class RwExploreActivity extends RwServiceWebActivity {
+public class RwExploreActivity extends RwWebActivity {
     public static final String LOGTAG = RwExploreActivity.class.getSimpleName();
-    private final static boolean D = true;
+    private final static boolean D = false;
 
     @Override
     protected String getUrl() {
         return getString(R.string.explore_url);
+    }
+
+    @Override
+    protected void handleOnServiceConnected(RWService service) {
+        // nada
     }
 }
 

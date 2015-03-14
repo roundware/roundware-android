@@ -6,4 +6,5 @@
 	<item android:drawable="@drawable/play_listen_pressed" android:state_checked="false" android:state_pressed="true" />
 	<item android:drawable="@drawable/play_listen_focussed" android:state_checked="false" android:state_focused="true" />
 	<item android:drawable="@drawable/play_listen_normal" android:state_checked="false" />
+    <item android:drawable="@drawable/play_listen_pressed" android:state_checked="false" android:state_enabled="false"/>
 </selector>

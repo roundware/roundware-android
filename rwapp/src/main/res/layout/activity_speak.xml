@@ -7,12 +7,9 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_speak"/>
+        android:src="@drawable/bg_speak"
+        android:visibility="invisible"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <ViewFlipper
             android:id="@+id/viewFlipper"
@@ -22,8 +19,21 @@
             android:outAnimation="@anim/out_to_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".SpeakActivity"
-            android:visibility="gone">
+            tools:context=".SpeakActivity">
+
+            <!-- web view (filters) -->
+            <RelativeLayout
+                android:id="@+id/speakFilterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#55ffffff">
+
+                <WebView
+                    android:id="@+id/speakFilterWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </RelativeLayout>
 
             <!-- recording view -->
             <RelativeLayout
@@ -90,10 +100,10 @@
                             android:orientation="horizontal"
                             android:gravity="center"
                             android:background="#88ffffff"
-
                             android:layout_alignParentBottom="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp">
+
                         <org.roundware.rwapp.utils.LevelMeterView
                                 android:id="@+id/recordingLevelMeterView"
                                 android:layout_width="fill_parent"
@@ -197,21 +207,6 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <!-- web view (filters) -->
-            <RelativeLayout
-                android:id="@+id/speakFilterLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#55ffffff">
-
-                <WebView
-                    android:id="@+id/speakFilterWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </RelativeLayout>
-
-
             <!-- thank you view -->
             <FrameLayout
                     android:layout_width="match_parent"
@@ -288,13 +283,13 @@
 
                         <Button
                                 style="@style/AppTheme.Shadow.SpeakSmallButton"
-                                android:id="@+id/speakHeadphonesButton"
+                                android:id="@+id/speakDoneButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Listen More"
+                                android:text="@string/done_btn_label"
                                 android:singleLine="true"
                                 android:background="#00ffffff"
-                                android:drawableTop="@drawable/headphones_button"
+                                android:drawableTop="@drawable/done_button"
                                 android:drawablePadding="2dp"
                                 android:layout_gravity="left"
                                 android:layout_marginRight="40dp"/>
@@ -304,7 +299,7 @@
                                 android:id="@+id/speakMicButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Record Again"
+                                android:text="@string/speak_more_btn_label"
                                 android:singleLine="true"
                                 android:background="#00ffffff"
                                 android:drawableTop="@drawable/mic_button"
@@ -316,5 +311,4 @@
                 </RelativeLayout>
             </FrameLayout>
         </ViewFlipper>
-    </LinearLayout>
 </FrameLayout>

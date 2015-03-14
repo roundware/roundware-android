@@ -6,6 +6,7 @@ package org.roundware.service;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,19 +23,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.StrictMode;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-
-import org.roundware.service.R;
-import org.roundware.service.util.RWList;
-import org.roundware.service.util.RWSharedPrefsHelper;
-import org.roundware.service.util.RWUriHelper;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
@@ -42,6 +39,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.roundware.service.util.RWList;
+import org.roundware.service.util.RWSharedPrefsHelper;
+import org.roundware.service.util.RWUriHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -133,9 +133,10 @@ import java.util.TimerTask;
     private PendingIntent mNotificationPendingIntent;
     private Notification mRwNotification;
     private String mNotificationTitle;
+    private int mNotificationColor;
     private String mNotificationDefaultText;
     private int mNotificationIconId;
-    private Class<?> mNotificationActivity;
+    private Class<?> mNotificationActivity = null;
 
     private String mContentFilesLocalDir = null;
     private boolean mAlwaysDownloadContent = false;
@@ -156,6 +157,7 @@ import java.util.TimerTask;
     private long mPrepareTime = 0;
     private RWConfiguration configuration;
     private RWTags tags;
+    private int boundActivities = 0;
 
 
     //TODO support telephony interruption support?
@@ -172,153 +174,115 @@ import java.util.TimerTask;
 
     
     /**
-     * Async Task to retrieve the configuration settings for a project from
+     * Retrieves the configuration settings for a project from
      * the server. When the request is successful it will also start the timer
      * that controls the queue processing and sending idle pings when playing
      * a stream and there is no other activity. 
      */
-    private class RetrieveConfigurationTask extends AsyncTask<Void, Void, String> {
+    void retrieveConfiguration(final Context context, final String deviceId, final String projectId) {
+        debugLog("Retrieving configuration for project");
+        perform(mActionFactory.createRetrieveProjectConfigurationAction(deviceId, projectId), true,
+                new ServicePerformListener() {
 
-        private Context context = null;
-        private String deviceId = null;
-        private String projectId = null;
+                    @Override
+                    public void onPerformComplete(String result) {
+                        debugLog("Retrieve project configuration result: " + result);
 
-        public RetrieveConfigurationTask(Context context, String deviceId, String projectId) {
-            this.context = context;
-            this.deviceId = deviceId;
-            this.projectId = projectId;
-        }
+                        // try to use cache when no server data received
+                        boolean usingCache = false;
+                        if (result == null) {
+                            result = RWSharedPrefsHelper.loadJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId);
+                            usingCache = true;
+                        } else {
+                            // cache current data
+                            RWSharedPrefsHelper.saveJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId, result);
+                        }
 
-        @Override
-        protected String doInBackground(Void... params) {
-            debugLog("Retrieving configuration for project");
-            return perform(mActionFactory.createRetrieveProjectConfigurationAction(deviceId, projectId), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Retrieve project configuration result: " + result);
-
-            // try to use cache when no server data received
-            boolean usingCache = false;
-            if (result == null) {
-                result = RWSharedPrefsHelper.loadJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId);
-                usingCache = true;
-            } else {
-                // cache current data
-                RWSharedPrefsHelper.saveJSONArray(context, RW.PROJECT_CONFIG_CACHE, projectId, result);
-            }
-
-            if (result == null) {
-                Log.i(TAG, "Could not retrieve configuration data from server and no cached data available!");
-                broadcast(RW.NO_CONFIGURATION);
-            } else {
-                configuration.assignFromJsonServerResponse(result, usingCache);
-                if (usingCache) {
-                    configuration.setSessionId("-1");
+                        if (result == null) {
+                            Log.i(TAG, "Could not retrieve configuration data from server and no cached data available!");
+                            broadcast(RW.NO_CONFIGURATION);
+                        } else {
+                            configuration.assignFromJsonServerResponse(result, usingCache);
+                            if (usingCache) {
+                                configuration.setSessionId("-1");
+                            }
+                            broadcast(RW.CONFIGURATION_LOADED);
+                        }
+                    }
                 }
-                broadcast(RW.CONFIGURATION_LOADED);
-            }
-        }
+        );
     }
 
-
     /**
-     * Async Task to retrieve the configuration settings for a project from
+     * Retrieves the configuration settings for a project from
      * the server. When the request is successful it will also start the timer
      * that controls the queue processing and sending idle pings when playing
      * a stream and there is no other activity. 
      */
-    private class RetrieveTagsTask extends AsyncTask<Void, Void, String> {
+    private void retrieveTags(final Context context, final String projectId) {
+        perform(mActionFactory.createRetrieveTagsForProjectAction(projectId), true, new ServicePerformListener() {
+            @Override
+            public void onPerformComplete(String result) {
+                debugLog("Retrieve project tags result: " + result);
 
-        private Context context = null;
-        private String projectId = null;
+                // try to use cache when no server data received
+                boolean usingCache = false;
+                if (result == null) {
+                    result = RWSharedPrefsHelper.loadJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId);
+                    usingCache = true;
+                } else {
+                    // cache current data
+                    RWSharedPrefsHelper.saveJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId, result);
+                }
 
-        public RetrieveTagsTask(Context context, String projectId) {
-            this.context = context;
-            this.projectId = projectId;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            debugLog("Retrieving tags for project");
-            return perform(mActionFactory.createRetrieveTagsForProjectAction(projectId), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Retrieve project tags result: " + result);
-
-            // try to use cache when no server data received
-            boolean usingCache = false;
-            if (result == null) {
-                result = RWSharedPrefsHelper.loadJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId);
-                usingCache = true;
-            } else {
-                // cache current data
-                RWSharedPrefsHelper.saveJSONObject(context, RW.PROJECT_TAGS_CACHE, projectId, result);
+                if (result == null) {
+                    Log.w(TAG, "Could not retrieve tags data from server and no cached data available!");
+                    broadcast(RW.NO_TAGS);
+                } else {
+                    tags.fromJson(result, usingCache ? RWTags.FROM_CACHE : RWTags.FROM_SERVER);
+                    broadcast(RW.TAGS_LOADED);
+                }
             }
-            
-            if (result == null) {
-                Log.w(TAG, "Could not retrieve tags data from server and no cached data available!");
-                broadcast(RW.NO_TAGS);
-            } else {
-                tags.fromJson(result, usingCache ? RWTags.FROM_CACHE : RWTags.FROM_SERVER);
-                broadcast(RW.TAGS_LOADED);
-            }
-        }
+        });
     }
     
     
     /**
-     * Async Task to start play back of a sound stream from the server. When the
+     * Starts play back of a sound stream from the server. When the
      * request is successful it will also start the ping timer that sends heart
      * beats back to the server.
      */
-    private class StartPlaybackTask extends AsyncTask<Void, Void, String> {
-        
-        private RWList selections;
-        
-        public StartPlaybackTask(RWList tags) {
-            this.selections = tags;
-        }
-        
-        @Override
-        protected String doInBackground(Void... params) {
-            // start initial stream without selection
-            debugLog("Starting Playback from Service");
-            return perform(mActionFactory.createRequestStreamAction(selections), true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            debugLog("Starting Playback from Service result: " + result);
-            // check for errors
-            mStreamUrl = null;
-            if (result == null) {
-                Log.e(TAG, "Operation failed, no response available to start audio stream from.", null);
-                broadcast(RW.UNABLE_TO_PLAY);
-            } else {
-                String streamUrlKey = getString(R.string.rw_key_stream_url);
-                try {
-                    JSONObject jsonObj = new JSONObject(result);
-                    mStreamUrl = jsonObj.optString(streamUrlKey, null);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Invalid response from server", e);
-                    broadcast(RW.UNABLE_TO_PLAY);
-                }
-                
-                if ((mStreamUrl == null) || (mStreamUrl.length() == 0)) {
+    private void startPlayback(RWList tags) {
+        RWList selections = tags;
+        perform(mActionFactory.createRequestStreamAction(selections), true, new ServicePerformListener() {
+            @Override
+            public void onPerformComplete(String result) {
+                debugLog("Starting Playback from Service result: " + result);
+                // check for errors
+                mStreamUrl = null;
+                if (result == null) {
+                    Log.e(TAG, "Operation failed, no response available to start audio stream from.", null);
                     broadcast(RW.UNABLE_TO_PLAY);
                 } else {
-                    preparePlayer(0);
+                    String streamUrlKey = getString(R.string.rw_key_stream_url);
+                    try {
+                        JSONObject jsonObj = new JSONObject(result);
+                        mStreamUrl = jsonObj.optString(streamUrlKey, null);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Invalid response from server", e);
+                        broadcast(RW.UNABLE_TO_PLAY);
+                    }
+
+                    if ((mStreamUrl == null) || (mStreamUrl.length() == 0)) {
+                        broadcast(RW.UNABLE_TO_PLAY);
+                    } else {
+                        preparePlayer(0);
+                    }
                 }
             }
-        }
+        });
     }
+
     private void preparePlayer(int startingErrorCount ){
         this.errorCount = startingErrorCount;
         preparePlayer();
@@ -344,7 +308,11 @@ import java.util.TimerTask;
             try {
                 debugLog("reset: " + playUrl);
                 synchronized (this) {
-                    mPlayer.reset();
+                    if(mPlayer == null){
+                        createPlayer();
+                    }else {
+                        mPlayer.reset();
+                    }
                     mPlayer.setDataSource(playUrl);
                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     debugLog("Preparing: " + playUrl);
@@ -456,7 +424,7 @@ import java.util.TimerTask;
                 manageSessionState(SessionState.UNINITIALIZED);
             } else if (RW.CONTENT_LOADED.equalsIgnoreCase(intent.getAction())) {
                 if (mSessionState != SessionState.ON_LINE) {
-                    new RetrieveTagsTask(context, configuration.getProjectId()).execute();
+                    retrieveTags(context, configuration.getProjectId());
                 }                
             } else if (RW.NO_CONTENT.equalsIgnoreCase(intent.getAction())) {
                 manageSessionState(SessionState.UNINITIALIZED);
@@ -737,36 +705,22 @@ import java.util.TimerTask;
         return RWLocationTracker.instance().getLastLocation();
     }
 
-    
+
     @Override
     public IBinder onBind(Intent intent) {
+        if (intent != null) {
+            getSettingsFromIntent(intent);
+        }
         return mBinder;
     }
 
-    
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // intent will be null on restart!
         if (intent != null) {
             getSettingsFromIntent(intent);
         }
-        
-        // create a pending intent to start the specified activity from the notification
-        Intent ovIntent = new Intent(this, mNotificationActivity);
-        //FIXME new_task?
-        mNotificationPendingIntent = PendingIntent.getActivity(this, 0, ovIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        //FIXME remove notification onStop
-        // create a notification and move service to foreground
-        mRwNotification = new Notification(mNotificationIconId, "Roundware Service Started", System.currentTimeMillis());
-        mRwNotification.number = 1;
-        mRwNotification.flags = mRwNotification.flags
-                | Notification.FLAG_FOREGROUND_SERVICE
-                | Notification.FLAG_ONGOING_EVENT
-                | Notification.FLAG_NO_CLEAR;
-        setNotificationText("");
-
-        startForeground(NOTIFICATION_ID, mRwNotification);
 
         // start initializing the Roundware session, this will attempt to get the configuration, tags and content
         manageSessionState(SessionState.INITIALIZING);
@@ -774,7 +728,28 @@ import java.util.TimerTask;
         return Service.START_STICKY;
     }
 
+    private void makeNotification(Class<?> klass){
+        // create a pending intent to start the specified activity, default on the one from the notification
+        Intent ovIntent = new Intent(this, klass == null ? mNotificationActivity : klass);
+        ovIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mNotificationPendingIntent = PendingIntent.getActivity(this, PendingIntent.FLAG_CANCEL_CURRENT , ovIntent, 0);
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(mNotificationIconId)
+                .setContentTitle(mNotificationTitle)
+                .setContentText(mNotificationDefaultText)
+                .setContentIntent(mNotificationPendingIntent)
+                .setColor(mNotificationColor)
+                .setAutoCancel(false)
+                .setOngoing(true);
+
+        mRwNotification = builder.build();
+        // create a notification and move service to foreground
+        mRwNotification.flags = mRwNotification.flags
+                | Notification.FLAG_FOREGROUND_SERVICE
+                | Notification.FLAG_ONGOING_EVENT
+                | Notification.FLAG_NO_CLEAR;
+    }
 
     /**
      * Parse the raw meta data and broadcast. This may likely be somewhat preliminary, so expect
@@ -840,7 +815,7 @@ import java.util.TimerTask;
         debugLog("+++ playbackStart +++");
         if (!isPlaying()) {
             createPlayer();
-            new StartPlaybackTask(tags).execute();
+            startPlayback(tags);
         }
     }
     
@@ -884,6 +859,10 @@ import java.util.TimerTask;
             if (mNotificationTitle == null) {
                 mNotificationTitle = "Roundware";
             }
+            mNotificationColor = intent.getExtras().getInt(RW.EXTRA_NOTIFICATION_COLOR);
+            if(mNotificationColor == 0){
+                mNotificationColor = 0x253360;
+            }
             mNotificationDefaultText = intent.getExtras().getString(RW.EXTRA_NOTIFICATION_DEFAULT_TEXT);
             if (mNotificationDefaultText == null) {
                 mNotificationDefaultText = "Return to app";
@@ -895,13 +874,34 @@ import java.util.TimerTask;
                     mNotificationActivity = Class.forName(className);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Unknown class specified for handling " + "notification: " + className);
-                mNotificationActivity = null;
+                try{
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); //getClassLoader();
+                    mNotificationActivity = classLoader.loadClass(className);
+                } catch (ClassNotFoundException e1) {
+                    Log.e(TAG, "Unknown class specified for handling " + "notification: " + className);
+                    mNotificationActivity = null;
+
+                }
             }
         }
     }
 
-    
+    public void bindActivity(Activity activity){
+        makeNotification(activity.getClass());
+        if(boundActivities == 0){
+            stopForeground(true);
+        }
+        boundActivities++;
+    }
+
+
+    public void unbindActivity() {
+        boundActivities--;
+        if(boundActivities == 0){
+            startForeground(NOTIFICATION_ID, mRwNotification);
+        }
+    }
+
     @Override
     public void onDestroy() {
         stopService();
@@ -912,7 +912,7 @@ import java.util.TimerTask;
         super.onDestroy();
     }
 
-    
+
     /**
      * Shut down the RWService instance. Makes sure the location updates
      * are stopped, the background processing of the action queue is stopped,
@@ -951,29 +951,23 @@ import java.util.TimerTask;
 
     
     /**
-     * Updates the text in the RWService notification placed in the Android
-     * notification bar on the screen of the device.
+     * Updates the ticker text in the RWService notification placed in the Android
+     * notification bar on the screen of the device _and_ posts notification.
+     * NOTE: Only functional if detailed messaging is set true!
+     * @see org.roundware.service.RWService#setShowDetailedMessages(boolean)
      * 
      * @param message to be displayed
      */
-    public void setNotificationText(String message) {
-        if ((mRwNotification != null) && (mNotificationPendingIntent != null)) {
+    public void setNotificationTickerText(String message) {
+        if( mShowDetailedMessages && mRwNotification != null && mNotificationPendingIntent != null ) {
             NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) {
                 if (message != null) {
                     boolean debugMsg = message.startsWith(".");
                     String msg = debugMsg ? message.subSequence(1, message.length()).toString() : message;
-
-                    boolean defaultMsg = message.equalsIgnoreCase(mNotificationDefaultText);
-
-                    if ((!debugMsg) || (mShowDetailedMessages)) {
-                        mRwNotification.setLatestEventInfo(this, mNotificationTitle, msg, mNotificationPendingIntent);
-                        if (!defaultMsg) {
-                            mRwNotification.tickerText = msg;
-                        } else {
-                            mRwNotification.tickerText = "";
-                        }
-                    }
+                    mRwNotification.tickerText = msg;
+                }else{
+                    mRwNotification.tickerText = "";
                 }
 
                 mRwNotification.when = System.currentTimeMillis();
@@ -1320,45 +1314,15 @@ import java.util.TimerTask;
      * current location (latitude, longitude) of the device.
      * 
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
     public String rwSendMoveListener(boolean now) {
-        if ((configuration.getSessionId() != null) && (isPlaying()) && (!isPlayingMuted())) {
-            return perform(mActionFactory.createModifyStreamAction(), now);
+        if (configuration.getSessionId() != null && isPrepared) {
+            return perform(mActionFactory.createModifyStreamAction(), now, null);
         }
         return null;
     }
     
-    
-    /**
-     * Retrieves information about the asset currently being streamed by the
-     * Roundware server, if the project supports metadata and audio is playing
-     * and not playing the static soundtrack.
-     * 
-     * Note that the Android buffers streaming audio so the asset streamed by
-     * the server is not directly audible on the device.
-     *  
-     * @return server response, see the Roundware protocol documentation
-     */
-    public String rwGetCurrentStreamingAsset() {
-        if (configuration.isStreamMetadataEnabled() && isPlaying() && !isPlayingStaticSoundtrack()) {
-            return perform(mActionFactory.createRetrieveLastStreamedAssetInfoAction(), true);
-        }
-        return null;
-    }
-    
-    
-    /**
-     * Retrieves information about the specified asset from the Roundware
-     * server, if it exists.
-     *  
-     * @param assetId of asset to retrieve information for
-     * @return server response, see the Roundware protocol documentation
-     */
-    public String rwGetAssetInfo(int assetId) {
-        return perform(mActionFactory.createRetrieveAssetInfoAction(assetId), true);
-    }
-
 
     /**
      * Sends a heartbeat call to the Roundware server, to let it know we
@@ -1370,7 +1334,7 @@ import java.util.TimerTask;
      */
     public String rwSendHeartbeat() {
         if (configuration.getSessionId() != null) {
-            String response = perform(mActionFactory.createHeartbeatAction(), true);
+            String response = perform(mActionFactory.createHeartbeatAction(), true, null);
             broadcast(RW.HEARTBEAT_SENT);
             return response;
         }
@@ -1386,10 +1350,10 @@ import java.util.TimerTask;
      * @param tags to include in log event, may be null
      * @param data to include in log event, may be null
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
     public String rwSendLogEvent(int eventTypeResId, RWList tags, String data, boolean now) {
-        return perform(mActionFactory.createLogEventAction(eventTypeResId, tags, data), now);
+        return perform(mActionFactory.createLogEventAction(eventTypeResId, tags, data), now, null);
     }
     
 
@@ -1404,26 +1368,26 @@ import java.util.TimerTask;
      * @param voteType to apply
      * @param voteValue to apply, can be null
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
     public String rwSendVoteAsset(int assetId, String voteType, String voteValue, boolean now) {
-        return perform(mActionFactory.createVoteAssetAction(assetId, voteType, voteValue), now);
+        return perform(mActionFactory.createVoteAssetAction(assetId, voteType, voteValue), now, null);
     }
 
-    
+
     /**
      * Sends a call to the Roundware server to request an audio stream
      * based on the specified selections of tags options.
-     * 
+     *
      * @param tags of tags options for the audio
-     * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @param now True to sent immediately, false for queued processing
+     * @return server response, empty string when queued or on ui thread
      */
     public String rwRequestStream(RWList tags, boolean now) {
-        return perform(mActionFactory.createRequestStreamAction(tags), now);
+        return perform(mActionFactory.createRequestStreamAction(tags), now, null);
     }
 
-    
+
     /**
      * Sends a call to the Roundware server to request modifying of the
      * already streaming audio stream based on the specified selections
@@ -1431,10 +1395,10 @@ import java.util.TimerTask;
      * 
      * @param tags of tags options for the audio
      * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      */
     public String rwModifyStream(RWList tags, boolean now) {
-        return perform(mActionFactory.createModifyStreamAction(tags), now);
+        return perform(mActionFactory.createModifyStreamAction(tags), now, null);
     }
     
     
@@ -1446,7 +1410,7 @@ import java.util.TimerTask;
      */
     public String rwSkipAhead() {
         //TODO notify metadata listener that current metadata is null
-        return perform(mActionFactory.createSkipAheadAction(), true);
+        return perform(mActionFactory.createSkipAheadAction(), true, null);
     }
     
     
@@ -1455,10 +1419,11 @@ import java.util.TimerTask;
      * specified asset into the audio stream.
      * 
      * @param assetId of recording to be inserted into the stream
-     * @return server response, see the Roundware protocol documentation
+     * @return server response, see the Roundware protocol documentation,
+     * empty string when queued or on ui thread
      */
     public String rwPlayAssetInStream(int assetId) {
-        return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true);
+        return perform(mActionFactory.createPlayAssetInStreamAction(assetId), true, null);
     }
 
     
@@ -1475,19 +1440,24 @@ import java.util.TimerTask;
      * @param submitted for stream (Y) or not (N), null to ignore
      * @param now True to sent immediately, false for queued processing
      * @param sharingBroadcast True to broadcast an RW_SHARING_MESSAGE
-     * @return server response, empty string when queued
+     * @return server response, empty string when queued or on ui thread
      * @throws Exception when temporary file could not be created
      */
     public String rwSubmit(RWList tags, String filename, String submitted, boolean now, boolean sharingBroadcast) throws Exception {
         // create an action to create an asset envelope and perform it directly
         int envelopeId = -1;
+        if(Looper.myLooper() == Looper.getMainLooper()){
+            throw new Exception("do not call on main thread!");
+        }
 
         // create a temporary copy of the recording file
         File queueFile = RWActionQueue.instance().createTemporaryQueueFile(filename);
 
         // try to open an envelope on the server
         RWAction createEnvelopeAction = mActionFactory.createCreateEnvelopeAction(tags);
-        String jsonResponse = perform(createEnvelopeAction, true);
+        String jsonResponse = perform(createEnvelopeAction, true, null);
+
+
         if (jsonResponse != null) {
             String envelopeKey = getString(R.string.rw_key_envelope_id);
             JSONObject jsonObj = new JSONObject(jsonResponse);
@@ -1499,7 +1469,7 @@ import java.util.TimerTask;
 
         if (envelopeId == -1) {
             // envelope could not be created, queue action for later processing
-            return perform(addAssetAction, false);
+            return perform(addAssetAction, false, null);
         } else {
             // when submitting directly, send out a sharing broadcast to apps
             if ((now) && (sharingBroadcast)) {
@@ -1516,24 +1486,24 @@ import java.util.TimerTask;
                 } else {
                     url = configuration.getSharingUrl();
                 }
-                
+
                 // replace placeholder with evelope id
                 url = url.replace("[id]", envId);
-                
+
                 // get location details
                 Double lat = addAssetAction.getLatitude();
                 Double lon = addAssetAction.getLongitude();
                 Double acc = addAssetAction.getAccuracy();
-                
+
                 // send the broadcast message
                 broadcastSharingMessage(msg, url, envId, lat, lon, acc);
             }
             // start the actual file upload, or place in queue
-            return perform(addAssetAction, now);
+            return perform(addAssetAction, now, null);
         }
     }
 
-    
+
     /**
      * Performs a server call for the specified RWAction instance. It can
      * either be handled directly (i.e. the request is created, sent to the
@@ -1545,21 +1515,40 @@ import java.util.TimerTask;
      * queue when it concerns file uploads.
      * 
      * @param action to perform as Roundware server call
-     * @param now True to sent immediately, false for queued processing 
-     * @return server response, empty string when queued
+     * @param now True is sent immediately on non-ui thread, false for queued processing
+     * @param listener to update on result
+     * @return server response, empty string when queued or on ui thread
      */
-    protected String perform(RWAction action, boolean now) {
+    protected String perform(final RWAction action, boolean now, final ServicePerformListener listener) {
         if (now) {
-            return perform(action);
+            if(Looper.myLooper() == Looper.getMainLooper()) {
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        String result = perform(action);
+                        if(listener != null){
+                            listener.onPerformComplete(result);
+                        }
+                    }
+                }).start();
+                return "";
+            }else{
+                String result = perform(action);
+                if(listener != null){
+                    listener.onPerformComplete(result);
+                }
+                return result;
+            }
         } else {
             RWActionQueue.instance().add(action.getProperties());
-            setNotificationText(null);
+            setNotificationTickerText(null);
             
             // broadcast operation QUEUED intent
             String msg = "Action placed in queued";
             Log.i(TAG, msg, null);
             broadcastActionQueued(action, TAG + ": " + msg, null);
-            
+
             return "";
         }
     }
@@ -1568,7 +1557,9 @@ import java.util.TimerTask;
     /**
      * Handles the setting of notification texts and broadcasting intents
      * surround the calling of the action.perform() method (that does the
-     * actual calling of the server).
+     * actual calling of the server). Performs on this thread!
+     * @see org.roundware.service.RWService#perform(RWAction, boolean,
+     * org.roundware.service.RWService.ServicePerformListener)
      * 
      * @param action to be executed
      * @return server response
@@ -1579,7 +1570,7 @@ import java.util.TimerTask;
             mLastRequestMsec = System.currentTimeMillis();
 
             try {
-                setNotificationText(action.getCaption());
+                setNotificationTickerText(action.getCaption());
             } catch (Exception e) {
                 Log.e(TAG, "Could not update notification text!", e);
             }
@@ -1614,8 +1605,6 @@ import java.util.TimerTask;
             if (action.getFilename() != null) {
                 rwSendLogEvent(R.string.rw_et_stop_upload, null, "true", true);
             }
-
-            setNotificationText(mNotificationDefaultText);
 
             // broadcast operation SUCCESS intent
             broadcastActionSuccess(action, result);
@@ -1816,7 +1805,7 @@ import java.util.TimerTask;
                 playbackStop();
                 break;
             case INITIALIZING:
-                new RetrieveConfigurationTask(this, configuration.getDeviceId(), configuration.getProjectId()).execute();
+                retrieveConfiguration(this, configuration.getDeviceId(), configuration.getProjectId());
                 break;
             case ON_LINE:
                 // refresh configuration after threshold time so session ID can be refreshed
@@ -1824,11 +1813,11 @@ import java.util.TimerTask;
                 long millis = System.currentTimeMillis();
                 if ((millis - mLastStateChangeMsec) > (configuration.getHeartbeatTimerSec() * 5)) {
                     // project ID assumed to be already in configuration and not changing!
-                    new RetrieveConfigurationTask(this, configuration.getDeviceId(), configuration.getProjectId()).execute();
+                    retrieveConfiguration(this, configuration.getDeviceId(), configuration.getProjectId());
                 }
                 // refresh tags
                 if (tags.getDataSource() != RWTags.FROM_SERVER) {
-                    new RetrieveTagsTask(this, configuration.getProjectId()).execute();
+                    retrieveTags(this, configuration.getProjectId());
                 }
                 startQueueTimer();
                 startLocationUpdates();
@@ -1932,7 +1921,7 @@ import java.util.TimerTask;
                 }
             }
 
-            setNotificationText(null);
+            setNotificationTickerText(null);
             return;
         }
 
@@ -1940,9 +1929,9 @@ import java.util.TimerTask;
         if (action != null) {
             if (perform(action) != null) {
                 RWActionQueue.instance().delete(action);
-                setNotificationText(null);
+                setNotificationTickerText(null);
             } else {
-                setNotificationText(getString(R.string.roundware_notification_request_failed));
+                setNotificationTickerText(getString(R.string.roundware_notification_request_failed));
                 // remove failing action from queue, unless it is a file upload
                 if (action.getFilename() == null) {
                     RWActionQueue.instance().delete(action);
@@ -1969,7 +1958,7 @@ import java.util.TimerTask;
                         isPrepared = true;
                         mPrepareTime = System.currentTimeMillis() - mStartTime;
                     }
-
+                    rwSendMoveListener(false);
                     broadcast(RW.READY_TO_PLAY);
                     if (mStartPlayingWhenReady) {
                         playbackFadeIn(mVolumeLevel);
@@ -2073,7 +2062,7 @@ import java.util.TimerTask;
 
         setVolumeLevel(0, true);
         mStartPlayingWhenReady = false;
-        setNotificationText(".Audio muted");
+        setNotificationTickerText(".Audio muted");
     }
 
     
@@ -2099,7 +2088,7 @@ import java.util.TimerTask;
             rwSendLogEvent(R.string.rw_et_start_listen, null, null, true);
 
             setVolumeLevel(endVolumeLevel, true);
-            setNotificationText(".Audio unmuted");
+            setNotificationTickerText(".Audio unmuted");
         } else {
             Log.i(TAG, "Fade in to volume level " + endVolumeLevel + " ignored, " + "MediaPlayer not initialized!", null);
             setVolumeLevel(endVolumeLevel, true);
@@ -2195,5 +2184,9 @@ import java.util.TimerTask;
         if(D){
             Log.d(TAG, msg);
         }
+    }
+
+    private interface ServicePerformListener{
+        public void onPerformComplete(String result);
     }
 }

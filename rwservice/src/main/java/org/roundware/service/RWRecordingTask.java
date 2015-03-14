@@ -4,19 +4,18 @@
  */
 package org.roundware.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.roundware.service.R;
-
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Asynchronous task that handles creating an audio recording, suitable for
@@ -239,8 +238,9 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
         }
 
         recordInstance.stop();
-        save(mTempDirName + RECORDING_FILE_NAME, bytesOut.toByteArray());
         recordInstance.release();
+        save(mTempDirName + RECORDING_FILE_NAME, bytesOut);
+
 
         if (mListener != null) {
             long currentMillis = System.currentTimeMillis();
@@ -253,28 +253,40 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
 
     /**
      * Saves the supplied byte stream as a WAV file.
-     * 
-     * @param name The desired filename
-     * @param bytes The sound data in 16-bit little-endian PCM format
+     *  @param name The desired filename
+     * @param bytesOut
      */
-    public void save(String name, byte[] bytes) {
-        File fileName = new File(name);
-        if (fileName.exists())
-            fileName.delete();
+    public void save(String name, ByteArrayOutputStream bytesOut) {
+        File file = new File(name);
+        if (file.exists()) {
+            file.delete();
+        }
+        BufferedOutputStream fileOut;
+        try{
+            file.createNewFile();
+            fileOut = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (IOException e) {
+            Log.e(TAG, "Error saving WAV file: " + e.getMessage(), e);
+            return;
+        }
 
         try {
-            fileName.createNewFile();
-            FileOutputStream out = new FileOutputStream(fileName);
-
-            byte[] header = createHeader(bytes);
-            out.write(header); 
-            out.write(bytes);
-            out.flush();
-            out.close();
-            System.gc();
+            byte[] header = createHeader(bytesOut.size());
+            fileOut.write(header);
+            bytesOut.writeTo(fileOut);
+            fileOut.flush();
 
         } catch (Exception e) {
             Log.e(TAG, "Error saving WAV file: " + e.getMessage(), e);
+        }finally {
+            if(fileOut != null) {
+                try {
+                    fileOut.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "Error saving WAV file: " + e.getMessage(), e);
+                }
+            }
+            System.gc();
         }
     }
 
@@ -283,13 +295,13 @@ public class RWRecordingTask extends AsyncTask<Void, Void, String> {
      * Creates a valid WAV header for the given bytes, using the class-wide
      * sample rate.
      *
-     * @param bytes The sound data to be appraised
+     * @param len The length of the sound data to be appraised
      * @return The header, ready to be written to a file
      */
-    public byte[] createHeader(byte[] bytes) {
-        int totalLength = bytes.length + 4 + 24 + 8;
+    public byte[] createHeader(int len) {
+        int totalLength = len + 4 + 24 + 8;
         byte[] lengthData = intToBytes(totalLength);
-        byte[] samplesLength = intToBytes(bytes.length);
+        byte[] samplesLength = intToBytes(len);
         byte[] bitRate = intToBytes(mSampleRate);
         byte[] bytesPerSecond = intToBytes(mSampleRate*2);
 

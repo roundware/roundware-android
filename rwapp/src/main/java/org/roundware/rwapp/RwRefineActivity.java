@@ -1,3 +1,8 @@
+/**
+ * Roundware Android code is released under the terms of the GNU General Public License.
+ * See COPYRIGHT.txt, AUTHORS.txt, and LICENSE.txt in the project root directory for details.
+ */
+
 package org.roundware.rwapp;
 
 import android.content.Context;
@@ -15,9 +20,9 @@ import java.io.IOException;
 /**
  * Refine Activity
  */
-public class RwRefineActivity extends RwServiceWebActivity{
+public class RwRefineActivity extends RwWebActivity {
     public final static String RWREFINE_TAG_URI = "taguri";
-    private final static String LOGTAG = RwServiceWebActivity.class.getSimpleName();
+    private final static String LOGTAG = RwRefineActivity.class.getSimpleName();
     private final static String ROUNDWARE_TAGS_TYPE = "listen";
     private RWList mTagsList;
     private boolean mTagsChanged = false;
@@ -28,10 +33,17 @@ public class RwRefineActivity extends RwServiceWebActivity{
         return null;
     }
 
+    /**
+     * Override to do additional data replacement, remember to call super!
+     * @param input
+     * @return the munged data
+     */
+    protected String mungeUrlData(String input){
+        return input.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+    }
+
     @Override
     protected void handleOnServiceConnected(RWService service) {
-        super.handleOnServiceConnected(service);
-
         mTagsList = new RWList(mRwBinder.getTags().filterByType(ROUNDWARE_TAGS_TYPE));
         mTagsList.cullNonWebTags();
         mTagsList.restoreSelectionState(Settings.getSharedPreferences());
@@ -42,7 +54,7 @@ public class RwRefineActivity extends RwServiceWebActivity{
             String contentFileName = contentFileDir + "listen.html";
             try {
                 String data = mRwBinder.readContentFile(contentFileName);
-                data = data.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
+                data = mungeUrlData(data);
                 mWebView.loadDataWithBaseURL("file://" + contentFileName, data, null, null, null);
             } catch (IOException e) {
                 e.printStackTrace();

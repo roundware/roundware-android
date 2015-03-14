@@ -5,7 +5,12 @@
 package org.roundware.service;
 
 import android.content.Context;
-import android.location.*;
+import android.location.Criteria;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,8 +39,8 @@ public class RWLocationTracker extends Observable {
 
     private Context mContext;
     private LocationManager mLocationManager;
-    private String mCoarseLocationProvider;
-    private String mGpsLocationProvider;
+    private String mCoarseLocationProviderName;
+    private String mGpsLocationProviderName;
     private boolean mGpsLocationAvailable;
     private boolean mUseGpsIfPossible;
     private long mMinUpdateTime;
@@ -44,7 +49,16 @@ public class RWLocationTracker extends Observable {
     private boolean mFixedLocation;
     private boolean mUsingGpsLocation;
     private boolean mUsingCoarseLocation;
+    private long mLastUpdateMs = -1;
 
+
+    private static final float MIN_DISPLANCEMENT_M = 0.1f;
+    //Google recommends a minimum of 5 seconds
+    private static final long UPDATE_INTERVAL_MS = 5 * 1000;
+    //I observed no good gps loc points with an inaccuracy above 130 meters
+    private static final int LARGEST_INACCURACY_M = 150;
+    //wikipedia says a normal walk is 1.4 m/s and a competitive one is 2.5 m/s
+    private static final float VERY_FAST_WALK_MPS = 2.0f;
 
     /**
      * LocationListener for the coarse (Network) location provider. Used
@@ -53,23 +67,30 @@ public class RWLocationTracker extends Observable {
     private final LocationListener mCoarseLocationProviderListener = new LocationListener() {
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (D) { Log.d(TAG, "Coarse location provider status changed"); }
+            if (D) { Log.d(TAG, "Coarse location provider status changed " + status);
+                switch (status){
+                    case LocationProvider.AVAILABLE:
+                        break;
+                    case LocationProvider.OUT_OF_SERVICE:
+                        swithToGpsLocationUpdates();
+                        break;
+                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                        break;
+                }}
         }
 
         public void onProviderEnabled(String provider) {
             if (D) { Log.d(TAG, "Coarse location provider enabled - finding last know location"); }
-            gotoLastKnownLocation();
         }
 
         public void onProviderDisabled(String provider) {
             if (D) { Log.d(TAG, "Coarse location provider disabled"); }
-            updateWithNewLocation(null);
         }
 
         public void onLocationChanged(Location location) {
             if (D) { Log.d(TAG, "Coarse location provider location changed"); }
-            if (mUsingCoarseLocation) {
-                gotoLastKnownLocation();
+            if (!mGpsLocationAvailable) {
+                updateWithNewLocation(location);
             }
         }
     };
@@ -82,12 +103,23 @@ public class RWLocationTracker extends Observable {
     private final LocationListener mGpsLocationProviderListener = new LocationListener() {
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (D) { Log.d(TAG, "GPS location provider status changed"); }
+            if (D) { Log.d(TAG, "GPS location provider status changed " + status);}
+            switch (status){
+                case LocationProvider.AVAILABLE:
+                    mGpsLocationAvailable =true;
+                    break;
+                case LocationProvider.OUT_OF_SERVICE:
+                    mGpsLocationAvailable =false;
+                    switchToCoarseLocationUpdates();
+                    break;
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    mGpsLocationAvailable =false;
+                    break;
+            }
         }
 
         public void onProviderEnabled(String provider) {
             if (D) { Log.d(TAG, "GPS location provider enabled"); }
-            // not switching yet, waiting for first fix
         }
 
         public void onProviderDisabled(String provider) {
@@ -96,9 +128,7 @@ public class RWLocationTracker extends Observable {
 
         public void onLocationChanged(Location location) {
             if (D) { Log.d(TAG, "GPS location provider location update"); }
-            if (mUsingGpsLocation) {
-                gotoLastKnownLocation();
-            }
+                updateWithNewLocation(location);
         }
     };
 
@@ -106,8 +136,8 @@ public class RWLocationTracker extends Observable {
     /**
      * GPS status listener, used to get notified about GPS availability and
      * coordinate fixes. When GPS is available and has a first coordinate fix
-     * we will start using it, if it is no we switch back to using the coarse
-     * location provider.
+     * we will start using it. In large the udpates here are verbose and redundant
+     * to LocationListener.onStatusChanged
      */
     private final GpsStatus.Listener mGpsStatusListener = new GpsStatus.Listener() {
         @Override
@@ -116,16 +146,15 @@ public class RWLocationTracker extends Observable {
                 case GpsStatus.GPS_EVENT_FIRST_FIX:
                     if (D) { Log.d(TAG, "GPS first fix"); }
                     mGpsLocationAvailable = true;
-                    swithToGpsLocationUpdates();
                     break;
                 case GpsStatus.GPS_EVENT_STARTED:
-                    if (D) { Log.d(TAG, "GPS started"); }
-                    mGpsLocationAvailable = false;
+                    if (D) {
+                        GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
+                        Log.d(TAG, "GPS started " + gpsStatus.getTimeToFirstFix());
+                    }
                     break;
                 case GpsStatus.GPS_EVENT_STOPPED:
-                    if (D) { Log.d(TAG, "GPS stopped"); }
-                    mGpsLocationAvailable = false;
-                    switchToCoarseLocationUpdates();
+                    if (D) { Log.d(TAG, "GPS stopped?"); }
                     break;
             }
         }
@@ -137,7 +166,7 @@ public class RWLocationTracker extends Observable {
      * 
      * @return singleton instance of the class
      */
-    public static RWLocationTracker instance() {
+    public synchronized static RWLocationTracker instance() {
         if (mSingleton == null) {
             mSingleton = new RWLocationTracker();
         }
@@ -177,7 +206,7 @@ public class RWLocationTracker extends Observable {
      * @param longitude of the fixed location
      */
     public void fixLocationAt(Double latitude, Double longitude) {
-        Location l = new Location(mCoarseLocationProvider);
+        Location l = new Location(mCoarseLocationProviderName);
         l.setLatitude(latitude);
         l.setLongitude(longitude);
         fixLocationAt(l);
@@ -247,19 +276,16 @@ public class RWLocationTracker extends Observable {
         if (mLocationManager != null) {
             stopLocationUpdates();
             mLocationManager = null;
-            mCoarseLocationProvider = null;
-            mGpsLocationProvider = null;
+            mCoarseLocationProviderName = null;
+            mGpsLocationProviderName = null;
         }
 
         mContext = context;
-
         mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        if (mLocationManager == null) {
-            Toast.makeText(context, R.string.roundware_no_location_service, Toast.LENGTH_SHORT).show();
-            return false;
-        }
 
-        return getLocationProviders();
+        boolean rc = getLocationProviders();
+        gotoLastKnownLocation();
+        return rc;
     }
 
 
@@ -273,12 +299,14 @@ public class RWLocationTracker extends Observable {
         // get the GPS location provider info
         LocationProvider provider = mLocationManager.getProvider(LocationManager.GPS_PROVIDER);
         if (provider != null) {
-            if (D) { Log.d(TAG, "GPS location provider name : " + mGpsLocationProvider); }
-            mGpsLocationProvider = provider.getName();
+            mGpsLocationProviderName = provider.getName();
+            //mGpsLocationAvailable = true;
+            if (D) { Log.d(TAG, "GPS location provider name : " + mGpsLocationProviderName); }
         } else {
             if (D) { Log.d(TAG, "GPS location provider not found on this device"); }
-            mGpsLocationProvider = null;
+            mGpsLocationProviderName = null;
         }
+
         mGpsLocationAvailable = false;
 
         // get a coarse (usually the network) location provider as backup
@@ -289,12 +317,11 @@ public class RWLocationTracker extends Observable {
         coarseCriteria.setCostAllowed(false);
         coarseCriteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
 
-        mCoarseLocationProvider = mLocationManager.getBestProvider(coarseCriteria, true);
-        if (D) { Log.d(TAG, "Coarse location provider name : " + mCoarseLocationProvider); }
+        mCoarseLocationProviderName = mLocationManager.getBestProvider(coarseCriteria, true);
+        if (D) { Log.d(TAG, "Coarse location provider name : " + mCoarseLocationProviderName); }
 
         // need to have at least one
-        if ((mGpsLocationProvider == null) && (mCoarseLocationProvider == null)) {
-            Toast.makeText(mContext, R.string.roundware_no_location_signal, Toast.LENGTH_SHORT).show();
+        if ((mGpsLocationProviderName == null) && (mCoarseLocationProviderName == null)) {
             return false;
         }
 
@@ -322,22 +349,42 @@ public class RWLocationTracker extends Observable {
         if (mFixedLocation) {
             return;
         }
-
-        mLastLocation = location;
-
-        if (D) {
-            if (location != null) {
-                String msg = String.format("%s: (%.6f, %.6f) %.1fm", location.getProvider(),
-                        location.getLatitude(), location.getLongitude(), location.getAccuracy());
-
-                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "No location info", Toast.LENGTH_SHORT).show();
-            }
+        if(location == null){
+            return;
         }
 
-        setChanged();
-        notifyObservers();
+        if( location.getAccuracy() < LARGEST_INACCURACY_M ) {
+            if (location.getSpeed() > VERY_FAST_WALK_MPS) {
+                Log.w(TAG, "Location speed is fast: " + location.getSpeed());
+                //panic
+                return;
+            }
+            if (mLastLocation != null && mLastUpdateMs != -1) {
+                float calcSpeed = mLastLocation.distanceTo(location) / (System.currentTimeMillis() - mLastUpdateMs);
+                if (calcSpeed > VERY_FAST_WALK_MPS) {
+                    Log.w(TAG, "Calculated speed is fast: " + calcSpeed);
+                    //panic
+                    return;
+                }
+            }
+
+            mLastLocation = location;
+            mLastUpdateMs = System.currentTimeMillis();
+
+            if (D) {
+                if (location != null) {
+                    String msg = String.format("%s: (%.6f, %.6f) %.1fm", location.getProvider(),
+                            location.getLatitude(), location.getLongitude(), location.getAccuracy());
+
+                    Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "No location info", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            setChanged();
+            notifyObservers();
+        }
 
     }
 
@@ -350,22 +397,17 @@ public class RWLocationTracker extends Observable {
         if (mLocationManager != null) {
             Location l;
             // check most accurate first
-            if (mUsingGpsLocation && mGpsLocationAvailable && (mGpsLocationProvider != null)) {
-                l = mLocationManager.getLastKnownLocation(mGpsLocationProvider);
+            if (mUsingGpsLocation && mGpsLocationAvailable && (mGpsLocationProviderName != null)) {
+                l = mLocationManager.getLastKnownLocation(mGpsLocationProviderName);
                 updateWithNewLocation(l);
                 return;
             }
 
             // use less accurate network location
-            if (mCoarseLocationProvider != null) {
-                l = mLocationManager.getLastKnownLocation(mCoarseLocationProvider);
+            if (mCoarseLocationProviderName != null) {
+                l = mLocationManager.getLastKnownLocation(mCoarseLocationProviderName);
                 updateWithNewLocation(l);
-                return;
             }
-        }
-
-        if (mContext != null) {
-            Toast.makeText(mContext, R.string.roundware_lost_location_signal, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -376,27 +418,35 @@ public class RWLocationTracker extends Observable {
      * wait for GPS availability and first coordinate fix, which then will be
      * switched to.
      * 
-     * @param minTime (msec) allowed between location updates
-     * @param minDistance (m) for location updates
+     * @param minTime (msec) allowed between location updates !ignored!
+     * @param minDistance (m) for location updates !ignored!
      * @param useGps when available on the device
      */
     public void startLocationUpdates(long minTime, float minDistance, boolean useGps) {
-        mMinUpdateTime = minTime;
-        mMinUpdateDistance = minDistance;
+        mMinUpdateTime = UPDATE_INTERVAL_MS; //minTime;
+        mMinUpdateDistance = MIN_DISPLANCEMENT_M; //minDistance;
         mUsingGpsLocation = false;
         mUsingCoarseLocation = false;
         mUseGpsIfPossible = useGps;
-        switchToCoarseLocationUpdates();
-        if ((mLocationManager != null) && (mGpsLocationAvailable) && (mUseGpsIfPossible)) {
+        if(areProvidersUnique()) {
+            startCoarseLocationUpdates();
+        }
+        if ((mLocationManager != null) && (mUseGpsIfPossible)) {
             mLocationManager.addGpsStatusListener(mGpsStatusListener);
+            startGpsLocationUpdates();
         }
     }
+
+    private boolean areProvidersUnique(){
+        return mCoarseLocationProviderName != null && !mCoarseLocationProviderName.equals(mGpsLocationProviderName);
+    }
+
 
 
     /**
      * Switches from using Network location updates to GPS location updates.
      */
-    public void swithToGpsLocationUpdates() {
+    private void swithToGpsLocationUpdates() {
         if (mUsingGpsLocation) {
             return;
         }
@@ -411,13 +461,26 @@ public class RWLocationTracker extends Observable {
             mUsingCoarseLocation = false;
 
             // set new listeners
-            if (mGpsLocationProvider != null) {
-                mLocationManager.requestLocationUpdates(mGpsLocationProvider, mMinUpdateTime, mMinUpdateDistance, mGpsLocationProviderListener);
+            if (mGpsLocationProviderName != null) {
+                mLocationManager.requestLocationUpdates(mGpsLocationProviderName, mMinUpdateTime, mMinUpdateDistance, mGpsLocationProviderListener);
                 mUsingGpsLocation = true;
             }
+        }
+    }
 
-            // update location info
-            gotoLastKnownLocation();
+    private void startCoarseLocationUpdates(){
+        if (mLocationManager != null) {
+            if (mCoarseLocationProviderName != null) {
+                mLocationManager.requestLocationUpdates(mCoarseLocationProviderName, mMinUpdateTime, mMinUpdateDistance, mCoarseLocationProviderListener);
+            }
+        }
+    }
+
+    private void startGpsLocationUpdates(){
+        if (mLocationManager != null) {
+            if (mGpsLocationProviderName != null) {
+                mLocationManager.requestLocationUpdates(mGpsLocationProviderName, mMinUpdateTime, mMinUpdateDistance, mGpsLocationProviderListener);
+            }
         }
     }
 
@@ -425,7 +488,7 @@ public class RWLocationTracker extends Observable {
     /**
      * Switches from using GPS location updates to Network location updates.
      */
-    public void switchToCoarseLocationUpdates() {
+    private void switchToCoarseLocationUpdates() {
         if (mUsingCoarseLocation) {
             return;
         }
@@ -442,13 +505,9 @@ public class RWLocationTracker extends Observable {
             mUsingGpsLocation = false;
 
             // set new listeners
-            if (mCoarseLocationProvider != null) {
-                mLocationManager.requestLocationUpdates(mCoarseLocationProvider, mMinUpdateTime, mMinUpdateDistance, mCoarseLocationProviderListener);
+            if (mCoarseLocationProviderName != null) {
+                mLocationManager.requestLocationUpdates(mCoarseLocationProviderName, mMinUpdateTime, mMinUpdateDistance, mCoarseLocationProviderListener);
                 mUsingCoarseLocation = true;
-            }
-
-            if ((mGpsLocationProvider != null) && (mUseGpsIfPossible)) {
-                mLocationManager.requestLocationUpdates(mGpsLocationProvider, mMinUpdateTime, mMinUpdateDistance, mGpsLocationProviderListener);
             }
 
             // update location info
