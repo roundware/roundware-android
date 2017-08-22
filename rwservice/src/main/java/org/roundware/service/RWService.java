@@ -322,7 +322,7 @@ import java.util.TimerTask;
                 }
                 debugLog("Waiting for prepare");
                 // get wifi lock, will be released when playback is stopped
-                mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                mWifiLock = ((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE))
                         .createWifiLock(WifiManager.WIFI_MODE_FULL, "roundware_playback_wifilock");
 
                 mWifiLock.setReferenceCounted(false);
