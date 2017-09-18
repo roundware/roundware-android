@@ -63,6 +63,10 @@
     Unable to load project configuration from server or
     cache. Please exit the app, check connectivity and try again.
 </string>
+<string name="unable_to_retrieve_webcontent">
+    Unable to load the web content for the app from the server.
+    Please exit the app, check connectivity and try again.
+</string>
 <string name="starting_playback_message">
     Waiting for audio from server, one moment please.
 </string>

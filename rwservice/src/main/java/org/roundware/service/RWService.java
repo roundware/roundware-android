@@ -25,6 +25,7 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -559,9 +560,10 @@ import java.util.TimerTask;
             
             @Override
             public void downloadingFailed(long timeStampMsec, String errorMessage) {
-                // TODO: pass error message in intent?
                 mContentFilesLocalDir = null;
-                broadcast(RW.NO_CONTENT);
+                Bundle extras = new Bundle();
+                extras.putString(RW.EXTRA_FAILURE_REASON, errorMessage);
+                broadcast(RW.NO_CONTENT, extras);
             }
         }).execute();
     }
@@ -1846,7 +1848,22 @@ import java.util.TimerTask;
         debugLog("Going to send broadcast event, action=" + action);
         sendBroadcast(intent);
     }
-    
+
+
+    /**
+     * Broadcast an intent with the specified action and extras.
+     *
+     * @param action intent action (not a RWAction)
+     * @param extras to include in the intent
+     */
+    private void broadcast(String action, Bundle extras) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        intent.putExtras(extras);
+        debugLog("Going to send broadcast event with extras, action=" + action);
+        sendBroadcast(intent);
+    }
+
     
     @SuppressLint("DefaultLocale")
     private void broadcastActionSuccess(RWAction action, String result) {

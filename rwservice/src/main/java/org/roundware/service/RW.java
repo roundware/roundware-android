@@ -160,8 +160,6 @@ public class RW {
      */
     public final static String EXTRA_STREAM_METADATA_TITLE = INTENT_EXTRA_PREFIX + "stream_metadata_title";
 
-
-
     /**
      * Uri from metadata, extract using below known names
      */
@@ -197,9 +195,6 @@ public class RW {
      * value: integer array
      */
     public final static String METADATA_URI_NAME_TAGS = "tags";
-
-
-
 
     /**
      * Extra for the generic server operation success or failure broadcast

@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipEntry;
@@ -27,7 +28,7 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
 
     // debugging
     private final static String TAG = "RWZipDownloadingTask";
-    private final static boolean D = false;
+    private final static boolean D = true;
 
     private static final int DOWNLOADING_EVENT_INTERVAL_MSEC = 2000; // 2.0 sec between updates
 
@@ -84,14 +85,27 @@ public class RWZipDownloadingTask extends AsyncTask<Void, Void, String> {
         if (D) { Log.d(TAG, "Starting download of: " + mFileUrl, null); }
 
         // download file from server
-        URLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
             URL url = new URL(mFileUrl);
-            connection = url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
+            int responseCode = connection.getResponseCode();
+
+            // follow permanent or temporary redirects to new location
+            if ((responseCode == HttpURLConnection.HTTP_MOVED_PERM) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
+                String newUrl = connection.getHeaderField("Location");
+                connection = (HttpURLConnection) (new URL(newUrl).openConnection());
+                if (D) { Log.d(TAG, "Redirected to: " + newUrl); }
+                responseCode = connection.getResponseCode();
+            }
+
+            if (responseCode != 200) {
+                throw new java.net.ConnectException("HTTP code " + responseCode);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Download failed: " + e.getMessage(), null);
-            return "Could not download app content files from: " + mFileUrl;
+            String msg = "Download failed: " + e.getMessage();
+            Log.e(TAG, msg, null);
+            return msg;
         }
 
         if (mListener != null) {
