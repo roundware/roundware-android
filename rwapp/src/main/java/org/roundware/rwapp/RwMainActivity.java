@@ -123,9 +123,13 @@ public class RwMainActivity extends RwBoundActivity{
                 //} catch (IOException e) {
                 //    e.printStackTrace();
                 //    Log.e(LOGTAG, "Problem loading content file: " + contentFileName);
-                    // TODO: dialog?? error??
+                // TODO: dialog?? error??
                 //}
-            } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
+            } else if (RW.NO_CONTENT.equals(intent.getAction())) {
+                updateUIState(false);
+                String reason = intent.getStringExtra(RW.EXTRA_FAILURE_REASON);
+                showMessage(getString(R.string.unable_to_retrieve_webcontent) + " (" + reason + ")", true, true);
+           } else if (RW.USER_MESSAGE.equals(intent.getAction())) {
                 showMessage(intent.getStringExtra(RW.EXTRA_SERVER_MESSAGE), false, false);
             } else if (RW.ERROR_MESSAGE.equals(intent.getAction())) {
                 if ((mRwBinder != null) && (mRwBinder.getShowDetailedMessages())) {
@@ -175,6 +179,7 @@ public class RwMainActivity extends RwBoundActivity{
         filter.addAction(RW.NO_CONFIGURATION);
         filter.addAction(RW.TAGS_LOADED);
         filter.addAction(RW.CONTENT_LOADED);
+        filter.addAction(RW.NO_CONTENT);
         filter.addAction(RW.ERROR_MESSAGE);
         filter.addAction(RW.USER_MESSAGE);
 
