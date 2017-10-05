@@ -464,15 +464,17 @@ public class RwMainActivity extends RwBoundActivity{
      * @param forced true to always display the dialog
      */
     private void showVersionDialog(boolean forced) {
+        // FIX: no dialog being displayed
+        // FIX: See https://developers.google.com/android/guides/opensource for new guidelines
         try {
             StringBuilder license = new StringBuilder();
             license.append(getResources().getString(R.string.version_text));
-            String osLicense = GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(getApplicationContext());
-            if (osLicense != null) {
-                license.append(osLicense);
-            } else {
-                license.append(R.string.play_services_not_installed);
-            }
+//            String osLicense = GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(getApplicationContext());
+//            if (osLicense != null) {
+//                license.append(osLicense);
+//            } else {
+//                license.append(R.string.play_services_not_installed);
+//            }
         } catch (Exception e) {
             Log.e(LOGTAG, "Unable to show version dialog!", e);
         }
