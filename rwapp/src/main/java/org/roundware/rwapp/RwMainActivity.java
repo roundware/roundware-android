@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -23,8 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import org.roundware.rwapp.utils.AssetImageManager;
 import org.roundware.rwapp.utils.ClassRegistry;
@@ -40,7 +44,7 @@ import org.roundware.service.RW;
 import org.roundware.service.RWService;
 import org.roundware.service.util.RWList;
 
-public class RwMainActivity extends RwBoundActivity{
+public class RwMainActivity extends RwBoundActivity {
     public static final String LOGTAG = RwMainActivity.class.getSimpleName();
     private final static boolean D = false;
 
@@ -60,6 +64,7 @@ public class RwMainActivity extends RwBoundActivity{
     private ImageButton mInfoCloseButton;
     private Button mFeedbackButton;
     private WebView mHiddenWebView;
+    private WebView mInfoWebView;
 
     // fields
     private ProgressDialog mProgressDialog;
@@ -308,9 +313,9 @@ public class RwMainActivity extends RwBoundActivity{
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
         mBackgroundImageView = (ImageView)findViewById(R.id.background);
-        mHiddenWebView = (WebView) findViewById(R.id.hiddenWebView);
 
-        // set-up the webview
+        // setup a hidden webview to trigger caching of the Listen html content
+        mHiddenWebView = (WebView) findViewById(R.id.hiddenWebView);
         WebSettings webSettings = mHiddenWebView.getSettings();
 
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
@@ -329,6 +334,16 @@ public class RwMainActivity extends RwBoundActivity{
         webSettings.setGeolocationEnabled(false);
         webSettings.setDatabaseEnabled(false);
         webSettings.setDomStorageEnabled(false);
+
+        // setup the info webview so that it keeps i.e. http redirects from opening a browser
+        mInfoWebView = (WebView)findViewById(R.id.infoWebView);
+        mInfoWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
         mListenButton = (Button) findViewById(R.id.listenButton);
         mListenButton.setOnClickListener(new View.OnClickListener() {
@@ -349,8 +364,7 @@ public class RwMainActivity extends RwBoundActivity{
         mInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebView wv = (WebView)findViewById(R.id.infoWebView);
-                wv.loadUrl(getString(R.string.app_info_url));
+                mInfoWebView.loadUrl(getString(R.string.app_info_url));
                 mViewFlipper.setInAnimation(mFadeInAnimation);
                 mViewFlipper.setOutAnimation(mFadeOutAnimation);
                 mViewFlipper.showNext();
@@ -391,11 +405,6 @@ public class RwMainActivity extends RwBoundActivity{
         prefsEditor.putBoolean(RwSpeakActivity.PREFS_KEY_LEGAL_NOTICE_ACCEPTED, false);
         prefsEditor.apply();
     }
-
-
-
-
-
 
 
     /**
@@ -464,20 +473,8 @@ public class RwMainActivity extends RwBoundActivity{
      * @param forced true to always display the dialog
      */
     private void showVersionDialog(boolean forced) {
-        // FIX: no dialog being displayed
-        // FIX: See https://developers.google.com/android/guides/opensource for new guidelines
-        try {
-            StringBuilder license = new StringBuilder();
-            license.append(getResources().getString(R.string.version_text));
-//            String osLicense = GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(getApplicationContext());
-//            if (osLicense != null) {
-//                license.append(osLicense);
-//            } else {
-//                license.append(R.string.play_services_not_installed);
-//            }
-        } catch (Exception e) {
-            Log.e(LOGTAG, "Unable to show version dialog!", e);
-        }
+        Intent intent = new Intent(this, OssLicensesMenuActivity.class);
+        startActivity(intent);
     }
 
 
