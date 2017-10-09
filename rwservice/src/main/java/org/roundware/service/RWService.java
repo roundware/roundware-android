@@ -1666,7 +1666,7 @@ import java.util.TimerTask;
                 key = getString(R.string.rw_key_server_error_traceback);
                 break;
             case USER:
-                key = getString(R.string.rw_key_server_result);
+                key = getString(R.string.rw_key_server_user_message);
                 break;
             case SHARING:
                 key = getString(R.string.rw_key_server_sharing_message);
