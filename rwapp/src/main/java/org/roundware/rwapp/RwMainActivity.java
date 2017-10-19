@@ -14,17 +14,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,9 +30,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import org.roundware.rwapp.utils.AssetImageManager;
 import org.roundware.rwapp.utils.ClassRegistry;
@@ -238,7 +232,7 @@ public class RwMainActivity extends RwBoundActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_ITEM_INFO: {
-                showVersionDialog(true);
+                showVersionAndLicensesInfoDialog(true);
                 return true;
             }
             case MENU_ITEM_PREFERENCES: {
@@ -472,9 +466,8 @@ public class RwMainActivity extends RwBoundActivity {
      *
      * @param forced true to always display the dialog
      */
-    private void showVersionDialog(boolean forced) {
-        Intent intent = new Intent(this, OssLicensesMenuActivity.class);
-        startActivity(intent);
+    private void showVersionAndLicensesInfoDialog(boolean forced) {
+        showMessage(getString(R.string.version_and_licenses_text), false, false);
     }
 
 
