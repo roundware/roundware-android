@@ -64,14 +64,6 @@
             android:theme="@style/AppTheme" >
         </activity>
 
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
         <service android:label="RoundwareService" android:name="org.roundware.service.RWService">
             <meta-data android:name="com.google.android.gms.version" android:value="3265130" />
         </service>
