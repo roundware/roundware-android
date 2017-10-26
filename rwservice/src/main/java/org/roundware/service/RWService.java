@@ -148,6 +148,7 @@ import java.util.TimerTask;
     private boolean mShowDetailedMessages = false;
     private boolean mStartPlayingWhenReady = false;
     private boolean mOnlyConnectOverWiFi = false;
+    private String mPreviousUserMessage = "";
     private int mVolumeLevel = 0;
     private int mMinVolumeLevel = 0;
     private int mMaxVolumeLevel = 50;
@@ -1716,10 +1717,11 @@ import java.util.TimerTask;
         String message;
         Intent intent = new Intent();
         
-        // process none critical messages first
+        // process none critical messages first (and do not send duplicate messages)
 
         message = retrieveServerMessage(ServerMessageType.USER, response);
-        if (message != null) {
+        if ((message != null) && (!message.equalsIgnoreCase(mPreviousUserMessage))) {
+            mPreviousUserMessage = message;
             intent.setAction(RW.USER_MESSAGE);
             intent.putExtra(RW.EXTRA_SERVER_MESSAGE, message);
             if (D) {

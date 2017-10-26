@@ -79,7 +79,6 @@ public class RwListenActivity extends RwBoundActivity {
     private AssetData mPendingAsset = new AssetData(null,null);
     private AssetData mCurrentAsset = mPendingAsset;
 
-
     private PausableScheduledThreadPoolExecutor mEventPool;
 
     private final Object mAssetImageLock = new Object();
