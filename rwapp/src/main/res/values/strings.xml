@@ -49,12 +49,12 @@
 
 <string name="play_services_not_installed">Google Play services is not installed on this device.</string>
 
-<!-- version info (Android open source license text will be appended) -->
-<string name="version_text">
-    \n
-    \nThis app was made using the open-source Roundware media platform, see
-    \nhttp://www.roundware.org for more information.
-    \n
+<!-- info text about app version and used open source licenses -->
+<string name="version_and_licenses_text">
+    \nThis app is built on the open-source Roundware audio augmented
+    reality platform (roundware.org). It also makes use
+    of Google Maps, Google Play Services and the Picasso image
+    library (by Square, Inc.).
     \n
 </string>
 

@@ -91,7 +91,7 @@
     <string name="rw_key_server_error_number">error_number</string>
     <string name="rw_key_server_error_message">error_message</string>
     <string name="rw_key_server_error_traceback">traceback</string>
-    <string name="rw_key_server_user_message">user_error_message</string>
+    <string name="rw_key_server_user_message">user_message</string>
     <string name="rw_key_server_sharing_message">sharing_message</string>
     
     <string name="rw_key_server_asset_id">asset_id</string>

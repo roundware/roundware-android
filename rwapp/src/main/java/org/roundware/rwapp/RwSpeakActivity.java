@@ -41,6 +41,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -350,19 +351,18 @@ public class RwSpeakActivity extends RwBoundActivity {
 
     private void initMapIfNeeded() {
         if (mGoogleMap == null) {
-            mGoogleMap = mMapView.getMap();
-            if (mGoogleMap != null) {
-                setUpMap();
-            }
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
+                    mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+                    mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
+                    mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    mGoogleMap.setMyLocationEnabled(false);
+                }
+            });
         }
-    }
-
-    private void setUpMap() {
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
-        mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        mGoogleMap.setMyLocationEnabled(false);
     }
 
 
