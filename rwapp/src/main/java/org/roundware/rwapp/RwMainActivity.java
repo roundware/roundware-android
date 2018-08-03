@@ -4,6 +4,7 @@
  */
 package org.roundware.rwapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -64,6 +65,31 @@ public class RwMainActivity extends RwBoundActivity {
     private ProgressDialog mProgressDialog;
     private Intent mRwServiceIntent;
     private boolean mIsConnected;
+
+    private int PERMISSION_ALL_SPEAK = 1;
+    private int PERMISSION_ALL_LISTEN = 2;
+    String[] PERMISSIONS_SPEAK = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    String[] PERMISSIONS_LISTEN = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -343,6 +369,9 @@ public class RwMainActivity extends RwBoundActivity {
         mListenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!hasPermissions(this, PERMISSIONS_SPEAK)){
+                    ActivityCompat.requestPermissions(this, PERMISSIONS_SPEAK, PERMISSION_ALL_SPEAK);
+                }
                 startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwListenActivity")));
             }
         });
