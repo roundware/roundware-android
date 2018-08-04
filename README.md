@@ -42,10 +42,11 @@ git add .
 git commit -m "Initial commit of original app-starter"
 git push origin master
 ```
+**Note that creating a copy of the app-starter is ESSENTIAL. Without it Android Studio will not find a runnable Android app in the project.**
 
 Configure the project:
 
-* Open the project in Android Studio
+* Open the project in Android Studio (use Import Project and choose the top level roundware-android folder)
 * Edit `app/src/main/AndroidManifest.xml` to set your namespace. Change:
   ```xml
   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
