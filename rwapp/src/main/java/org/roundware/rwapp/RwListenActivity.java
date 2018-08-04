@@ -422,7 +422,7 @@ public class RwListenActivity extends RwBoundActivity {
 
         if (!TextUtils.isEmpty(url)) {
             //pre-load into cache
-            Picasso.with(this).load(url);
+            Picasso.get().load(url);
         }
     }
 
@@ -470,7 +470,7 @@ public class RwListenActivity extends RwBoundActivity {
             mAssetTextView.setText(mCurrentAsset.description);
             if (showUrl) {
                 //load
-                Picasso picasso = Picasso.with(this);
+                Picasso picasso = Picasso.get();
                 // set below true, to view image source debugging
                 picasso.setIndicatorsEnabled(false);
                 picasso.load(mCurrentAsset.url)
@@ -486,8 +486,8 @@ public class RwListenActivity extends RwBoundActivity {
                             }
 
                             @Override
-                            public void onError() {
-                                Log.w(LOGTAG, "Image load failure!");
+                            public void onError(Exception e) {
+                                Log.w(LOGTAG, "Image load failure! " + e.getMessage());
                                 mAssetImageLayout.setVisibility(View.INVISIBLE);
                             }
                         });

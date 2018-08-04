@@ -644,11 +644,9 @@ import java.util.TimerTask;
         filter.addAction(RW.TAGS_LOADED);
         filter.addAction(RW.NO_TAGS);
         registerReceiver(rwReceiver, filter);
-        
-        // setup for GPS callback
-        RWLocationTracker.instance().init(this);
+
+        // register with the location tracker
         RWLocationTracker.instance().addObserver(this);
-        
 
         // simple audio management
         mAudioManager = new RWAudioManager( getApplicationContext() );
@@ -678,23 +676,42 @@ import java.util.TimerTask;
     /**
      * Request location updates from the most accurate available location
      * service (GPS, Network).
+     *
+     * @return false when location tracking is needed but could not be started
      */
-    private void startLocationUpdates() {
+    private boolean startLocationUpdates() {
         if ((configuration != null) && (configuration.isUsingLocation())) {
-            RWLocationTracker.instance().startLocationUpdates(
-                    configuration.getMinLocationUpdateTimeMSec(), 
-                    (float)configuration.getMinLocationUpdateDistanceMeter(),
-                    configuration.getUseGpsIfPossible());
+            try {
+                // attempt to init the location tracker first
+                if (RWLocationTracker.instance().init(this)) {
+                    RWLocationTracker.instance().startLocationUpdates(
+                            configuration.getMinLocationUpdateTimeMSec(),
+                            (float) configuration.getMinLocationUpdateDistanceMeter(),
+                            configuration.getUseGpsIfPossible());
+                } else {
+                    // Failed to init location manager, device could have no GPS or user has not
+                    // granted location permissions.
+                    return false;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error initalising location tracker: " + e.getMessage());
+                return false;
+            }
         }
+        return true;
     }
-    
-    
+
+
     /**
      * Stop receiving location updates, and allows the device to shutdown the
      * location service providers to reduce power consumption.
      */
     private void stopLocationUpdates() {
-        RWLocationTracker.instance().stopLocationUpdates();
+        try {
+            RWLocationTracker.instance().stopLocationUpdates();
+        } catch (Exception e) {
+            Log.e(TAG, "Error stopping location tracker: " + e.getMessage());
+        }
     }
 
     
@@ -705,7 +722,12 @@ import java.util.TimerTask;
      * @return Location, last known by the location services
      */
     public Location getLastKnownLocation() {
-        return RWLocationTracker.instance().getLastLocation();
+        try {
+            return RWLocationTracker.instance().getLastLocation();
+        } catch (Exception e) {
+            Log.e(TAG, "Error retrieving last known location: " + e.getMessage());
+            return null;
+        }
     }
 
 
@@ -1824,7 +1846,10 @@ import java.util.TimerTask;
                     retrieveTags(this, configuration.getProjectId());
                 }
                 startQueueTimer();
-                startLocationUpdates();
+                if (!startLocationUpdates()) {
+                    // TODO location tracking might fail if user has not granted permissions
+                    debugLog("Could not start location tracking, user might not have granted location permissions to the app");
+                }
                 broadcast(RW.SESSION_ON_LINE);
                 break;
             case OFF_LINE:
