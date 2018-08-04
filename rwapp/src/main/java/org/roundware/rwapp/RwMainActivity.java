@@ -14,9 +14,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,30 +69,33 @@ public class RwMainActivity extends RwBoundActivity {
     private Intent mRwServiceIntent;
     private boolean mIsConnected;
 
-    private int PERMISSION_ALL_SPEAK = 1;
-    private int PERMISSION_ALL_LISTEN = 2;
-    String[] PERMISSIONS_SPEAK = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-    };
-    String[] PERMISSIONS_LISTEN = {
+    // definitions for runtime permission requesting
+    private final static int PERMISSIONS_REQUEST_FOR_STARTUP = 1;
+    private final static String[] PERMISSIONS_FOR_STARTUP = {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     };
 
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
+    /**
+     * Callback for runtime permissions requests.
+     *
+     * @param requestCode the callback is called for
+     * @param permissions that were requested
+     * @param grantResults for the corresponding permissions (PERMISSION_GRANTED, PERMISSION_DENIED)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResults[]) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_FOR_STARTUP: {
+                if (Utils.areAllPermissionsGranted(permissions, grantResults)) {
+                    startRWService(getIntent());
+                } else {
+                    showMessage(getString(R.string.permissions_for_location_denied), false, true);
                 }
             }
         }
-        return true;
     }
+
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -177,8 +183,14 @@ public class RwMainActivity extends RwBoundActivity {
         initUIWidgets();
         updateUIState(false);
 
-        // create session start unless one is passed in
-        startRWService(getIntent());
+        if (!Utils.hasPermissions(RwMainActivity.this, PERMISSIONS_FOR_STARTUP)) {
+            ActivityCompat.requestPermissions(RwMainActivity.this,
+                    PERMISSIONS_FOR_STARTUP,
+                    PERMISSIONS_REQUEST_FOR_STARTUP);
+        } else {
+            // create session start unless one is passed in
+            startRWService(getIntent());
+        }
     }
 
 
@@ -369,9 +381,6 @@ public class RwMainActivity extends RwBoundActivity {
         mListenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!hasPermissions(this, PERMISSIONS_SPEAK)){
-                    ActivityCompat.requestPermissions(this, PERMISSIONS_SPEAK, PERMISSION_ALL_SPEAK);
-                }
                 startActivity(new Intent(getApplicationContext(), ClassRegistry.get("RwListenActivity")));
             }
         });

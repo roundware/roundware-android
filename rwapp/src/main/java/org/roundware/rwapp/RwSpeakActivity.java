@@ -4,6 +4,7 @@
  */
 package org.roundware.rwapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -87,7 +89,7 @@ public class RwSpeakActivity extends RwBoundActivity {
 
     // debugging
     private final static boolean D = false;
-    private final static String TAG = "SFMSSpeakActivity";
+    private final static String TAG = "RWSpeakActivity";
     private final static boolean SUBMIT_RECORDING = true;
 
     // pause time to allow final lead-in sound to fade out before starting recording
@@ -154,6 +156,33 @@ public class RwSpeakActivity extends RwBoundActivity {
     private View.OnClickListener mSubmitListener;
     private View.OnClickListener mCancelListener;
 
+
+    private final static int PERMISSIONS_REQUEST_FOR_RECORDING = 1;
+    private final static String[] PERMISSIONS_FOR_RECORDING = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO
+    };
+
+    /**
+     * Callback for runtime permissions requests.
+     *
+     * @param requestCode the callback is called for
+     * @param permissions that were requested
+     * @param grantResults for the corresponding permissions (PERMISSION_GRANTED, PERMISSION_DENIED)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResults[]) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_FOR_RECORDING: {
+                if (!Utils.areAllPermissionsGranted(permissions, grantResults)) {
+                    showMessage(getString(R.string.permissions_for_recording_denied), false, true);
+                }
+            }
+        }
+    }
+
+
     /**
      * Override to do additional data replacement, remember to call super!
      * @param input
@@ -162,6 +191,7 @@ public class RwSpeakActivity extends RwBoundActivity {
     protected String mungeUrlData(String input){
         return input.replace("/*%roundware_tags%*/", mTagsList.toJsonForWebView(ROUNDWARE_TAGS_TYPE));
     }
+
 
     /**
      * Handles connection state to an RWService Android Service. In this
@@ -254,6 +284,14 @@ public class RwSpeakActivity extends RwBoundActivity {
         mIsRecordingGeneralFeedback = ACTION_RECORD_FEEDBACK.equals(action);
         setFlipperChild( mIsRecordingGeneralFeedback ? RECORD_LAYOUT : FILTER_LAYOUT);
         Log.d(TAG, "done onCreate");
+
+
+        // ask user to grant runtime permissions if needed
+        if (!Utils.hasPermissions(RwSpeakActivity.this, PERMISSIONS_FOR_RECORDING)) {
+            ActivityCompat.requestPermissions(RwSpeakActivity.this,
+                    PERMISSIONS_FOR_RECORDING,
+                    PERMISSIONS_REQUEST_FOR_RECORDING);
+        }
     }
 
 
@@ -359,7 +397,12 @@ public class RwSpeakActivity extends RwBoundActivity {
                     mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
                     mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
                     mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    mGoogleMap.setMyLocationEnabled(false);
+
+                    try {
+                        mGoogleMap.setMyLocationEnabled(false);
+                    } catch (SecurityException e) {
+                        Log.w(TAG,"Exception when disabling Google Map MyLocation, " + e.getMessage());
+                    }
                 }
             });
         }

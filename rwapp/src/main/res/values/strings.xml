@@ -58,6 +58,22 @@
     \n
 </string>
 
+<!-- info text when user denies one or more critical permissions for app functionality -->
+<string name="permissions_for_location_denied">
+    \nThis app is location based, and really needs to be
+    able to figure out where you are in the world to work properly.
+    Please start again and grant the requested permissions. Thank you!
+    \n
+</string>
+
+<string name="permissions_for_recording_denied">
+    \nThe requested permissions are needed so the app can make
+    a recording of your voice and store it locally before it will
+    be transmitted to our servers. Please try again and grant the
+    requested permissions. Thank you!
+    \n
+</string>
+
 <!-- dialog messages -->
 <string name="unable_to_retrieve_configuration">
     Unable to load project configuration from server or
